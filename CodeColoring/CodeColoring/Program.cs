@@ -7,7 +7,7 @@ namespace CodeColoring
         static void Main(string[] args)
         {
             var conArgDec = new ConsoleArgsDecoder();
-            conArgDec.Decode(args);
+            var dargs = conArgDec.Decode(args);
         }
     }
 }

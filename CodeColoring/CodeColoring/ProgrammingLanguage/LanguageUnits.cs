@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace CodeColoring
 {
-    public class ProgrammingLanguage
+    public enum LanguageUnits
     {
+        Unknown,
+        FunctionDefinition,
     }
 }
