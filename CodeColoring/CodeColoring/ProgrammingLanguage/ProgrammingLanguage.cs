@@ -8,6 +8,11 @@ namespace CodeColoring
 {
     public abstract class ProgrammingLanguage
     {
+        public abstract ParseResult Parse(string text);
+    }
+
+    public class ParseResult
+    {
 
     }
 }
