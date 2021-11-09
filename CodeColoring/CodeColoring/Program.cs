@@ -24,7 +24,7 @@ namespace CodeColoring
             var container = ConfigureContainer();
             var conArgDec = container.Get<IArgsDecoder>();
             var dargs = conArgDec.Decode(args);
-            var textReader = container.Get<StreamReader>(); // или что-то другое (не TextReader),
+            var textReader = container.Get<TextReader>(); // или что-то другое (не TextReader),
                                                             // или дописать функцию на чтение всех строк,
                                                             // как принимает аргкменты???
             var inputText = File.ReadAllText(dargs.InputFilePath);
