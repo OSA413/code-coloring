@@ -25,7 +25,7 @@ namespace CodeColoring
             {
                 s => new[] {"def"}.Contains(s[1]), 
                 LanguageUnit.FunctionDefinition
-            },
+            }, //TODO лучше объединить в операторы, наверное 
             {
                 s => new[]
                 {
@@ -37,7 +37,7 @@ namespace CodeColoring
                 LanguageUnit.Operator
             },
             {
-                s => s[1].EndsWith(")") || s[0] == "def",
+                s => s[1].EndsWith(")") || s[0] == "def", //TODO подумать
                 LanguageUnit.Function
             },
             {
