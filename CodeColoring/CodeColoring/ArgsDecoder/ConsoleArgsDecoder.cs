@@ -15,6 +15,7 @@ namespace CodeColoring
         public DecodedArguments Decode(string[] args)
         {
             throw new NotImplementedException();
+            //массив ILanguage и смотрим по всем им расширения для поиска нужного по файлу. передаем же файл?
         }
     }
 }

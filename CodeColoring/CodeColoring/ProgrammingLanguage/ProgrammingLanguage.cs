@@ -13,6 +13,7 @@ namespace CodeColoring
 
     public class ParseResult
     {
+        
 
     }
 }

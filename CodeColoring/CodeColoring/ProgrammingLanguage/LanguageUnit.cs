@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace CodeColoring
 {
-    public enum LanguageUnits
+    public enum LanguageUnit
     {
-        Unknown,
+        Unknown = default,
         FunctionDefinition,
+        Variable,
+        Function,
+        Operator
+        
     }
 }

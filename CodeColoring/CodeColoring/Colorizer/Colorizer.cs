@@ -8,5 +8,6 @@ namespace CodeColoring.Colorizer
 {
     class Colorizer
     {
+        
     }
 }

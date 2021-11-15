@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Ninject;
+using Ninject.Extensions.Conventions;
 
 namespace CodeColoring
 {
@@ -9,11 +10,12 @@ namespace CodeColoring
         public static StandardKernel ConfigureContainer()
         {
             var container = new StandardKernel();
-
+            container.Bind(c => c.FromThisAssembly().SelectAllClasses().InheritedFrom<ILanguage>().BindAllInterfaces());
             container.Bind<IArgsDecoder>().To<ConsoleArgsDecoder>();
             container.Bind<TextReader>().To<ArgsReader>(); //??
             container.Bind<TextWriter>().To<FileWriter>(); //??
             container.Bind<ColorPalette>().ToSelf(); // возможно, создать какой-то интерфейс, но нужен ли он тут
+            
             
 
             return container;
