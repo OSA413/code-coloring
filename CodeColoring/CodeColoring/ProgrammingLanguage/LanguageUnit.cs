@@ -8,9 +8,9 @@ namespace CodeColoring
 {
     public enum LanguageUnit
     {
-        Unknown = default,
+        Symbols ,
         FunctionDefinition,
-        Variable,
+        Variable = default,
         Function,
         Operator
         

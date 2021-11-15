@@ -7,47 +7,55 @@ namespace CodeColoring
     public class Python : ILanguage
     {
         
-        public LanguageUnit GetUnit(string[] args) //нужно предыдущее, текущее и следующее слово-знак
+        public LanguageUnit GetUnit(string arg) //нужно предыдущее, текущее и следующее слово-знак
         {
-            if (args.Length != 3)
+            
+
+            foreach (var (arr, languageUnit) in UnitCheck())
             {
-                //что-то
+                if (languageUnit == LanguageUnit.Function)
+                {
+                    foreach (var key in arr)
+                    {
+                        if(arg.Contains(key))
+                            return languageUnit;
+                    }
+                }
+                else
+                {
+                    if(arr.Contains(arg))
+                        return languageUnit;
+                }
             }
 
-            return (from unit in UnitCheck() where unit.Key(args) select unit.Value).FirstOrDefault();
+            return LanguageUnit.Variable;
         }
 
         public string[] Extensions() => new[] {".py", ".ipynb"};
         
 
-        public Dictionary<Func<string[], bool>, LanguageUnit> UnitCheck() => new()
+        public Dictionary<string[], LanguageUnit> UnitCheck() => new()
         {
             {
-                s => new[] {"def"}.Contains(s[1]), 
-                LanguageUnit.FunctionDefinition
-            }, //TODO лучше объединить в операторы, наверное 
+                new[] {"def", "class"}, 
+                LanguageUnit.FunctionDefinition //переименовать
+            },
             {
-                s => new[]
+                new[]
                 {
                     "if", "else", "elif", "print", "for", "while", "pass", "break", "continue", "return", "yield",
                     "global", "nonlocal", "import", "from", "class", "try", "except", "finally", "raise", "assert",
-                    "with",
-                    "as", "del"
-                }.Contains(s[1]),
+                    "with", "as", "del"
+                },
                 LanguageUnit.Operator
             },
             {
-                s => s[1].EndsWith(")") || s[0] == "def", //TODO подумать
+                new []{"(", "."}, //TODO нужно отдавать следующий символ после последней буквы
                 LanguageUnit.Function
             },
             {
-                s =>
-                {
-
-                    var options = new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "("};
-                    return options.Contains(s[2]) || options.Contains(s[0]);
-                },
-                LanguageUnit.Variable
+                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "("},
+                LanguageUnit.Symbols
             }
         };
     }

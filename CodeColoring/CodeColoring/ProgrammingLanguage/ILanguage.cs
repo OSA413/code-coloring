@@ -5,9 +5,9 @@ namespace CodeColoring
 {
     public interface ILanguage
     {
-        LanguageUnit GetUnit(string[] arg);
+        LanguageUnit GetUnit(string arg);
         string[] Extensions();
-        Dictionary<Func<string[], bool>, LanguageUnit> UnitCheck();
+        Dictionary<string[], LanguageUnit> UnitCheck();
 
     }
     
