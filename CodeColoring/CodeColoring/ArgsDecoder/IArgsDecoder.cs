@@ -9,8 +9,6 @@ namespace CodeColoring
     public interface IArgsDecoder
     {
         string Help { get; }
-        bool ErrorOccured { get; }
-        string ErrorMessage { get; }
         DecodedArguments Decode(string[] args);
     }
 
