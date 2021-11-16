@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodeColoring
 {
-    class ConsoleArgsDecoder : IArgsDecoder
+    public class ConsoleArgsDecoder : IArgsDecoder
     {
         public bool ErrorOccured { get; private set; }
         public string ErrorMessage { get; private set; }
@@ -14,7 +14,9 @@ namespace CodeColoring
 
         public DecodedArguments Decode(string[] args)
         {
-            throw new NotImplementedException();
+            var result = new DecodedArguments();
+
+            return result;
             //массив ILanguage и смотрим по всем им расширения для поиска нужного по файлу. передаем же файл?
         }
     }

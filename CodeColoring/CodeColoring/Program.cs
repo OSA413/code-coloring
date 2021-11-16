@@ -12,12 +12,10 @@ namespace CodeColoring
             var container = new StandardKernel();
             container.Bind(c => c.FromThisAssembly().SelectAllClasses().InheritedFrom<ILanguage>().BindAllInterfaces());
             container.Bind<IArgsDecoder>().To<ConsoleArgsDecoder>();
-            container.Bind<TextReader>().To<ArgsReader>(); //??
-            container.Bind<TextWriter>().To<FileWriter>(); //??
+            //container.Bind<TextReader>().To<ArgsReader>(); //??
+            //container.Bind<TextWriter>().To<FileWriter>(); //??
             container.Bind<ColorPalette>().ToSelf(); // возможно, создать какой-то интерфейс, но нужен ли он тут
             
-            
-
             return container;
         }
         static void Main(string[] args)
@@ -31,10 +29,10 @@ namespace CodeColoring
                                                             // как принимает аргкменты???
             var inputText = File.ReadAllText(dargs.InputFilePath);
             var parsingResult = dargs.ProgrammingLanguage.Parse(inputText);
-            var withColorsApplied = dargs.ColorPalette.Colorize(parsingResult);
+            //var withColorsApplied = dargs.ColorPalette.Colorize(parsingResult);
             var textWriter = container.Get<TextWriter>(); // вопросы те же 
-            var outputText = dargs.OutputFormat.Format(withColorsApplied);
-            File.WriteAllText(dargs.OutputFilePath, outputText);
+            //var outputText = dargs.OutputFormat.Format(withColorsApplied);
+            //File.WriteAllText(dargs.OutputFilePath, outputText);
         }
     }
 }
