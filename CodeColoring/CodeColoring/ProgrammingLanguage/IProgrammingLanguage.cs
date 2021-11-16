@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodeColoring
 {
-    public abstract class ProgrammingLanguage
+    public interface IProgrammingLanguage
     {
         public abstract ParseResult Parse(string text);
         public abstract LanguageUnit GetUnit(string arg);

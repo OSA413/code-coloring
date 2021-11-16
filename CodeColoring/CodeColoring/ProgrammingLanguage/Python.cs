@@ -4,11 +4,14 @@ using System.Linq;
 
 namespace CodeColoring
 {
-    public class Python : ProgrammingLanguage //как по мне лучше интерфейс все же 
+    public class Python : IProgrammingLanguage
     {
-        public override ParseResult Parse(string text);
+        public ParseResult Parse(string text)
+        {
+            throw new NotImplementedException();
+        }
         
-        public override LanguageUnit GetUnit(string arg) //нужно предыдущее, текущее и следующее слово-знак
+        public LanguageUnit GetUnit(string arg) //нужно предыдущее, текущее и следующее слово-знак
         {
             
 
@@ -32,10 +35,10 @@ namespace CodeColoring
             return LanguageUnit.Variable;
         }
 
-        public override string[] Extensions() => new[] {".py", ".ipynb"};
+        public string[] Extensions() => new[] {".py", ".ipynb"};
         
 
-        public override Dictionary<string[], LanguageUnit> UnitCheck() => new()
+        public Dictionary<string[], LanguageUnit> UnitCheck() => new()
         {
             {
                 new[] {"def", "class"}, 
