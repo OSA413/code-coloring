@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ninject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace CodeColoring
 {
-    public interface Repository<T>
+    public static class Repository
     {
-        void Add(Type newInstanceType, string id);
-        T Get(string id);
+        public static StandardKernel Kernel;
+        static Repository() => Kernel = new StandardKernel();
+
     }
 }
