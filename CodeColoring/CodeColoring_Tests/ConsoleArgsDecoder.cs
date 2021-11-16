@@ -29,13 +29,9 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_ColorPalette()
         {
-            Assert.Fail();
-            /*
-            var arg = "D:\\nfrinfweio\\dsadasdas";
-            DecodedArguments result = decoder.Decode(new string[] { "-i", arg });
-            var expected = new DecodedArguments() { ColorPalette = arg };
+            DecodedArguments result = decoder.Decode(new string[] { "-c", "DayTheme" });
+            var expected = new DecodedArguments() { ColorPalette = new DayTheme() };
             AreEqual(expected, result);
-            */
         }
 
         [Test]
