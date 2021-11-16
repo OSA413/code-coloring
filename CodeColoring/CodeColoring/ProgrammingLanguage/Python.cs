@@ -6,7 +6,7 @@ namespace CodeColoring
 {
     public class Python : IProgrammingLanguage
     {
-        public ParseResult Parse(string text)
+        public ParsingResult Parse(string text)
         {
             throw new NotImplementedException();
         }

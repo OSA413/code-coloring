@@ -4,10 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeColoring.Colorizer
+namespace CodeColoring
 {
-    class Colorizer
+    public static class Colorizer
     {
-        
+        public static ColoringResult Colorize(ParsingResult pr, ColorPalette palette)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ColoringResult
+    {
+
     }
 }

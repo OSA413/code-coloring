@@ -32,7 +32,7 @@ namespace CodeColoring
             private void HandleInputFilePath(string arg) =>
                 decoded.InputFilePath = arg;
             private void HandleOutputFormat(string arg) =>
-                decoded.OutputFormat = Repository.Kernel.Get<OutputFormat>(arg);
+                decoded.OutputFormat = Repository.Kernel.Get<IOutputFormat>(arg);
             private void HandleProgrammingLanguage(string arg) =>
                 decoded.ProgrammingLanguage = Repository.Kernel.Get<IProgrammingLanguage>(arg);
             private void HandleOutputFilePath(string arg) =>

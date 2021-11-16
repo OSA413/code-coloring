@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace CodeColoring
 {
-    public abstract class OutputFormat
+    public interface IOutputFormat
     {
+        string Format(ColoringResult cr);
     }
 }

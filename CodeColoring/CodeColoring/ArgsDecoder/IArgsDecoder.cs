@@ -18,6 +18,6 @@ namespace CodeColoring
         public ColorPalette ColorPalette;
         public IProgrammingLanguage ProgrammingLanguage;
         public string OutputFilePath;
-        public OutputFormat OutputFormat;
+        public IOutputFormat OutputFormat;
     }
 }

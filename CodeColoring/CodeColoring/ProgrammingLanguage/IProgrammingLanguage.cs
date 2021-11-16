@@ -8,13 +8,13 @@ namespace CodeColoring
 {
     public interface IProgrammingLanguage
     {
-        public abstract ParseResult Parse(string text);
+        public abstract ParsingResult Parse(string text);
         public abstract LanguageUnit GetUnit(string arg);
         public abstract string[] Extensions();
         public abstract Dictionary<string[], LanguageUnit> UnitCheck();
     }
 
-    public class ParseResult
+    public class ParsingResult
     {
         
 

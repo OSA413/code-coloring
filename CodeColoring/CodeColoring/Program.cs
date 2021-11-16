@@ -12,7 +12,7 @@ namespace CodeColoring
             var dargs = new ConsoleArgsDecoder().Decode(args);
             var inputText = File.ReadAllText(dargs.InputFilePath);
             var parsingResult = dargs.ProgrammingLanguage.Parse(inputText);
-            var withColorsApplied = dargs.ColorPalette.Colorize(parsingResult);
+            var withColorsApplied = Colorizer.Colorize(parsingResult, dargs.ColorPalette);
             var outputText = dargs.OutputFormat.Format(withColorsApplied);
             File.WriteAllText(dargs.OutputFilePath, outputText);
         }
