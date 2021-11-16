@@ -10,7 +10,12 @@ namespace CodeColoring
     public static class Repository
     {
         public static StandardKernel Kernel;
-        static Repository() => Kernel = new StandardKernel();
+        //static Repository() => Kernel = new StandardKernel(); потом вернуть к этому виду
 
+        static Repository()
+        {
+            Kernel = new StandardKernel();
+            Kernel.Bind<ColorPalette>().To<DayTheme>().Named("DayTheme");
+        }
     }
 }

@@ -8,9 +8,5 @@ namespace CodeColoring
 {
     public class DayTheme: ColorPalette
     {
-        static DayTheme()
-        {
-            Repository.Kernel.Bind<ColorPalette>().To<DayTheme>().Named("DayTheme");
-        }
     }
 }
