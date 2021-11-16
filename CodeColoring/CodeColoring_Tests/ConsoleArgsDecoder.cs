@@ -7,13 +7,19 @@ namespace CodeColoring_Tests
     {
         ConsoleArgsDecoder decoder = new ConsoleArgsDecoder();
 
+        void CheckType(object expected, object actual)
+        {
+            if (expected == null) Assert.IsNull(actual);
+            else Assert.IsInstanceOf(expected.GetType(), actual);
+        }
+
         void AreEqual(DecodedArguments expected, DecodedArguments actual)
         {
-            Assert.AreEqual(expected.ColorPalette, actual.ColorPalette);
+            CheckType(expected.ColorPalette, actual.ColorPalette);
             Assert.AreEqual(expected.InputFilePath, actual.InputFilePath);
             Assert.AreEqual(expected.OutputFilePath, actual.OutputFilePath);
-            Assert.AreEqual(expected.OutputFormat, actual.OutputFormat);
-            Assert.AreEqual(expected.ProgrammingLanguage, actual.ProgrammingLanguage);
+            CheckType(expected.OutputFormat, actual.OutputFormat);
+            CheckType(expected.ProgrammingLanguage, actual.ProgrammingLanguage);
         }
 
         [Test]
@@ -58,26 +64,18 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_OutputFormat()
         {
-            Assert.Fail();
-            /*
-            var arg = "D:\\nfrinfweio\\dsadasdas";
-            DecodedArguments result = decoder.Decode(new string[] { "-f", arg });
-            var expected = new DecodedArguments() { OutputFormat = arg };
+            DecodedArguments result = decoder.Decode(new string[] { "-f", "HTML" });
+            var expected = new DecodedArguments() { OutputFormat = new HTML() };
             AreEqual(expected, result);
-            */
         }
 
         [Test]
         [Repeat(5)]
         public void OnlyOneParam_ProgrammingLanguage()
         {
-            Assert.Fail();
-            /*
-            var arg = "D:\\nfrinfweio\\dsadasdas";
-            DecodedArguments result = decoder.Decode(new string[] { "-l", arg });
-            var expected = new DecodedArguments() { ProgrammingLanguage = arg };
+            DecodedArguments result = decoder.Decode(new string[] { "-l", "Python" });
+            var expected = new DecodedArguments() { ProgrammingLanguage = new Python() };
             AreEqual(expected, result);
-            */
         }
 
 

@@ -16,6 +16,8 @@ namespace CodeColoring
         {
             Kernel = new StandardKernel();
             Kernel.Bind<ColorPalette>().To<DayTheme>().Named("DayTheme");
+            Kernel.Bind<IOutputFormat>().To<HTML>().Named("HTML");
+            Kernel.Bind<IProgrammingLanguage>().To<Python>().Named("Python");
         }
     }
 }
