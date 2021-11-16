@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodeColoring
 {
-    public abstract class OutputFormat
+    public class HTML: OutputFormat
     {
     }
 }
