@@ -59,7 +59,7 @@ namespace CodeColoring
             },
             {
                 new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "("},
-                LanguageUnit.Symbols
+                LanguageUnit.Symbol
             }
         };
     }

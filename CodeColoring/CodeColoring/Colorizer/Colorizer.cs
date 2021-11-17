@@ -25,7 +25,7 @@ namespace CodeColoring
                     case LanguageUnit.Operator:
                         result.Add(new ColorizedArgument(palette.OperatorColor, arg.arg));
                         break;
-                    case LanguageUnit.Symbols:
+                    case LanguageUnit.Symbol:
                         result.Add(new ColorizedArgument(palette.SymbolColor, arg.arg));
                         break;
                     case LanguageUnit.Variable:

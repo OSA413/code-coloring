@@ -10,10 +10,11 @@ namespace CodeColoring
     {
         Unknown,
         Variable,
-        Symbols,
+        Symbol,
         FunctionDefinition,
         Function,
         Operator,
+        Value,
         Whitespace
     }
 
