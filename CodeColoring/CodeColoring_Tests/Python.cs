@@ -41,6 +41,27 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(5)]
+        public void SimpleAssignmentAndPrint()
+        {
+            var input = "x = 5\n print(x)";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("x", LanguageUnit.Variable),
+                (" ", LanguageUnit.Whitespace),
+                ("=", LanguageUnit.Symbol),
+                (" ", LanguageUnit.Whitespace),
+                ("5", LanguageUnit.Value),
+                ("\n", LanguageUnit.Whitespace),
+                ("print", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                ("x", LanguageUnit.Variable),
+                (")", LanguageUnit.Symbol)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+
+        [Test]
+        [Repeat(5)]
         public void DefAPrint123()
         {
             var input = "def a(): print(\"123\")";
