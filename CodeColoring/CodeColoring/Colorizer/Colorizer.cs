@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace CodeColoring
 {
-    public class Colorizer : ColorPalette
+    public class Colorizer
     {
         public static ColoringResult Colorize(ParseUnit[] parseResult, ColorPalette palette)
         {
