@@ -9,32 +9,38 @@ namespace CodeColoring
 {
     public class Colorizer : ColorPalette
     {
-        private List<ColorizedArgument> result = new List<ColorizedArgument>();
-        public IEnumerable<ColorizedArgument> Colorize(ParseResult parseResult)
+        public static ColoringResult Colorize(ParsingResult parseResult, ColorPalette palette)
         {
-            //Предположу что в парс резалте будет словарь - аргумент:тип
-            foreach (var arg in parseResult.results)
+            var result = new ColoringResult();
+            foreach (var arg in parseResult.Result)
             {
                 switch (arg.LanguageUnit)
                 {
                     case LanguageUnit.Function:
-                        result.Add(new ColorizedArgument(this.FunctionColor, arg.arg));
+                        result.Add(new ColorizedArgument(palette.FunctionColor, arg.arg));
                         break;
                     case LanguageUnit.FunctionDefinition:
-                        result.Add(new ColorizedArgument(this.FunctionDefinitionColor, arg.arg));
+                        result.Add(new ColorizedArgument(palette.FunctionDefinitionColor, arg.arg));
                         break;
                     case LanguageUnit.Operator:
-                        result.Add(new ColorizedArgument(this.OperatorColor, arg.arg));
+                        result.Add(new ColorizedArgument(palette.OperatorColor, arg.arg));
                         break;
                     case LanguageUnit.Symbols:
-                        result.Add(new ColorizedArgument(this.SymbolColor, arg.arg));
+                        result.Add(new ColorizedArgument(palette.SymbolColor, arg.arg));
                         break;
                     case LanguageUnit.Variable:
-                        result.Add(new ColorizedArgument(this.VariableColor, arg.arg));
+                        result.Add(new ColorizedArgument(palette.VariableColor, arg.arg));
+                        break;
                 }
             }
             return result;
         }
+    }
+
+    public class ColoringResult
+    {
+        public List<ColorizedArgument> Result = new List<ColorizedArgument>();
+        public void Add(ColorizedArgument a) => Result.Add(a);
     }
 
     public class ColorizedArgument

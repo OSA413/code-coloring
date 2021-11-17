@@ -8,9 +8,10 @@ namespace CodeColoring
 {
     public enum LanguageUnit
     {
+        Unknown,
+        Variable,
         Symbols,
         FunctionDefinition,
-        Variable = default,
         Function,
         Operator,
         Whitespace
@@ -26,7 +27,6 @@ namespace CodeColoring
 
     public class ParsingResult
     {
-        
-
+        public List<(string arg, LanguageUnit LanguageUnit)> Result;
     }
 }
