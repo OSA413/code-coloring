@@ -13,13 +13,13 @@ namespace CodeColoring_Tests
     {
         public Python python = new Python();
 
-        private void SameOutput(List<(string arg, LanguageUnit LanguageUnit)> expected, ParsingResult actual)
+        private void SameOutput(List<(string arg, LanguageUnit LanguageUnit)> expected, ParseUnit[] actual)
         {
-            Assert.AreEqual(expected.Count, actual.Result.Count, "Expected different lengh");
+            Assert.AreEqual(expected.Count, actual.Length, "Expected different lengh");
             for (int i = 0; i < expected.Count; i++)
             {
-                Assert.AreEqual(expected[i].arg, actual.Result[i].arg, "Difference at index " + i);
-                Assert.AreEqual(expected[i].LanguageUnit, actual.Result[i].LanguageUnit, "Different unit for [" + expected[i].arg + "]");
+                Assert.AreEqual(expected[i].arg, actual[i].Symbol, "Difference at index " + i);
+                Assert.AreEqual(expected[i].LanguageUnit, actual[i].Unit, "Different unit for [" + expected[i].arg + "]");
             }
         }
 
