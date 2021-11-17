@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace CodeColoring
 {
+    public enum LanguageUnit
+    {
+        Symbols,
+        FunctionDefinition,
+        Variable = default,
+        Function,
+        Operator
+    }
+
     public interface IProgrammingLanguage
     {
         public abstract ParsingResult Parse(string text);
