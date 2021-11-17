@@ -12,7 +12,8 @@ namespace CodeColoring
         FunctionDefinition,
         Variable = default,
         Function,
-        Operator
+        Operator,
+        Whitespace
     }
 
     public interface IProgrammingLanguage
