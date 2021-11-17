@@ -9,27 +9,27 @@ namespace CodeColoring
 {
     public class Colorizer : ColorPalette
     {
-        public static ColoringResult Colorize(ParsingResult parseResult, ColorPalette palette)
+        public static ColoringResult Colorize(ParseUnit[] parseResult, ColorPalette palette)
         {
             var result = new ColoringResult();
-            foreach (var arg in parseResult.Result)
+            foreach (var arg in parseResult)
             {
-                switch (arg.LanguageUnit)
+                switch (arg.Unit)
                 {
                     case LanguageUnit.Function:
-                        result.Add(new ColorizedArgument(palette.FunctionColor, arg.arg));
+                        result.Add(new ColorizedArgument(palette.FunctionColor, arg.Symbol));
                         break;
                     case LanguageUnit.FunctionDefinition:
-                        result.Add(new ColorizedArgument(palette.FunctionDefinitionColor, arg.arg));
+                        result.Add(new ColorizedArgument(palette.FunctionDefinitionColor, arg.Symbol));
                         break;
                     case LanguageUnit.Operator:
-                        result.Add(new ColorizedArgument(palette.OperatorColor, arg.arg));
+                        result.Add(new ColorizedArgument(palette.OperatorColor, arg.Symbol));
                         break;
                     case LanguageUnit.Symbols:
-                        result.Add(new ColorizedArgument(palette.SymbolColor, arg.arg));
+                        result.Add(new ColorizedArgument(palette.SymbolColor, arg.Symbol));
                         break;
                     case LanguageUnit.Variable:
-                        result.Add(new ColorizedArgument(palette.VariableColor, arg.arg));
+                        result.Add(new ColorizedArgument(palette.VariableColor, arg.Symbol));
                         break;
                 }
             }

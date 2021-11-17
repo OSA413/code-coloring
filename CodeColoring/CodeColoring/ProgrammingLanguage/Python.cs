@@ -1,65 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Castle.Core.Internal;
 
 namespace CodeColoring
 {
     public class Python : IProgrammingLanguage
     {
-        public ParsingResult Parse(string text)
+        public ParseUnit[] Parse(string text)
         {
-            throw new NotImplementedException();
-        }
-        
-        public LanguageUnit GetUnit(string arg) //нужно предыдущее, текущее и следующее слово-знак
-        {
-            
-
-            foreach (var (arr, languageUnit) in UnitCheck())
+            var result = new List<ParseUnit>();
+            var strBuilder = new StringBuilder();
+            foreach (var value in text)
             {
-                if (languageUnit == LanguageUnit.Function)
+                if (UnitCheck()[LanguageUnit.Function].Contains(value.ToString()))
                 {
-                    foreach (var key in arr)
+                    result.Add(new ParseUnit(LanguageUnit.Symbols, value.ToString()));
+                    result.Add(new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
+                    strBuilder = new StringBuilder();
+                }
+                else if(value == ' ')
+                {
+                    result.Add(new ParseUnit(LanguageUnit.Whitespace, value.ToString()));
+                    
+                    if(UnitCheck()[LanguageUnit.FunctionDefinition].Contains(strBuilder.ToString()))
                     {
-                        if(arg.Contains(key))
-                            return languageUnit;
+                        result.Add(new ParseUnit(LanguageUnit.FunctionDefinition, strBuilder.ToString()));
                     }
+                    else if (UnitCheck()[LanguageUnit.Operator].Contains(strBuilder.ToString()))
+                    {
+                        result.Add(new ParseUnit(LanguageUnit.Operator, strBuilder.ToString()));
+                    }
+                    else
+                    {
+                        result.Add(new ParseUnit(LanguageUnit.Variable, strBuilder.ToString()));
+                    }
+
+                    strBuilder = new StringBuilder();
+                }
+
+                else if (UnitCheck()[LanguageUnit.Symbols].Contains(value.ToString()))
+                {
+                    result.Add(new ParseUnit(LanguageUnit.Symbols, value.ToString()));
+                    result.Add(new ParseUnit(LanguageUnit.Variable, strBuilder.ToString()));
+                    strBuilder = new StringBuilder();
                 }
                 else
                 {
-                    if(arr.Contains(arg))
-                        return languageUnit;
+                    strBuilder.Append(value);
                 }
             }
 
-            return LanguageUnit.Variable;
+            return result.Where(unit => !unit.Symbol.IsNullOrEmpty()).ToArray();
         }
 
         public string[] Extensions() => new[] {".py", ".ipynb"};
         
 
-        public Dictionary<string[], LanguageUnit> UnitCheck() => new()
+        public Dictionary<LanguageUnit,string[]> UnitCheck() => new()
         {
             {
-                new[] {"def", "class"}, 
-                LanguageUnit.FunctionDefinition //переименовать
+                LanguageUnit.FunctionDefinition,
+                new[] {"def", "class"}//переименовать
             },
             {
+                
+                LanguageUnit.Operator,
                 new[]
                 {
                     "if", "else", "elif", "print", "for", "while", "pass", "break", "continue", "return", "yield",
                     "global", "nonlocal", "import", "from", "class", "try", "except", "finally", "raise", "assert",
                     "with", "as", "del"
-                },
-                LanguageUnit.Operator
+                }
             },
             {
-                new []{"(", "."}, //TODO нужно отдавать следующий символ после последней буквы
-                LanguageUnit.Function
+                LanguageUnit.Function,
+                new []{"(", "."} 
+                
             },
             {
-                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "("},
-                LanguageUnit.Symbols
+                LanguageUnit.Symbols,
+                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "("}
+                
             }
         };
     }

@@ -19,14 +19,21 @@ namespace CodeColoring
 
     public interface IProgrammingLanguage
     {
-        public abstract ParsingResult Parse(string text);
-        public abstract LanguageUnit GetUnit(string arg);
+        public abstract ParseUnit[] Parse(string text);
         public abstract string[] Extensions();
-        public abstract Dictionary<string[], LanguageUnit> UnitCheck();
+        public abstract Dictionary<LanguageUnit, string[] > UnitCheck();
     }
 
-    public class ParsingResult
+    
+    public struct ParseUnit
     {
-        public List<(string arg, LanguageUnit LanguageUnit)> Result;
+        public string Symbol;
+        public LanguageUnit Unit;
+
+        public ParseUnit(LanguageUnit unit, string symbol)
+        {
+            Unit = unit;
+            Symbol = symbol;
+        }
     }
 }
