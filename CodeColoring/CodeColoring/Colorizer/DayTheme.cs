@@ -6,14 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodeColoring
 {
-    public abstract class ProgrammingLanguage
+    public class DayTheme: ColorPalette
     {
-        public abstract ParseResult Parse(string text);
-    }
-
-    public class ParseResult
-    {
-        
-
     }
 }

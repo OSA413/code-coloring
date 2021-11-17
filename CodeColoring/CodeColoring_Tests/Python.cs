@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeColoring
+namespace CodeColoring_Tests
 {
-    public class OutputFormat
+    class Python
     {
+
     }
 }

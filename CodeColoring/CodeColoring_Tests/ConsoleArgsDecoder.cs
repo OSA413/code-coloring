@@ -1,19 +1,50 @@
-using NUnit.Framework;
 using CodeColoring;
+
+using System.Linq;
+using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace CodeColoring_Tests
 {
     public class Tests
     {
         ConsoleArgsDecoder decoder = new ConsoleArgsDecoder();
+        Randomizer randomizer = new Randomizer();
+        Parameters parameters;
+        
+        public class Parameters
+        {
+            public string[][] Params;
+            public string Input;
+            public string Output;
+            public Parameters(string input, string output)
+            {
+                Input = input;
+                Output = output;
+                Params = new[] { new[] { "-c", "DayTheme" }, new[] { "-i", input }
+                , new[] { "-f", "HTML" }, new[] { "-l", "Python" }, new[] { output } };
+            }
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            parameters = new Parameters(randomizer.GetString(), randomizer.GetString());
+        }
+
+        void CheckType(object expected, object actual)
+        {
+            if (expected == null) Assert.IsNull(actual);
+            else Assert.IsInstanceOf(expected.GetType(), actual);
+        }
 
         void AreEqual(DecodedArguments expected, DecodedArguments actual)
         {
-            Assert.AreEqual(expected.ColorPalette, actual.ColorPalette);
+            CheckType(expected.ColorPalette, actual.ColorPalette);
             Assert.AreEqual(expected.InputFilePath, actual.InputFilePath);
             Assert.AreEqual(expected.OutputFilePath, actual.OutputFilePath);
-            Assert.AreEqual(expected.OutputFormat, actual.OutputFormat);
-            Assert.AreEqual(expected.ProgrammingLanguage, actual.ProgrammingLanguage);
+            CheckType(expected.OutputFormat, actual.OutputFormat);
+            CheckType(expected.ProgrammingLanguage, actual.ProgrammingLanguage);
         }
 
         [Test]
@@ -29,20 +60,16 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_ColorPalette()
         {
-            Assert.Fail();
-            /*
-            var arg = "D:\\nfrinfweio\\dsadasdas";
-            DecodedArguments result = decoder.Decode(new string[] { "-i", arg });
-            var expected = new DecodedArguments() { ColorPalette = arg };
+            DecodedArguments result = decoder.Decode(new string[] { "-c", "DayTheme" });
+            var expected = new DecodedArguments() { ColorPalette = new DayTheme() };
             AreEqual(expected, result);
-            */
         }
 
         [Test]
         [Repeat(5)]
         public void OnlyOneParam_InputFilePath()
         {
-            var arg = "D:\\nfrinfweio\\dsadasdas";
+            var arg = randomizer.GetString();
             DecodedArguments result = decoder.Decode(new string[] { "-i", arg });
             var expected = new DecodedArguments() { InputFilePath = arg };
             AreEqual(expected, result);
@@ -52,7 +79,7 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_OutputFilePath()
         {
-            var arg = "D:\\nfrinfweio\\dsadasdas";
+            var arg = randomizer.GetString();
             DecodedArguments result = decoder.Decode(new string[] { arg });
             var expected = new DecodedArguments() { OutputFilePath = arg };
             AreEqual(expected, result);
@@ -62,26 +89,18 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_OutputFormat()
         {
-            Assert.Fail();
-            /*
-            var arg = "D:\\nfrinfweio\\dsadasdas";
-            DecodedArguments result = decoder.Decode(new string[] { "-f", arg });
-            var expected = new DecodedArguments() { OutputFormat = arg };
+            DecodedArguments result = decoder.Decode(new string[] { "-f", "HTML" });
+            var expected = new DecodedArguments() { OutputFormat = new HTML() };
             AreEqual(expected, result);
-            */
         }
 
         [Test]
         [Repeat(5)]
         public void OnlyOneParam_ProgrammingLanguage()
         {
-            Assert.Fail();
-            /*
-            var arg = "D:\\nfrinfweio\\dsadasdas";
-            DecodedArguments result = decoder.Decode(new string[] { "-l", arg });
-            var expected = new DecodedArguments() { ProgrammingLanguage = arg };
+            DecodedArguments result = decoder.Decode(new string[] { "-l", "Python" });
+            var expected = new DecodedArguments() { ProgrammingLanguage = new Python() };
             AreEqual(expected, result);
-            */
         }
 
 
@@ -90,23 +109,35 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void AllParams()
         {
-            Assert.Fail();
-            /*
-            var arg = "D:\\nfrinfweio\\dsadasdas";
-            DecodedArguments result = decoder.Decode(new string[] { "-l", arg });
+            var input = randomizer.GetString();
+            var output = randomizer.GetString();
+            DecodedArguments result = decoder.Decode(new string[] { "-c", "DayTheme", "-i", input, "-f", "HTML", "-l", "Python", output });
             var expected = new DecodedArguments()
             {
-                ProgrammingLanguage = arg
+                ColorPalette = new DayTheme(),
+                InputFilePath = input,
+                OutputFilePath = output,
+                OutputFormat = new HTML(),
+                ProgrammingLanguage = new Python()
             };
             AreEqual(expected, result);
-            */
         }
 
         [Test]
         [Repeat(250)]
         public void AllParamsRandomOrder()
         {
-            Assert.Fail();
+            var args = parameters.Params.OrderBy(x => randomizer.Next()).SelectMany(x => x).ToArray();
+            DecodedArguments result = decoder.Decode(args);
+            var expected = new DecodedArguments()
+            {
+                ColorPalette = new DayTheme(),
+                InputFilePath = parameters.Input,
+                OutputFilePath = parameters.Output,
+                OutputFormat = new HTML(),
+                ProgrammingLanguage = new Python()
+            };
+            AreEqual(expected, result);
         }
     }
 }

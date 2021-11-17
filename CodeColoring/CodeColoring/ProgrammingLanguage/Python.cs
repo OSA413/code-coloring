@@ -4,8 +4,12 @@ using System.Linq;
 
 namespace CodeColoring
 {
-    public class Python : ILanguage
+    public class Python : IProgrammingLanguage
     {
+        public ParsingResult Parse(string text)
+        {
+            throw new NotImplementedException();
+        }
         
         public LanguageUnit GetUnit(string arg) //нужно предыдущее, текущее и следующее слово-знак
         {

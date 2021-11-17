@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace CodeColoring
 {
-    public enum LanguageUnit
+    public class HTML : IOutputFormat
     {
-        Symbols ,
-        FunctionDefinition,
-        Variable = default,
-        Function,
-        Operator
-        
+        public string Format(ColoringResult cr)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

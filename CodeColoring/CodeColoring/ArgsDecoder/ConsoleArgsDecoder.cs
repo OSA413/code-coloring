@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Ninject;
 
 namespace CodeColoring
 {
@@ -30,11 +27,16 @@ namespace CodeColoring
                     HandleOutputFilePath(arg);
             }
 
-            private void HandleColor(string arg) => throw new NotImplementedException();
-            private void HandleInputFilePath(string arg) => decoded.InputFilePath = arg;
-            private void HandleOutputFormat(string arg) => throw new NotImplementedException();
-            private void HandleProgrammingLanguage(string arg) => throw new NotImplementedException();
-            private void HandleOutputFilePath(string arg) => decoded.OutputFilePath = arg;
+            private void HandleColor(string arg) =>
+                decoded.ColorPalette = Repository.Kernel.Get<ColorPalette>(arg);
+            private void HandleInputFilePath(string arg) =>
+                decoded.InputFilePath = arg;
+            private void HandleOutputFormat(string arg) =>
+                decoded.OutputFormat = Repository.Kernel.Get<IOutputFormat>(arg);
+            private void HandleProgrammingLanguage(string arg) =>
+                decoded.ProgrammingLanguage = Repository.Kernel.Get<IProgrammingLanguage>(arg);
+            private void HandleOutputFilePath(string arg) =>
+                decoded.OutputFilePath = arg;
 
             private bool IsKey(string arg)
             {
@@ -67,7 +69,6 @@ namespace CodeColoring
                 assigner.Process(arg);
 
             return result;
-            //массив ILanguage и смотрим по всем им расширения для поиска нужного по файлу. передаем же файл?
         }
     }
 }
