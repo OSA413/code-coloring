@@ -6,7 +6,7 @@ using NUnit.Framework.Internal;
 
 namespace CodeColoring_Tests
 {
-    public class Tests
+    public class ConsoleArgsDecoder_Tests
     {
         ConsoleArgsDecoder decoder = new ConsoleArgsDecoder();
         Randomizer randomizer = new Randomizer();

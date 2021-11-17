@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodeColoring_Tests
 {
-    class Python_Tests
+    class HTML_Tests
     {
-
     }
 }
