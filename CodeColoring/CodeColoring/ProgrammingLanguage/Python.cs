@@ -16,7 +16,7 @@ namespace CodeColoring
             {
                 if (UnitCheck()[LanguageUnit.Function].Contains(value.ToString()))
                 {
-                    result.Add(new ParseUnit(LanguageUnit.Symbols, value.ToString()));
+                    result.Add(new ParseUnit(LanguageUnit.Symbol, value.ToString()));
                     result.Add(new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
                     strBuilder = new StringBuilder();
                 }
@@ -40,9 +40,9 @@ namespace CodeColoring
                     strBuilder = new StringBuilder();
                 }
 
-                else if (UnitCheck()[LanguageUnit.Symbols].Contains(value.ToString()))
+                else if (UnitCheck()[LanguageUnit.Symbol].Contains(value.ToString()))
                 {
-                    result.Add(new ParseUnit(LanguageUnit.Symbols, value.ToString()));
+                    result.Add(new ParseUnit(LanguageUnit.Symbol, value.ToString()));
                     result.Add(new ParseUnit(LanguageUnit.Variable, strBuilder.ToString()));
                     strBuilder = new StringBuilder();
                 }
@@ -80,7 +80,7 @@ namespace CodeColoring
                 
             },
             {
-                LanguageUnit.Symbols,
+                LanguageUnit.Symbol,
                 new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "("}
                 
             }
