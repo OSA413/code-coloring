@@ -12,19 +12,25 @@ namespace CodeColoring
         {
             var result = new List<ParseUnit>();
             var strBuilder = new StringBuilder();
-            foreach (var value in text)
+            for (var index = 0; index < text.Length; index++)
             {
+                var value = text[index];
                 if (UnitCheck()[LanguageUnit.Function].Contains(value.ToString()))
                 {
-                    result.Add(new ParseUnit(LanguageUnit.Symbol, value.ToString()));
                     result.Add(new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
+                    result.Add(new ParseUnit(LanguageUnit.Symbol, value.ToString()));
                     strBuilder = new StringBuilder();
                 }
-                else if(value == ' ')
+                else if (strBuilder.Length > 0 &&
+                         (value == '\"' && strBuilder[0] == '\"' || value == '\'' && strBuilder[0] == '\''))
                 {
-                    result.Add(new ParseUnit(LanguageUnit.Whitespace, value.ToString()));
-                    
-                    if(UnitCheck()[LanguageUnit.FunctionDefinition].Contains(strBuilder.ToString()))
+                    strBuilder.Append(value);
+                    result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
+                    strBuilder = new StringBuilder();
+                }
+                else if (UnitCheck()[LanguageUnit.Whitespace].Contains(value.ToString()))
+                {
+                    if (UnitCheck()[LanguageUnit.FunctionDefinition].Contains(strBuilder.ToString()))
                     {
                         result.Add(new ParseUnit(LanguageUnit.FunctionDefinition, strBuilder.ToString()));
                     }
@@ -34,22 +40,51 @@ namespace CodeColoring
                     }
                     else
                     {
-                        result.Add(new ParseUnit(LanguageUnit.Variable, strBuilder.ToString()));
+                        if (strBuilder.Length > 0 && int.TryParse(strBuilder[0].ToString(), out _))
+                        {
+                            result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
+                        }
+                        else
+                        {
+                            result.Add(new ParseUnit(LanguageUnit.Variable, strBuilder.ToString()));
+                        }
                     }
 
+                    result.Add(new ParseUnit(LanguageUnit.Whitespace, value.ToString()));
                     strBuilder = new StringBuilder();
                 }
 
                 else if (UnitCheck()[LanguageUnit.Symbol].Contains(value.ToString()))
                 {
+                    if (strBuilder.Length > 0 && int.TryParse(strBuilder[0].ToString(), out _))
+                    {
+                        result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
+                    }
+                    else
+                    {
+                        result.Add(new ParseUnit(LanguageUnit.Variable, strBuilder.ToString()));
+                    }
+
                     result.Add(new ParseUnit(LanguageUnit.Symbol, value.ToString()));
-                    result.Add(new ParseUnit(LanguageUnit.Variable, strBuilder.ToString()));
                     strBuilder = new StringBuilder();
                 }
+                
                 else
                 {
                     strBuilder.Append(value);
+                    if (index != text.Length - 1) continue;
+                    if (strBuilder.Length > 0 && int.TryParse(strBuilder[0].ToString(), out _))
+                    {
+                        result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
+                    }
+                    else
+                    {
+                        result.Add(new ParseUnit(LanguageUnit.Variable, strBuilder.ToString()));
+                    }
+
                 }
+
+                
             }
 
             return result.Where(unit => !unit.Symbol.IsNullOrEmpty()).ToArray();
@@ -81,8 +116,12 @@ namespace CodeColoring
             },
             {
                 LanguageUnit.Symbol,
-                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "("}
+                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "(", ";", "\\", "/", ":"}
                 
+            },
+            {
+                LanguageUnit.Whitespace,
+                new []{" ", "\n", "\r", "\t"}
             }
         };
     }
