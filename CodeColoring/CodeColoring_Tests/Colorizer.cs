@@ -12,6 +12,8 @@ namespace CodeColoring_Tests
 {
     class Colorizer_Tests
     {
+        Randomizer randomizer = new();
+
         ParseUnit[] testParseUnits =
         {
             new ParseUnit(LanguageUnit.Function, "testFunc"),
@@ -51,6 +53,7 @@ namespace CodeColoring_Tests
         }
 
         [Test]
+        [Repeat(5)]
         public void OneArgColorization()
         {
             var oneArgArray = new ParseUnit[] { new ParseUnit(LanguageUnit.Function, "testFunc") };
@@ -61,6 +64,7 @@ namespace CodeColoring_Tests
         }
 
         [Test]
+        [Repeat(5)]
         public void AllArgsColorization()
         {
             var actual = Colorizer.Colorize(testParseUnits, dayTheme);
@@ -68,29 +72,20 @@ namespace CodeColoring_Tests
         }
 
         [Test]
-        [Repeat(25)]
+        [Repeat(250)]
         public void RandomArgsColorization()
         {
-            Randomizer randomizer = new Randomizer();
             var randomizedArgs = allColorizedUnits.OrderBy(x => randomizer.Next()).ToArray();
             var randomizedParseUnits = new List<ParseUnit>();
             var expectedResult = new ColoringResult();
             foreach (var arg in randomizedArgs)
             {
-                var randomString = RandomString(5);
+                var randomString = randomizer.GetString(5);
                 randomizedParseUnits.Add(new ParseUnit(arg, randomString));
                 expectedResult.Add(new ColorizedArgument(dayThemeColorToUnitMap[arg], randomString));
             }
             var actual = Colorizer.Colorize(randomizedParseUnits.ToArray(), dayTheme);
             Assert.IsTrue(ColoringResultsAreEqual(expectedResult, actual));
-        }
-
-        string RandomString(int length)
-        {
-            var random = new Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         bool ColorizedArgumentsAreEqual(ColorizedArgument first, ColorizedArgument second)
@@ -101,17 +96,11 @@ namespace CodeColoring_Tests
         bool ColoringResultsAreEqual(ColoringResult first, ColoringResult second)
         {
             if (first.Result.Count != second.Result.Count)
-            {
                 return false;
-            }
 
             for (var i = 0; i < first.Result.Count; i++)
-            {
                 if (!ColorizedArgumentsAreEqual(first.Result[i], second.Result[i]))
-                {
                     return false;
-                }
-            }
 
             return true;
         }
