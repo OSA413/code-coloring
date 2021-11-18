@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using NUnit.Framework;
 
 using CodeColoring;
@@ -52,6 +53,7 @@ namespace CodeColoring_Tests
                 (" ", LanguageUnit.Whitespace),
                 ("5", LanguageUnit.Value),
                 ("\n", LanguageUnit.Whitespace),
+                (" ", LanguageUnit.Whitespace),
                 ("print", LanguageUnit.Function),
                 ("(", LanguageUnit.Symbol),
                 ("x", LanguageUnit.Variable),
