@@ -1,1 +1,1 @@
-CodeSamples/*.py linguist-vendored
+CodeSamples/**/*.py linguist-vendored
