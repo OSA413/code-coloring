@@ -1,6 +1,9 @@
 using CodeColoring;
 
 using System.Linq;
+using CodeColoring.ArgsDecoder;
+using CodeColoring.Colorizer;
+using CodeColoring.OutputFormat;
 using CodeColoring.ProgrammingLanguage;
 using NUnit.Framework;
 using NUnit.Framework.Internal;

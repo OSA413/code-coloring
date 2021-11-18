@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace CodeColoring
+namespace CodeColoring.Colorizer
 {
     public abstract class ColorPalette
     {
