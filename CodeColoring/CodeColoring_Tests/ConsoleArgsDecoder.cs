@@ -12,8 +12,8 @@ namespace CodeColoring_Tests
 {
     public class ConsoleArgsDecoder_Tests
     {
-        ConsoleArgsDecoder decoder = new ConsoleArgsDecoder();
-        Randomizer randomizer = new Randomizer();
+        ConsoleArgsDecoder decoder = new();
+        Randomizer randomizer = new();
         Parameters parameters;
         
         public class Parameters

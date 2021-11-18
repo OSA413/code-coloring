@@ -7,6 +7,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CodeColoring.Colorizer;
+using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring_Tests
 {
@@ -16,11 +18,11 @@ namespace CodeColoring_Tests
 
         ParseUnit[] testParseUnits =
         {
-            new ParseUnit(LanguageUnit.Function, "testFunc"),
-            new ParseUnit(LanguageUnit.FunctionDefinition, "testDef"),
-            new ParseUnit(LanguageUnit.Operator, "testOper"),
-            new ParseUnit(LanguageUnit.Symbol, "testSymb"),
-            new ParseUnit(LanguageUnit.Variable, "testVariable")
+            new(LanguageUnit.Function, "testFunc"),
+            new(LanguageUnit.FunctionDefinition, "testDef"),
+            new(LanguageUnit.Operator, "testOper"),
+            new(LanguageUnit.Symbol, "testSymb"),
+            new(LanguageUnit.Variable, "testVariable")
         };
         ColoringResult testResults = new();
         DayTheme dayTheme = new();
@@ -32,11 +34,11 @@ namespace CodeColoring_Tests
         {
             testResults.Result = new List<ColorizedArgument>
             {
-                new ColorizedArgument(dayTheme.FunctionColor, "testFunc"),
-                new ColorizedArgument(dayTheme.FunctionDefinitionColor, "testDef"),
-                new ColorizedArgument(dayTheme.OperatorColor, "testOper"),
-                new ColorizedArgument(dayTheme.SymbolColor, "testSymb"),
-                new ColorizedArgument(dayTheme.VariableColor, "testVariable")
+                new(dayTheme.FunctionColor, "testFunc"),
+                new(dayTheme.FunctionDefinitionColor, "testDef"),
+                new(dayTheme.OperatorColor, "testOper"),
+                new(dayTheme.SymbolColor, "testSymb"),
+                new(dayTheme.VariableColor, "testVariable")
             };
             dayThemeColorToUnitMap = new Dictionary<LanguageUnit, Color>
             {
@@ -56,7 +58,7 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OneArgColorization()
         {
-            var oneArgArray = new ParseUnit[] { new ParseUnit(LanguageUnit.Function, "testFunc") };
+            var oneArgArray = new ParseUnit[] { new(LanguageUnit.Function, "testFunc") };
             var actual = Colorizer.Colorize(oneArgArray, dayTheme);
             var expected = new ColoringResult();
             expected.Add(new ColorizedArgument(dayTheme.FunctionColor, "testFunc"));

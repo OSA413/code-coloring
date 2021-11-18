@@ -36,7 +36,7 @@ namespace CodeColoring.Colorizer
 
     public class ColoringResult
     {
-        public List<ColorizedArgument> Result = new List<ColorizedArgument>();
+        public List<ColorizedArgument> Result = new();
         public void Add(ColorizedArgument a) => Result.Add(a);
     }
 
