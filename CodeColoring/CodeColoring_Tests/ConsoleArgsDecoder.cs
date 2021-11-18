@@ -1,6 +1,7 @@
 using CodeColoring;
 
 using System.Linq;
+using CodeColoring.ProgrammingLanguage;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 

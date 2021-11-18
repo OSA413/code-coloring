@@ -20,16 +20,16 @@ namespace CodeColoring
 
     public interface IProgrammingLanguage
     {
-        public abstract ParseUnit[] Parse(string text);
-        public abstract string[] Extensions();
-        public abstract Dictionary<LanguageUnit, string[] > UnitCheck();
+        public ParseUnit[] Parse(string text);
+        public string[] Extensions(); //будем вообще это вызывать? Или другое определние языка
+       
     }
 
     
-    public struct ParseUnit
+    public readonly struct ParseUnit
     {
-        public string Symbol;
-        public LanguageUnit Unit;
+        public readonly string Symbol;
+        public readonly LanguageUnit Unit;
 
         public ParseUnit(LanguageUnit unit, string symbol)
         {

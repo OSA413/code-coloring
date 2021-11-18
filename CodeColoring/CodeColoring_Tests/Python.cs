@@ -7,6 +7,7 @@ using System.Xml;
 using NUnit.Framework;
 
 using CodeColoring;
+using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring_Tests
 {
