@@ -11,10 +11,35 @@ namespace CodeColoring.ProgrammingLanguage
         {
             var result = new List<ParseUnit>();
             var strBuilder = new StringBuilder();
+            var isComment = false;
             for (var index = 0; index < text.Length; index++)
             {
-                var value = text[index].ToString();
-                if (unitCheck[LanguageUnit.Function].Contains(value))
+                var value = text[index].ToString(); 
+                if (value == "#")
+                {
+                    strBuilder.Append(value);
+                    isComment = true;
+                }
+                else if(isComment)
+                {
+                    strBuilder.Append(value);
+                    if (value != "\n") continue;
+                    isComment = false;
+                    result.Add(new ParseUnit(LanguageUnit.Comment, strBuilder.ToString()));
+                    strBuilder = new StringBuilder();
+
+                }
+                
+                else if (unitCheck[LanguageUnit.Whitespace].Contains(value))
+                {
+                    
+                    
+                    result.Add(ChooseUnitWhereCurrentSymbolIsWhitSpace(strBuilder));
+                    
+                    result.Add(new ParseUnit(LanguageUnit.Whitespace, value));
+                    strBuilder = new StringBuilder();
+                }
+                else if (unitCheck[LanguageUnit.Function].Contains(value))
                 {
                     result.Add(unitCheck[LanguageUnit.Operator].Contains(strBuilder.ToString())
                         ? new ParseUnit(LanguageUnit.Operator, strBuilder.ToString())
@@ -22,12 +47,7 @@ namespace CodeColoring.ProgrammingLanguage
                     result.Add(new ParseUnit(LanguageUnit.Symbol, value));
                     strBuilder = new StringBuilder();
                 }
-                else if (unitCheck[LanguageUnit.Whitespace].Contains(value))
-                {
-                    result.Add(ChooseUnitWhereCurrentSymbolIsWhitSpace(strBuilder));
-                    result.Add(new ParseUnit(LanguageUnit.Whitespace, value));
-                    strBuilder = new StringBuilder();
-                }
+                
                 else if (unitCheck[LanguageUnit.Symbol].Contains(value))
                 {
                     result.Add(ChooseSymbolBetweenValueAndVariable(strBuilder));

@@ -9,7 +9,8 @@
         Function,
         Operator,
         Value,
-        Whitespace
+        Whitespace,
+        Comment
     }
 
     public interface IProgrammingLanguage

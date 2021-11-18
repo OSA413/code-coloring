@@ -107,5 +107,29 @@ namespace CodeColoring_Tests
             SameOutput(expected, python.Parse(input));
         }
         
+        [Test]
+        [Repeat(5)]
+        public void TestWithComment()
+        {
+            var input = "#hahah \nif x==5\n print(\"yes\")";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("#hahah \n", LanguageUnit.Comment),
+                ("if", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                ("=", LanguageUnit.Symbol),
+                ("=", LanguageUnit.Symbol),
+                ("5", LanguageUnit.Value),
+                ("\n", LanguageUnit.Whitespace),
+                (" ", LanguageUnit.Whitespace),
+                ("print", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                ("\"yes\"", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+        
     }
 }
