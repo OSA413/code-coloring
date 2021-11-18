@@ -1,5 +1,6 @@
 ﻿using CodeColoring;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -19,9 +20,10 @@ namespace CodeColoring_Tests
             new ParseUnit(LanguageUnit.Symbol, "testSymb"),
             new ParseUnit(LanguageUnit.Variable, "testVariable")
         };
-        ColoringResult testResults;
-        DayTheme dayTheme = new DayTheme();
+        ColoringResult testResults = new();
+        DayTheme dayTheme = new();
         Dictionary<LanguageUnit, Color> dayThemeColorToUnitMap;
+        LanguageUnit[] allColorizedUnits;
 
         [SetUp]
         public void SetUp()
@@ -30,9 +32,9 @@ namespace CodeColoring_Tests
             {
                 new ColorizedArgument(dayTheme.FunctionColor, "testFunc"),
                 new ColorizedArgument(dayTheme.FunctionDefinitionColor, "testDef"),
-                new ColorizedArgument(dayTheme.FunctionDefinitionColor, "testOper"),
-                new ColorizedArgument(dayTheme.FunctionDefinitionColor, "testSymb"),
-                new ColorizedArgument(dayTheme.FunctionDefinitionColor, "testVariable")
+                new ColorizedArgument(dayTheme.OperatorColor, "testOper"),
+                new ColorizedArgument(dayTheme.SymbolColor, "testSymb"),
+                new ColorizedArgument(dayTheme.VariableColor, "testVariable")
             };
             dayThemeColorToUnitMap = new Dictionary<LanguageUnit, Color>
             {
@@ -41,6 +43,10 @@ namespace CodeColoring_Tests
                 { LanguageUnit.Operator, dayTheme.OperatorColor},
                 { LanguageUnit.Symbol, dayTheme.SymbolColor},
                 { LanguageUnit.Variable, dayTheme.VariableColor}
+            };
+            allColorizedUnits = new LanguageUnit[]
+            {
+                LanguageUnit.Function, LanguageUnit.FunctionDefinition, LanguageUnit.Operator, LanguageUnit.Symbol, LanguageUnit.Variable
             };
         }
 
@@ -59,6 +65,24 @@ namespace CodeColoring_Tests
         {
             var actual = Colorizer.Colorize(testParseUnits, dayTheme);
             Assert.IsTrue(ColoringResultsAreEqual(actual, testResults));
+        }
+
+        [Test]
+        [Repeat(25)]
+        public void RandomArgsColorization()
+        {
+            Randomizer randomizer = new Randomizer();
+            var randomizedArgs = allColorizedUnits.OrderBy(x => randomizer.Next()).ToArray();
+            var randomizedParseUnits = new List<ParseUnit>();
+            var expectedResult = new ColoringResult();
+            foreach (var arg in randomizedArgs)
+            {
+                var randomString = RandomString(5);
+                randomizedParseUnits.Add(new ParseUnit(arg, randomString));
+                expectedResult.Add(new ColorizedArgument(dayThemeColorToUnitMap[arg], randomString));
+            }
+            var actual = Colorizer.Colorize(randomizedParseUnits.ToArray(), dayTheme);
+            Assert.IsTrue(ColoringResultsAreEqual(expectedResult, actual));
         }
 
         string RandomString(int length)
