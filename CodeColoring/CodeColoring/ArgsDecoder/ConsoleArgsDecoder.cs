@@ -5,7 +5,12 @@ namespace CodeColoring
 {
     public class ConsoleArgsDecoder : IArgsDecoder
     {
-        public string Help => "Usage example goes here";
+        public string Help => "Code Coloring\n\nAvailable parameters:"
+            + "\n\t-i, --input\tInput file path"
+            + "\n\t-l, --lang\tInput programming language"
+            + "\n\t-f, --format\tOutput format"
+            + "\n\t-c, --color\tOutput color palette"
+            + "\n\nUsage Example:\nCodeColoring -i D:\\main.py -c DayTheme -l Python -f HTML D:\\main.html";
 
         private class ArgumentAssigner
         {

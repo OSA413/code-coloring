@@ -1,5 +1,6 @@
 using CodeColoring;
 
+using System;
 using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -26,7 +27,7 @@ namespace CodeColoring_Tests
             }
         }
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             parameters = new Parameters(randomizer.GetString(), randomizer.GetString());
@@ -58,19 +59,19 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(5)]
-        public void OnlyOneParam_ColorPalette()
+        public void OnlyOneParam_ColorPalette([Values("-c", "--color")] string flag)
         {
-            DecodedArguments result = decoder.Decode(new string[] { "-c", "DayTheme" });
+            DecodedArguments result = decoder.Decode(new string[] { flag, "DayTheme" });
             var expected = new DecodedArguments() { ColorPalette = new DayTheme() };
             AreEqual(expected, result);
         }
 
         [Test]
         [Repeat(5)]
-        public void OnlyOneParam_InputFilePath()
+        public void OnlyOneParam_InputFilePath([Values("-i", "--input")] string flag)
         {
             var arg = randomizer.GetString();
-            DecodedArguments result = decoder.Decode(new string[] { "-i", arg });
+            DecodedArguments result = decoder.Decode(new string[] { flag, arg });
             var expected = new DecodedArguments() { InputFilePath = arg };
             AreEqual(expected, result);
         }
@@ -87,23 +88,34 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(5)]
-        public void OnlyOneParam_OutputFormat()
+        public void OnlyOneParam_OutputFormat([Values("-f", "--format")] string flag)
         {
-            DecodedArguments result = decoder.Decode(new string[] { "-f", "HTML" });
+            DecodedArguments result = decoder.Decode(new string[] { flag, "HTML" });
             var expected = new DecodedArguments() { OutputFormat = new HTML() };
             AreEqual(expected, result);
         }
 
         [Test]
         [Repeat(5)]
-        public void OnlyOneParam_ProgrammingLanguage()
+        public void OnlyOneParam_ProgrammingLanguage([Values("-l", "--lang")] string flag)
         {
-            DecodedArguments result = decoder.Decode(new string[] { "-l", "Python" });
+            DecodedArguments result = decoder.Decode(new string[] { flag, "Python" });
             var expected = new DecodedArguments() { ProgrammingLanguage = new Python() };
             AreEqual(expected, result);
         }
 
 
+        [Test]
+        [Repeat(5)]
+        [TestCase("-f", "--format")]
+        [TestCase("-l", "--lang")]
+        [TestCase("-c", "--color")]
+        [TestCase("-i", "--input")]
+        public void HelpContainsParameters(string shrt, string full)
+        {
+            Assert.IsTrue(decoder.Help.Contains(shrt), shrt);
+            Assert.IsTrue(decoder.Help.Contains(full), full);
+        }
 
         [Test]
         [Repeat(5)]
@@ -138,6 +150,16 @@ namespace CodeColoring_Tests
                 ProgrammingLanguage = new Python()
             };
             AreEqual(expected, result);
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void IncorrectParameterArgumentExceptionWithMessage()
+        {
+            var flag = "--" + randomizer.GetString(5);
+            Assert.IsTrue(
+                Assert.Throws<ArgumentException>(() => decoder.Decode(new string[] { flag }))
+                .Message.Contains(flag));
         }
     }
 }
