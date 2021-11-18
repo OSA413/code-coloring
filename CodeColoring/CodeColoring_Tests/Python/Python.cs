@@ -11,7 +11,7 @@ using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring_Tests
 {
-    class Python_Tests
+    partial class Python_Tests
     {
         public Python python = new();
 
@@ -131,6 +131,5 @@ namespace CodeColoring_Tests
             };
             SameOutput(expected, python.Parse(input));
         }
-        
     }
 }

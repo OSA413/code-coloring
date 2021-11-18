@@ -31,7 +31,7 @@ namespace CodeColoring_Tests
             }
         }
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUp()
         {
             parameters = new Parameters(randomizer.GetString(), randomizer.GetString());

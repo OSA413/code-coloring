@@ -29,7 +29,7 @@ namespace CodeColoring_Tests
         Dictionary<LanguageUnit, Color> dayThemeColorToUnitMap;
         LanguageUnit[] allColorizedUnits;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             testResults.Result = new List<ColorizedArgument>
@@ -77,7 +77,7 @@ namespace CodeColoring_Tests
         [Repeat(250)]
         public void RandomArgsColorization()
         {
-            var randomizedArgs = allColorizedUnits.OrderBy(x => randomizer.Next()).ToArray();
+            var randomizedArgs = allColorizedUnits.OrderBy(x => randomizer.Next());
             var randomizedParseUnits = new List<ParseUnit>();
             var expectedResult = new ColoringResult();
             foreach (var arg in randomizedArgs)
