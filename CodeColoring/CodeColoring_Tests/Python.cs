@@ -114,7 +114,8 @@ namespace CodeColoring_Tests
             var input = "#hahah \nif x==5\n print(\"yes\")";
             var expected = new List<(string arg, LanguageUnit LanguageUnit)>
             {
-                ("#hahah \n", LanguageUnit.Comment),
+                ("#hahah ", LanguageUnit.Comment),
+                ("\n", LanguageUnit.Whitespace),
                 ("if", LanguageUnit.Operator),
                 (" ", LanguageUnit.Whitespace),
                 ("x", LanguageUnit.Variable),

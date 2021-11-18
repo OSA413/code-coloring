@@ -22,11 +22,19 @@ namespace CodeColoring.ProgrammingLanguage
                 }
                 else if(isComment)
                 {
-                    strBuilder.Append(value);
-                    if (value != "\n") continue;
-                    isComment = false;
-                    result.Add(new ParseUnit(LanguageUnit.Comment, strBuilder.ToString()));
-                    strBuilder = new StringBuilder();
+                    
+                    if (value == "\n")
+                    {
+                        isComment = false;
+                        result.Add(new ParseUnit(LanguageUnit.Comment, strBuilder.ToString()));
+                        result.Add(new ParseUnit(LanguageUnit.Whitespace, value));
+                        strBuilder = new StringBuilder();
+                    }
+                    else
+                    {
+                        strBuilder.Append(value);
+                    }
+                    
 
                 }
                 
