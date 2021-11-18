@@ -16,7 +16,9 @@ namespace CodeColoring.ProgrammingLanguage
                 var value = text[index].ToString();
                 if (unitCheck[LanguageUnit.Function].Contains(value))
                 {
-                    result.Add(new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
+                    result.Add(unitCheck[LanguageUnit.Operator].Contains(strBuilder.ToString())
+                        ? new ParseUnit(LanguageUnit.Operator, strBuilder.ToString())
+                        : new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
                     result.Add(new ParseUnit(LanguageUnit.Symbol, value));
                     strBuilder = new StringBuilder();
                 }
@@ -71,7 +73,6 @@ namespace CodeColoring.ProgrammingLanguage
             {
                 return new ParseUnit(LanguageUnit.FunctionDefinition, builder.ToString());
             }
-
             if (unitCheck[LanguageUnit.Operator].Contains(builder.ToString()))
             {
                 return new ParseUnit(LanguageUnit.Operator, builder.ToString());
@@ -92,7 +93,7 @@ namespace CodeColoring.ProgrammingLanguage
                 LanguageUnit.Operator,
                 new[]
                 {
-                    "if", "else", "elif", "print", "for", "while", "pass", "break", "continue", "return", "yield",
+                    "if", "else", "elif", "for", "while", "pass", "break", "continue", "return", "yield",
                     "global", "nonlocal", "import", "from", "class", "try", "except", "finally", "raise", "assert",
                     "with", "as", "del"
                 }
