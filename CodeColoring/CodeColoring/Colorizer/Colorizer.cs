@@ -4,7 +4,7 @@ using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring.Colorizer
 {
-    public class Colorizer : ColorPalette
+    public class Colorizer
     {
         public static ColoringResult Colorize(ParseUnit[] parseResult, ColorPalette palette)
         {
