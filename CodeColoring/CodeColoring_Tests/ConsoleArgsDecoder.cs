@@ -2,6 +2,10 @@ using CodeColoring;
 
 using System;
 using System.Linq;
+using CodeColoring.ArgsDecoder;
+using CodeColoring.Colorizer;
+using CodeColoring.OutputFormat;
+using CodeColoring.ProgrammingLanguage;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
@@ -9,8 +13,8 @@ namespace CodeColoring_Tests
 {
     public class ConsoleArgsDecoder_Tests
     {
-        ConsoleArgsDecoder decoder = new ConsoleArgsDecoder();
-        Randomizer randomizer = new Randomizer();
+        ConsoleArgsDecoder decoder = new();
+        Randomizer randomizer = new();
         Parameters parameters;
         
         public class Parameters

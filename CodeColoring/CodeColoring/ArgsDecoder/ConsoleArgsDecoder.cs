@@ -1,7 +1,10 @@
 ﻿using System;
+using CodeColoring.Colorizer;
+using CodeColoring.OutputFormat;
+using CodeColoring.ProgrammingLanguage;
 using Ninject;
 
-namespace CodeColoring
+namespace CodeColoring.ArgsDecoder
 {
     public class ConsoleArgsDecoder : IArgsDecoder
     {

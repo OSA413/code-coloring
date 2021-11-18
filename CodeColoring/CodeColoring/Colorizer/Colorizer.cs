@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Drawing;
+using CodeColoring.ProgrammingLanguage;
 
-namespace CodeColoring
+namespace CodeColoring.Colorizer
 {
     public class Colorizer
     {
@@ -39,7 +36,7 @@ namespace CodeColoring
 
     public class ColoringResult
     {
-        public List<ColorizedArgument> Result = new List<ColorizedArgument>();
+        public List<ColorizedArgument> Result = new();
         public void Add(ColorizedArgument a) => Result.Add(a);
     }
 

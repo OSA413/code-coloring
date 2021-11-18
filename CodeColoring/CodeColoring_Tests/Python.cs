@@ -7,12 +7,13 @@ using System.Xml;
 using NUnit.Framework;
 
 using CodeColoring;
+using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring_Tests
 {
     class Python_Tests
     {
-        public Python python = new Python();
+        public Python python = new();
 
         private void SameOutput(List<(string arg, LanguageUnit LanguageUnit)> expected, ParseUnit[] actual)
         {

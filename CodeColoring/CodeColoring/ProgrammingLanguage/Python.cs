@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Castle.Core.Internal;
 
-namespace CodeColoring
+namespace CodeColoring.ProgrammingLanguage
 {
     public class Python : IProgrammingLanguage
     {
@@ -14,93 +13,82 @@ namespace CodeColoring
             var strBuilder = new StringBuilder();
             for (var index = 0; index < text.Length; index++)
             {
-                var value = text[index];
-                if (UnitCheck()[LanguageUnit.Function].Contains(value.ToString()))
+                var value = text[index].ToString();
+                if (unitCheck[LanguageUnit.Function].Contains(value))
                 {
                     result.Add(new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
-                    result.Add(new ParseUnit(LanguageUnit.Symbol, value.ToString()));
+                    result.Add(new ParseUnit(LanguageUnit.Symbol, value));
                     strBuilder = new StringBuilder();
                 }
-                else if (strBuilder.Length > 0 &&
-                         (value == '\"' && strBuilder[0] == '\"' || value == '\'' && strBuilder[0] == '\''))
+                else if (unitCheck[LanguageUnit.Whitespace].Contains(value))
+                {
+                    result.Add(ChooseUnitWhereCurrentSymbolIsWhitSpace(strBuilder));
+                    result.Add(new ParseUnit(LanguageUnit.Whitespace, value));
+                    strBuilder = new StringBuilder();
+                }
+                else if (unitCheck[LanguageUnit.Symbol].Contains(value))
+                {
+                    result.Add(ChooseSymbolBetweenValueAndVariable(strBuilder));
+                    result.Add(new ParseUnit(LanguageUnit.Symbol, value));
+                    strBuilder = new StringBuilder();
+                }
+                else if (IsStringOrCharType(strBuilder, value))
                 {
                     strBuilder.Append(value);
                     result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
                     strBuilder = new StringBuilder();
                 }
-                else if (UnitCheck()[LanguageUnit.Whitespace].Contains(value.ToString()))
-                {
-                    if (UnitCheck()[LanguageUnit.FunctionDefinition].Contains(strBuilder.ToString()))
-                    {
-                        result.Add(new ParseUnit(LanguageUnit.FunctionDefinition, strBuilder.ToString()));
-                    }
-                    else if (UnitCheck()[LanguageUnit.Operator].Contains(strBuilder.ToString()))
-                    {
-                        result.Add(new ParseUnit(LanguageUnit.Operator, strBuilder.ToString()));
-                    }
-                    else
-                    {
-                        if (strBuilder.Length > 0 && int.TryParse(strBuilder[0].ToString(), out _))
-                        {
-                            result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
-                        }
-                        else
-                        {
-                            result.Add(new ParseUnit(LanguageUnit.Variable, strBuilder.ToString()));
-                        }
-                    }
-
-                    result.Add(new ParseUnit(LanguageUnit.Whitespace, value.ToString()));
-                    strBuilder = new StringBuilder();
-                }
-
-                else if (UnitCheck()[LanguageUnit.Symbol].Contains(value.ToString()))
-                {
-                    if (strBuilder.Length > 0 && int.TryParse(strBuilder[0].ToString(), out _))
-                    {
-                        result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
-                    }
-                    else
-                    {
-                        result.Add(new ParseUnit(LanguageUnit.Variable, strBuilder.ToString()));
-                    }
-
-                    result.Add(new ParseUnit(LanguageUnit.Symbol, value.ToString()));
-                    strBuilder = new StringBuilder();
-                }
-                
                 else
                 {
                     strBuilder.Append(value);
                     if (index != text.Length - 1) continue;
-                    if (strBuilder.Length > 0 && int.TryParse(strBuilder[0].ToString(), out _))
-                    {
-                        result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
-                    }
-                    else
-                    {
-                        result.Add(new ParseUnit(LanguageUnit.Variable, strBuilder.ToString()));
-                    }
-
+                    result.Add(ChooseSymbolBetweenValueAndVariable(strBuilder));
                 }
-
-                
             }
 
             return result.Where(unit => !unit.Symbol.IsNullOrEmpty()).ToArray();
         }
 
-        public string[] Extensions() => new[] {".py", ".ipynb"};
-        
+        private static ParseUnit ChooseSymbolBetweenValueAndVariable(StringBuilder builder)
+        {
+            if (builder.Length > 0 && int.TryParse(builder[0].ToString(), out _))
+            {
+                return new ParseUnit(LanguageUnit.Value, builder.ToString());
+            }
 
-        public Dictionary<LanguageUnit,string[]> UnitCheck() => new()
+            return new ParseUnit(LanguageUnit.Variable, builder.ToString());
+        }
+
+        private static bool IsStringOrCharType(StringBuilder builder, string currentValue)
+        {
+            return builder.Length > 0 &&
+                   (currentValue == "\"" && builder[0] == '\"' || currentValue == "\'" && builder[0] == '\'');
+        }
+
+        private ParseUnit ChooseUnitWhereCurrentSymbolIsWhitSpace(StringBuilder builder)
+        {
+            if (unitCheck[LanguageUnit.FunctionDefinition].Contains(builder.ToString()))
+            {
+                return new ParseUnit(LanguageUnit.FunctionDefinition, builder.ToString());
+            }
+
+            if (unitCheck[LanguageUnit.Operator].Contains(builder.ToString()))
+            {
+                return new ParseUnit(LanguageUnit.Operator, builder.ToString());
+            }
+            return ChooseSymbolBetweenValueAndVariable(builder);
+        }
+
+        public string[] Extensions() => new[] {".py", ".ipynb"};
+
+
+        private readonly Dictionary<LanguageUnit, string[]> unitCheck = new()
         {
             {
                 LanguageUnit.FunctionDefinition,
-                new[] {"def", "class"}//переименовать
+                new[] {"def", "class"} //переименовать
             },
             {
-                
                 LanguageUnit.Operator,
                 new[]
                 {
@@ -111,17 +99,15 @@ namespace CodeColoring
             },
             {
                 LanguageUnit.Function,
-                new []{"(", "."} 
-                
+                new[] {"(", "."}
             },
             {
                 LanguageUnit.Symbol,
                 new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "(", ";", "\\", "/", ":"}
-                
             },
             {
                 LanguageUnit.Whitespace,
-                new []{" ", "\n", "\r", "\t"}
+                new[] {" ", "\n", "\r", "\t"}
             }
         };
     }
