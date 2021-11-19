@@ -59,12 +59,13 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(5)]
-        public void OneArgColorization()
+        public void OneArgColorization([Values] LanguageUnit arg)
         {
-            var oneArgArray = new ParseUnit[] { new(LanguageUnit.Function, "testFunc") };
+            var argName = randomizer.GetString(10);
+            var oneArgArray = new ParseUnit[] { new(arg, argName) };
             var actual = Colorizer.Colorize(oneArgArray, dayTheme);
             var expected = new ColoringResult();
-            expected.Add(new ColorizedArgument(dayTheme.FunctionColor, "testFunc"));
+            expected.Add(new ColorizedArgument(UnitToColorMap(arg, dayTheme), argName));
             Assert.AreEqual(expected.Result[0].ArgumentColor, actual.Result[0].ArgumentColor);
         }
 
