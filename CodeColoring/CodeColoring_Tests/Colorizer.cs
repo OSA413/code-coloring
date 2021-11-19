@@ -15,37 +15,7 @@ namespace CodeColoring_Tests
     class Colorizer_Tests
     {
         Randomizer randomizer = new();
-
-        ParseUnit[] testParseUnits =
-        {
-            new(LanguageUnit.Function, "testFunc"),
-            new(LanguageUnit.FunctionDefinition, "testDef"),
-            new(LanguageUnit.Operator, "testOper"),
-            new(LanguageUnit.Symbol, "testSymb"),
-            new(LanguageUnit.Variable, "testVariable"),
-            new(LanguageUnit.Comment, "testComment")
-        };
-        ColoringResult testResults = new();
-        DayTheme dayTheme = new();
-        LanguageUnit[] allColorizedUnits;
-
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            testResults.Result = new List<ColorizedArgument>
-            {
-                new(dayTheme.FunctionColor, "testFunc"),
-                new(dayTheme.FunctionDefinitionColor, "testDef"),
-                new(dayTheme.OperatorColor, "testOper"),
-                new(dayTheme.SymbolColor, "testSymb"),
-                new(dayTheme.VariableColor, "testVariable"),
-                new(dayTheme.CommentColor, "testComment")
-            };
-            allColorizedUnits = new LanguageUnit[]
-            {
-                LanguageUnit.Function, LanguageUnit.FunctionDefinition, LanguageUnit.Operator, LanguageUnit.Symbol, LanguageUnit.Variable, LanguageUnit.Comment
-            };
-        }
+        ColorPalette palette = new palette();
 
         [Test]
         [Repeat(5)]
@@ -60,9 +30,9 @@ namespace CodeColoring_Tests
         {
             var argName = randomizer.GetString(10);
             var oneArgArray = new ParseUnit[] { new(arg, argName) };
-            var actual = Colorizer.Colorize(oneArgArray, dayTheme);
+            var actual = Colorizer.Colorize(oneArgArray, palette);
             var expected = new ColoringResult();
-            expected.Add(new ColorizedArgument(UnitToColorMap(arg, dayTheme), argName));
+            expected.Add(new ColorizedArgument(UnitToColorMap(arg, palette), argName));
             Assert.AreEqual(expected.Result[0].ArgumentColor, actual.Result[0].ArgumentColor);
         }
 
@@ -74,8 +44,8 @@ namespace CodeColoring_Tests
             foreach (LanguageUnit unit in Enum.GetValues(typeof(LanguageUnit)))
                 data.Add((randomizer.GetString(10), unit));
 
-            var actual = Colorizer.Colorize(data.Select(x => new ParseUnit(x.unit, x.arg)).ToArray(), dayTheme);
-            ColoringResultsAreEqual(data.Select(x => (x.arg, UnitToColorMap(x.unit, dayTheme))).ToList(), actual);
+            var actual = Colorizer.Colorize(data.Select(x => new ParseUnit(x.unit, x.arg)).ToArray(), palette);
+            ColoringResultsAreEqual(data.Select(x => (x.arg, UnitToColorMap(x.unit, palette))).ToList(), actual);
         }
 
         [Test]
@@ -87,8 +57,8 @@ namespace CodeColoring_Tests
             for (int i = 0; i < range; i++)
                 data.Add((randomizer.GetString(15), randomizer.NextEnum<LanguageUnit>()));
             
-            var actual = Colorizer.Colorize(data.Select(x => new ParseUnit(x.unit, x.arg)).ToArray(), dayTheme);
-            ColoringResultsAreEqual(data.Select(x => (x.arg, UnitToColorMap(x.unit, dayTheme))).ToList(), actual);
+            var actual = Colorizer.Colorize(data.Select(x => new ParseUnit(x.unit, x.arg)).ToArray(), palette);
+            ColoringResultsAreEqual(data.Select(x => (x.arg, UnitToColorMap(x.unit, palette))).ToList(), actual);
         }
 
         void ColoringResultsAreEqual(List<(string arg, Color color)> expected, ColoringResult actual)
