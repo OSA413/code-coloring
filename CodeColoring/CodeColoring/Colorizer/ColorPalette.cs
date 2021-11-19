@@ -9,5 +9,6 @@ namespace CodeColoring.Colorizer
         public Color VariableColor { get; set; }
         public Color FunctionColor { get; set; }
         public Color OperatorColor { get; set; }
+        public Color CommentColor { get; set; }
     }
 }

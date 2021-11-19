@@ -22,7 +22,8 @@ namespace CodeColoring_Tests
             new(LanguageUnit.FunctionDefinition, "testDef"),
             new(LanguageUnit.Operator, "testOper"),
             new(LanguageUnit.Symbol, "testSymb"),
-            new(LanguageUnit.Variable, "testVariable")
+            new(LanguageUnit.Variable, "testVariable"),
+            new(LanguageUnit.Comment, "testComment")
         };
         ColoringResult testResults = new();
         DayTheme dayTheme = new();
@@ -38,7 +39,8 @@ namespace CodeColoring_Tests
                 new(dayTheme.FunctionDefinitionColor, "testDef"),
                 new(dayTheme.OperatorColor, "testOper"),
                 new(dayTheme.SymbolColor, "testSymb"),
-                new(dayTheme.VariableColor, "testVariable")
+                new(dayTheme.VariableColor, "testVariable"),
+                new(dayTheme.CommentColor, "testComment")
             };
             dayThemeColorToUnitMap = new Dictionary<LanguageUnit, Color>
             {
@@ -46,11 +48,12 @@ namespace CodeColoring_Tests
                 { LanguageUnit.FunctionDefinition, dayTheme.FunctionDefinitionColor},
                 { LanguageUnit.Operator, dayTheme.OperatorColor},
                 { LanguageUnit.Symbol, dayTheme.SymbolColor},
-                { LanguageUnit.Variable, dayTheme.VariableColor}
+                { LanguageUnit.Variable, dayTheme.VariableColor},
+                { LanguageUnit.Comment, dayTheme.CommentColor }
             };
             allColorizedUnits = new LanguageUnit[]
             {
-                LanguageUnit.Function, LanguageUnit.FunctionDefinition, LanguageUnit.Operator, LanguageUnit.Symbol, LanguageUnit.Variable
+                LanguageUnit.Function, LanguageUnit.FunctionDefinition, LanguageUnit.Operator, LanguageUnit.Symbol, LanguageUnit.Variable, LanguageUnit.Comment
             };
         }
 

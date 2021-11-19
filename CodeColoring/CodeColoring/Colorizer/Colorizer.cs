@@ -28,6 +28,9 @@ namespace CodeColoring.Colorizer
                     case LanguageUnit.Variable:
                         result.Add(new ColorizedArgument(palette.VariableColor, arg.Symbol));
                         break;
+                    case LanguageUnit.Comment:
+                        result.Add(new ColorizedArgument(palette.CommentColor, arg.Symbol));
+                        break;
                 }
             }
             return result;

@@ -11,6 +11,7 @@ namespace CodeColoring.Colorizer
             OperatorColor = Color.White;
             SymbolColor = Color.Orange;
             VariableColor = Color.LightBlue;
+            CommentColor = Color.Green;
         }
     }
 }
