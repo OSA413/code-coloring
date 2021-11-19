@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 
-using CodeColoring;
 using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring_Tests
 {
-    partial class Python_Tests
+    internal partial class Python_Tests
     {
-        public Python python = new();
+        private readonly Python python = new();
 
-        private void SameOutput(List<(string arg, LanguageUnit LanguageUnit)> expected, ParseUnit[] actual)
+        private static void SameOutput(List<(string arg, LanguageUnit LanguageUnit)> expected, ParseUnit[] actual)
         {
             Assert.AreEqual(expected.Count, actual.Length, "Expected different lengh");
-            for (int i = 0; i < expected.Count; i++)
+            for (var i = 0; i < expected.Count; i++)
             {
                 Assert.AreEqual(expected[i].arg, actual[i].Symbol, "Difference at index " + i);
                 Assert.AreEqual(expected[i].LanguageUnit, actual[i].Unit, "Different unit for [" + expected[i].arg + "]");

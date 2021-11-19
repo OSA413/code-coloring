@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CodeColoring.Colorizer;
 using CodeColoring.OutputFormat;
 using CodeColoring.ProgrammingLanguage;
@@ -17,8 +18,8 @@ namespace CodeColoring.ArgsDecoder
 
         private class ArgumentAssigner
         {
-            Action<string> action;
-            DecodedArguments decoded;
+            private Action<string> action;
+            private readonly DecodedArguments decoded;
 
             public ArgumentAssigner(DecodedArguments result) => decoded = result;
 
@@ -46,30 +47,36 @@ namespace CodeColoring.ArgsDecoder
             private void HandleOutputFilePath(string arg) =>
                 decoded.OutputFilePath = arg;
 
-            private bool IsKey(string arg)
+            private static bool IsKey(string arg)
             {
                 if (arg.StartsWith("-") && arg.Length == 2)
                     return true;
-                if (arg.StartsWith("--") && !arg.Contains(" "))
-                    return true;
-                return false;
+                return arg.StartsWith("--") && !arg.Contains(" ");
             }
 
             private Action<string> GetAction(string arg)
             {
-                if (arg == "-f" || arg == "--format")
-                    return HandleOutputFormat;
-                if (arg == "-i" || arg == "--input")
-                    return HandleInputFilePath;
-                if (arg == "-c" || arg == "--color")
-                    return HandleColor;
-                if (arg == "-l" || arg == "--lang")
-                    return HandleProgrammingLanguage;
-                throw new ArgumentException("Unknown argument: " + arg);
+                switch (arg)
+                {
+                    case "-f":
+                    case "--format":
+                        return HandleOutputFormat;
+                    case "-i":
+                    case "--input":
+                        return HandleInputFilePath;
+                    case "-c":
+                    case "--color":
+                        return HandleColor;
+                    case "-l":
+                    case "--lang":
+                        return HandleProgrammingLanguage;
+                    default:
+                        throw new ArgumentException("Unknown argument: " + arg);
+                }
             }
         }
 
-        public DecodedArguments Decode(string[] args)
+        public DecodedArguments Decode(IEnumerable<string> args)
         {
             var result = new DecodedArguments();
             var assigner = new ArgumentAssigner(result);

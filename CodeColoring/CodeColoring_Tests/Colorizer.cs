@@ -1,21 +1,18 @@
-﻿using CodeColoring;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using CodeColoring.Colorizer;
 using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring_Tests
 {
-    class Colorizer_Tests
+    internal class Colorizer_Tests
     {
-        Randomizer randomizer = new();
-        ColorPalette palette = new DayTheme();
+        private readonly Randomizer randomizer = new();
+        private readonly ColorPalette palette = new DayTheme();
 
         [Test]
         [Repeat(5)]
@@ -54,14 +51,14 @@ namespace CodeColoring_Tests
         {
             var range = randomizer.Next(50, 150);
             List<(string arg, LanguageUnit unit)> data = new();
-            for (int i = 0; i < range; i++)
+            for (var i = 0; i < range; i++)
                 data.Add((randomizer.GetString(15), randomizer.NextEnum<LanguageUnit>()));
             
             var actual = Colorizer.Colorize(data.Select(x => new ParseUnit(x.unit, x.arg)).ToArray(), palette);
             ColoringResultsAreEqual(data.Select(x => (x.arg, UnitToColorMap(x.unit, palette))).ToList(), actual);
         }
 
-        void ColoringResultsAreEqual(List<(string arg, Color color)> expected, ColoringResult actual)
+        private static void ColoringResultsAreEqual(List<(string arg, Color color)> expected, ColoringResult actual)
         {
             Assert.AreEqual(expected.Count, actual.Result.Count);
             for (var i = 0; i < expected.Count; i++)
@@ -71,21 +68,21 @@ namespace CodeColoring_Tests
             }
         }
 
-        Color UnitToColorMap(LanguageUnit languageUnit, ColorPalette palette)
+        private static Color UnitToColorMap(LanguageUnit languageUnit, ColorPalette palette)
         {
-            switch (languageUnit)
+            return languageUnit switch
             {
-                case LanguageUnit.Variable: return palette.VariableColor;
-                case LanguageUnit.Comment: return palette.CommentColor;
-                case LanguageUnit.Function: return palette.FunctionColor;
-                case LanguageUnit.FunctionDefinition: return palette.FunctionDefinitionColor;
-                case LanguageUnit.Operator: return palette.OperatorColor;
-                case LanguageUnit.Symbol: return palette.SymbolColor;
-                case LanguageUnit.Unknown: return palette.UnknownColor;
-                case LanguageUnit.Value: return palette.ValueColor;
-                case LanguageUnit.Whitespace: return palette.WhitespaceColor;
-            }
-            throw new ArgumentException("Color not found");
+                LanguageUnit.Variable => palette.VariableColor,
+                LanguageUnit.Comment => palette.CommentColor,
+                LanguageUnit.Function => palette.FunctionColor,
+                LanguageUnit.FunctionDefinition => palette.FunctionDefinitionColor,
+                LanguageUnit.Operator => palette.OperatorColor,
+                LanguageUnit.Symbol => palette.SymbolColor,
+                LanguageUnit.Unknown => palette.UnknownColor,
+                LanguageUnit.Value => palette.ValueColor,
+                LanguageUnit.Whitespace => palette.WhitespaceColor,
+                _ => throw new ArgumentOutOfRangeException(nameof(languageUnit), languageUnit, null)
+            };
         }
     }
 }

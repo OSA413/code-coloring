@@ -14,15 +14,14 @@ namespace CodeColoring.ProgrammingLanguage
             var isComment = false;
             for (var index = 0; index < text.Length; index++)
             {
-                var value = text[index].ToString(); 
+                var value = text[index].ToString();
                 if (value == "#")
                 {
                     strBuilder.Append(value);
                     isComment = true;
                 }
-                else if(isComment)
+                else if (isComment)
                 {
-                    
                     if (value == "\n")
                     {
                         isComment = false;
@@ -34,29 +33,23 @@ namespace CodeColoring.ProgrammingLanguage
                     {
                         strBuilder.Append(value);
                     }
-                    
-
                 }
-                
-                else if (unitCheck[LanguageUnit.Whitespace].Contains(value))
+                else if (units[LanguageUnit.Whitespace].Contains(value))
                 {
-                    
-                    
                     result.Add(ChooseUnitWhereCurrentSymbolIsWhitSpace(strBuilder));
-                    
                     result.Add(new ParseUnit(LanguageUnit.Whitespace, value));
                     strBuilder = new StringBuilder();
                 }
-                else if (unitCheck[LanguageUnit.Function].Contains(value))
+                else if (units[LanguageUnit.Function].Contains(value))
                 {
-                    result.Add(unitCheck[LanguageUnit.Operator].Contains(strBuilder.ToString())
+                    result.Add(units[LanguageUnit.Operator].Contains(strBuilder.ToString())
                         ? new ParseUnit(LanguageUnit.Operator, strBuilder.ToString())
                         : new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
                     result.Add(new ParseUnit(LanguageUnit.Symbol, value));
                     strBuilder = new StringBuilder();
                 }
-                
-                else if (unitCheck[LanguageUnit.Symbol].Contains(value))
+
+                else if (units[LanguageUnit.Symbol].Contains(value))
                 {
                     result.Add(ChooseSymbolBetweenValueAndVariable(strBuilder));
                     result.Add(new ParseUnit(LanguageUnit.Symbol, value));
@@ -97,21 +90,23 @@ namespace CodeColoring.ProgrammingLanguage
 
         private ParseUnit ChooseUnitWhereCurrentSymbolIsWhitSpace(StringBuilder builder)
         {
-            if (unitCheck[LanguageUnit.FunctionDefinition].Contains(builder.ToString()))
+            if (units[LanguageUnit.FunctionDefinition].Contains(builder.ToString()))
             {
                 return new ParseUnit(LanguageUnit.FunctionDefinition, builder.ToString());
             }
-            if (unitCheck[LanguageUnit.Operator].Contains(builder.ToString()))
+
+            if (units[LanguageUnit.Operator].Contains(builder.ToString()))
             {
                 return new ParseUnit(LanguageUnit.Operator, builder.ToString());
             }
+
             return ChooseSymbolBetweenValueAndVariable(builder);
         }
 
-        public string[] Extensions() => new[] {".py", ".ipynb"};
+        public string[] Extensions() => new[] {".py"};
 
 
-        private readonly Dictionary<LanguageUnit, string[]> unitCheck = new()
+        private readonly Dictionary<LanguageUnit, string[]> units = new()
         {
             {
                 LanguageUnit.FunctionDefinition,

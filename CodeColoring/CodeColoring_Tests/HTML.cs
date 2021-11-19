@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodeColoring_Tests
 {
-    class HTML_Tests
+    internal class HTML_Tests
     {
     }
 }

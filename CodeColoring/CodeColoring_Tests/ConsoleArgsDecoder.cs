@@ -13,15 +13,15 @@ namespace CodeColoring_Tests
 {
     public class ConsoleArgsDecoder_Tests
     {
-        ConsoleArgsDecoder decoder = new();
-        Randomizer randomizer = new();
-        Parameters parameters;
-        
-        public class Parameters
+        private readonly ConsoleArgsDecoder decoder = new();
+        private readonly Randomizer randomizer = new();
+        private Parameters parameters;
+
+        private class Parameters
         {
-            public string[][] Params;
-            public string Input;
-            public string Output;
+            public readonly string[][] Params;
+            public readonly string Input;
+            public readonly string Output;
             public Parameters(string input, string output)
             {
                 Input = input;
@@ -37,13 +37,13 @@ namespace CodeColoring_Tests
             parameters = new Parameters(randomizer.GetString(), randomizer.GetString());
         }
 
-        void CheckType(object expected, object actual)
+        private static void CheckType(object expected, object actual)
         {
             if (expected == null) Assert.IsNull(actual);
             else Assert.IsInstanceOf(expected.GetType(), actual);
         }
 
-        void AreEqual(DecodedArguments expected, DecodedArguments actual)
+        private void AreEqual(DecodedArguments expected, DecodedArguments actual)
         {
             CheckType(expected.ColorPalette, actual.ColorPalette);
             Assert.AreEqual(expected.InputFilePath, actual.InputFilePath);
@@ -56,7 +56,7 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void EmptyParams()
         {
-            DecodedArguments result = decoder.Decode(new string[] { });
+            var result = decoder.Decode(new string[] { });
             var expected = new DecodedArguments();
             AreEqual(expected, result);
         }
@@ -65,7 +65,7 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_ColorPalette([Values("-c", "--color")] string flag)
         {
-            DecodedArguments result = decoder.Decode(new string[] { flag, "DayTheme" });
+            var result = decoder.Decode(new[] { flag, "DayTheme" });
             var expected = new DecodedArguments() { ColorPalette = new DayTheme() };
             AreEqual(expected, result);
         }
@@ -75,7 +75,7 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_InputFilePath([Values("-i", "--input")] string flag)
         {
             var arg = randomizer.GetString();
-            DecodedArguments result = decoder.Decode(new string[] { flag, arg });
+            var result = decoder.Decode(new[] { flag, arg });
             var expected = new DecodedArguments() { InputFilePath = arg };
             AreEqual(expected, result);
         }
@@ -85,7 +85,7 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_OutputFilePath()
         {
             var arg = randomizer.GetString();
-            DecodedArguments result = decoder.Decode(new string[] { arg });
+            var result = decoder.Decode(new[] { arg });
             var expected = new DecodedArguments() { OutputFilePath = arg };
             AreEqual(expected, result);
         }
@@ -94,7 +94,7 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_OutputFormat([Values("-f", "--format")] string flag)
         {
-            DecodedArguments result = decoder.Decode(new string[] { flag, "HTML" });
+            var result = decoder.Decode(new[] { flag, "HTML" });
             var expected = new DecodedArguments() { OutputFormat = new HTML() };
             AreEqual(expected, result);
         }
@@ -103,7 +103,7 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_ProgrammingLanguage([Values("-l", "--lang")] string flag)
         {
-            DecodedArguments result = decoder.Decode(new string[] { flag, "Python" });
+            var result = decoder.Decode(new[] { flag, "Python" });
             var expected = new DecodedArguments() { ProgrammingLanguage = new Python() };
             AreEqual(expected, result);
         }
@@ -127,7 +127,7 @@ namespace CodeColoring_Tests
         {
             var input = randomizer.GetString();
             var output = randomizer.GetString();
-            DecodedArguments result = decoder.Decode(new string[] { "-c", "DayTheme", "-i", input, "-f", "HTML", "-l", "Python", output });
+            var result = decoder.Decode(new[] { "-c", "DayTheme", "-i", input, "-f", "HTML", "-l", "Python", output });
             var expected = new DecodedArguments()
             {
                 ColorPalette = new DayTheme(),
@@ -143,9 +143,9 @@ namespace CodeColoring_Tests
         [Repeat(250)]
         public void AllParamsRandomOrder()
         {
-            var args = parameters.Params.OrderBy(x => randomizer.Next()).SelectMany(x => x).ToArray();
-            DecodedArguments result = decoder.Decode(args);
-            var expected = new DecodedArguments()
+            var args = parameters.Params.OrderBy(_ => randomizer.Next()).SelectMany(x => x).ToArray();
+            var result = decoder.Decode(args);
+            var expected = new DecodedArguments
             {
                 ColorPalette = new DayTheme(),
                 InputFilePath = parameters.Input,
@@ -162,7 +162,7 @@ namespace CodeColoring_Tests
         {
             var flag = "--" + randomizer.GetString(5);
             Assert.IsTrue(
-                Assert.Throws<ArgumentException>(() => decoder.Decode(new string[] { flag }))
+                Assert.Throws<ArgumentException>(() => decoder.Decode(new[] { flag }))
                 .Message.Contains(flag));
         }
     }
