@@ -27,7 +27,7 @@ namespace CodeColoring_Tests
         };
         ColoringResult testResults = new();
         DayTheme dayTheme = new();
-        Dictionary<LanguageUnit, Color> dayThemeColorToUnitMap;
+        //Dictionary<LanguageUnit, Color> dayThemeColorToUnitMap;
         LanguageUnit[] allColorizedUnits;
 
         [OneTimeSetUp]
@@ -42,15 +42,15 @@ namespace CodeColoring_Tests
                 new(dayTheme.VariableColor, "testVariable"),
                 new(dayTheme.CommentColor, "testComment")
             };
-            dayThemeColorToUnitMap = new Dictionary<LanguageUnit, Color>
-            {
-                { LanguageUnit.Function, dayTheme.FunctionColor},
-                { LanguageUnit.FunctionDefinition, dayTheme.FunctionDefinitionColor},
-                { LanguageUnit.Operator, dayTheme.OperatorColor},
-                { LanguageUnit.Symbol, dayTheme.SymbolColor},
-                { LanguageUnit.Variable, dayTheme.VariableColor},
-                { LanguageUnit.Comment, dayTheme.CommentColor }
-            };
+            //dayThemeColorToUnitMap = new Dictionary<LanguageUnit, Color>
+            //{
+            //    { LanguageUnit.Function, dayTheme.FunctionColor},
+            //    { LanguageUnit.FunctionDefinition, dayTheme.FunctionDefinitionColor},
+            //    { LanguageUnit.Operator, dayTheme.OperatorColor},
+            //    { LanguageUnit.Symbol, dayTheme.SymbolColor},
+            //    { LanguageUnit.Variable, dayTheme.VariableColor},
+            //    { LanguageUnit.Comment, dayTheme.CommentColor }
+            //};
             allColorizedUnits = new LanguageUnit[]
             {
                 LanguageUnit.Function, LanguageUnit.FunctionDefinition, LanguageUnit.Operator, LanguageUnit.Symbol, LanguageUnit.Variable, LanguageUnit.Comment
@@ -78,7 +78,7 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(250)]
-        public void RandomArgsColorization()
+        public void DayThemeRandomArgsColorization()
         {
             var randomizedArgs = allColorizedUnits.OrderBy(x => randomizer.Next());
             var randomizedParseUnits = new List<ParseUnit>();
@@ -87,7 +87,7 @@ namespace CodeColoring_Tests
             {
                 var randomString = randomizer.GetString(5);
                 randomizedParseUnits.Add(new ParseUnit(arg, randomString));
-                expectedResult.Add(new ColorizedArgument(dayThemeColorToUnitMap[arg], randomString));
+                expectedResult.Add(new ColorizedArgument(UnitToColorMap(arg, dayTheme), randomString));
             }
             var actual = Colorizer.Colorize(randomizedParseUnits.ToArray(), dayTheme);
             Assert.IsTrue(ColoringResultsAreEqual(expectedResult, actual));
@@ -108,6 +108,26 @@ namespace CodeColoring_Tests
                     return false;
 
             return true;
+        }
+
+        Color UnitToColorMap(LanguageUnit languageUnit, ColorPalette palette)
+        {
+            switch (languageUnit)
+            {
+                case LanguageUnit.Variable:
+                    return palette.VariableColor;
+                case LanguageUnit.Comment:
+                    return palette.CommentColor;
+                case LanguageUnit.Function:
+                    return palette.FunctionColor;
+                case LanguageUnit.FunctionDefinition:
+                    return palette.FunctionDefinitionColor;
+                case LanguageUnit.Operator:
+                    return palette.OperatorColor;
+                case LanguageUnit.Symbol:
+                    return palette.SymbolColor;
+            }
+            return Color.Empty;
         }
     }
 }
