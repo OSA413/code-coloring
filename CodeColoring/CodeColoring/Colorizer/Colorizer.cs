@@ -32,7 +32,7 @@ namespace CodeColoring.Colorizer
                         result.Add(new ColorizedArgument(palette.CommentColor, arg.Symbol));
                         break;
                     default:
-                        result.Add(new ColorizedArgument(palette.DefaultColor, arg.Symbol));
+                        result.Add(new ColorizedArgument(Color.Empty, arg.Symbol));
                         break;
                 }
             }

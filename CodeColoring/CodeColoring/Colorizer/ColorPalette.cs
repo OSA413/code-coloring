@@ -10,11 +10,14 @@ namespace CodeColoring.Colorizer
         public Color FunctionColor { get; set; }
         public Color OperatorColor { get; set; }
         public Color CommentColor { get; set; }
-        public Color DefaultColor { get; set; }
+        public Color ValueColor { get; set; }
+        public Color WhitespaceColor { get; set; }
+        public Color UnknownColor { get; set; }
 
         public ColorPalette()
         {
-            DefaultColor = Color.Empty;
+            WhitespaceColor = Color.Empty;
+            UnknownColor = Color.Empty;
         }
     }
 }
