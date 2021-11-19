@@ -82,17 +82,13 @@ namespace CodeColoring_Tests
         [Repeat(250)]
         public void RandomArgsColorization()
         {
-            var randomizedArgs = allColorizedUnits.OrderBy(x => randomizer.Next());
-            var randomizedParseUnits = new List<ParseUnit>();
-            var expectedResult = new ColoringResult();
-            foreach (var arg in randomizedArgs)
-            {
-                var randomString = randomizer.GetString(5);
-                randomizedParseUnits.Add(new ParseUnit(arg, randomString));
-                expectedResult.Add(new ColorizedArgument(UnitToColorMap(arg, dayTheme), randomString));
-            }
-            var actual = Colorizer.Colorize(randomizedParseUnits.ToArray(), dayTheme);
-            ColoringResultsAreEqual(expectedResult, actual);
+            var range = randomizer.Next(50, 150);
+            List<(string arg, LanguageUnit unit)> data = new();
+            for (int i = 0; i < range; i++)
+                data.Add((randomizer.GetString(15), randomizer.NextEnum<LanguageUnit>()));
+            
+            var actual = Colorizer.Colorize(data.Select(x => new ParseUnit(x.unit, x.arg)).ToArray(), dayTheme);
+            ColoringResultsAreEqual(data.Select(x => (x.arg, UnitToColorMap(x.unit, dayTheme))).ToList(), actual);
         }
 
         void ColoringResultsAreEqual(List<(string arg, Color color)> expected, ColoringResult actual)
