@@ -70,13 +70,17 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void AllArgsColorization()
         {
-            var actual = Colorizer.Colorize(testParseUnits, dayTheme);
-            Assert.IsTrue(ColoringResultsAreEqual(actual, testResults));
+            List<(string arg, LanguageUnit unit)> data = new();
+            foreach (LanguageUnit unit in Enum.GetValues(typeof(LanguageUnit)))
+                data.Add((randomizer.GetString(10), unit));
+
+            var actual = Colorizer.Colorize(data.Select(x => new ParseUnit(x.unit, x.arg)).ToArray(), dayTheme);
+            ColoringResultsAreEqual(data.Select(x => (x.arg, UnitToColorMap(x.unit, dayTheme))).ToList(), actual);
         }
 
         [Test]
         [Repeat(250)]
-        public void DayThemeRandomArgsColorization()
+        public void RandomArgsColorization()
         {
             var randomizedArgs = allColorizedUnits.OrderBy(x => randomizer.Next());
             var randomizedParseUnits = new List<ParseUnit>();
@@ -88,24 +92,17 @@ namespace CodeColoring_Tests
                 expectedResult.Add(new ColorizedArgument(UnitToColorMap(arg, dayTheme), randomString));
             }
             var actual = Colorizer.Colorize(randomizedParseUnits.ToArray(), dayTheme);
-            Assert.IsTrue(ColoringResultsAreEqual(expectedResult, actual));
+            ColoringResultsAreEqual(expectedResult, actual);
         }
 
-        bool ColorizedArgumentsAreEqual(ColorizedArgument first, ColorizedArgument second)
+        void ColoringResultsAreEqual(List<(string arg, Color color)> expected, ColoringResult actual)
         {
-            return first.Argument == second.Argument && first.ArgumentColor == second.ArgumentColor;
-        }
-
-        bool ColoringResultsAreEqual(ColoringResult first, ColoringResult second)
-        {
-            if (first.Result.Count != second.Result.Count)
-                return false;
-
-            for (var i = 0; i < first.Result.Count; i++)
-                if (!ColorizedArgumentsAreEqual(first.Result[i], second.Result[i]))
-                    return false;
-
-            return true;
+            Assert.AreEqual(expected.Count, actual.Result.Count);
+            for (var i = 0; i < expected.Count; i++)
+            {
+                Assert.AreEqual(expected[i].arg, actual.Result[i].Argument, "Difference at index " + i);
+                Assert.AreEqual(expected[i].color, actual.Result[i].ArgumentColor, "Difference at index " + i);
+            }
         }
 
         Color UnitToColorMap(LanguageUnit languageUnit, ColorPalette palette)
