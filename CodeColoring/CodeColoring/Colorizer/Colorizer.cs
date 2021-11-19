@@ -31,6 +31,9 @@ namespace CodeColoring.Colorizer
                     case LanguageUnit.Comment:
                         result.Add(new ColorizedArgument(palette.CommentColor, arg.Symbol));
                         break;
+                    default:
+                        result.Add(new ColorizedArgument(palette.DefaultColor, arg.Symbol));
+                        break;
                 }
             }
             return result;

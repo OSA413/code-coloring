@@ -10,5 +10,11 @@ namespace CodeColoring.Colorizer
         public Color FunctionColor { get; set; }
         public Color OperatorColor { get; set; }
         public Color CommentColor { get; set; }
+        public Color DefaultColor { get; set; }
+
+        public ColorPalette()
+        {
+            DefaultColor = Color.Empty;
+        }
     }
 }
