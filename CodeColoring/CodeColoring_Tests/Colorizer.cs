@@ -75,20 +75,17 @@ namespace CodeColoring_Tests
         {
             switch (languageUnit)
             {
-                case LanguageUnit.Variable:
-                    return palette.VariableColor;
-                case LanguageUnit.Comment:
-                    return palette.CommentColor;
-                case LanguageUnit.Function:
-                    return palette.FunctionColor;
-                case LanguageUnit.FunctionDefinition:
-                    return palette.FunctionDefinitionColor;
-                case LanguageUnit.Operator:
-                    return palette.OperatorColor;
-                case LanguageUnit.Symbol:
-                    return palette.SymbolColor;
+                case LanguageUnit.Variable: return palette.VariableColor;
+                case LanguageUnit.Comment: return palette.CommentColor;
+                case LanguageUnit.Function: return palette.FunctionColor;
+                case LanguageUnit.FunctionDefinition: return palette.FunctionDefinitionColor;
+                case LanguageUnit.Operator: return palette.OperatorColor;
+                case LanguageUnit.Symbol: return palette.SymbolColor;
+                case LanguageUnit.Unknown: return palette.UnknownColor;
+                case LanguageUnit.Value: return palette.ValueColor;
+                case LanguageUnit.Whitespace: return palette.WhitespaceColor;
             }
-            return Color.Empty;
+            throw new ArgumentException("Color not found");
         }
     }
 }
