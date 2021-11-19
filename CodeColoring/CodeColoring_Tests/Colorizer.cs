@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Threading.Tasks;
 using CodeColoring.Colorizer;
 using CodeColoring.ProgrammingLanguage;
@@ -27,7 +27,6 @@ namespace CodeColoring_Tests
         };
         ColoringResult testResults = new();
         DayTheme dayTheme = new();
-        //Dictionary<LanguageUnit, Color> dayThemeColorToUnitMap;
         LanguageUnit[] allColorizedUnits;
 
         [OneTimeSetUp]
@@ -42,19 +41,17 @@ namespace CodeColoring_Tests
                 new(dayTheme.VariableColor, "testVariable"),
                 new(dayTheme.CommentColor, "testComment")
             };
-            //dayThemeColorToUnitMap = new Dictionary<LanguageUnit, Color>
-            //{
-            //    { LanguageUnit.Function, dayTheme.FunctionColor},
-            //    { LanguageUnit.FunctionDefinition, dayTheme.FunctionDefinitionColor},
-            //    { LanguageUnit.Operator, dayTheme.OperatorColor},
-            //    { LanguageUnit.Symbol, dayTheme.SymbolColor},
-            //    { LanguageUnit.Variable, dayTheme.VariableColor},
-            //    { LanguageUnit.Comment, dayTheme.CommentColor }
-            //};
             allColorizedUnits = new LanguageUnit[]
             {
                 LanguageUnit.Function, LanguageUnit.FunctionDefinition, LanguageUnit.Operator, LanguageUnit.Symbol, LanguageUnit.Variable, LanguageUnit.Comment
             };
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void ColorPaletteHasTheSameAmountOfVariablesAsLanguageUnit()
+        {
+            Assert.AreEqual(Enum.GetValues(typeof(LanguageUnit)).Length, typeof(ColorPalette).GetProperties().Length);
         }
 
         [Test]
