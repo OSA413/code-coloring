@@ -15,7 +15,7 @@ namespace CodeColoring_Tests
     class Colorizer_Tests
     {
         Randomizer randomizer = new();
-        ColorPalette palette = new palette();
+        ColorPalette palette = new DayTheme();
 
         [Test]
         [Repeat(5)]
