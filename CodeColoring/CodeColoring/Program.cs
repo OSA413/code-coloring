@@ -6,7 +6,7 @@ namespace CodeColoring
 {
     public class Program
     {
-        public void Main(string[] args)
+        public static void Main(string[] args)
         {
             var dargs = Repository.Kernel.Get<IArgsDecoder>().Decode(args);
             var inputText = Repository.Kernel.Get<StreamReader>().ReadToEnd();
