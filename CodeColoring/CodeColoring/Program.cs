@@ -9,11 +9,11 @@ namespace CodeColoring
         public static void Main(string[] args)
         {
             var dargs = Repository.Kernel.Get<IArgsDecoder>().Decode(args);
-            var inputText = Repository.Kernel.Get<StreamReader>().ReadToEnd();
+            var inputText = File.ReadAllText(dargs.InputFilePath);
             var parsingResult = dargs.ProgrammingLanguage.Parse(inputText);
             var withColorsApplied = Colorizer.Colorizer.Colorize(parsingResult, dargs.ColorPalette);
             var outputText = dargs.OutputFormat.Format(withColorsApplied);
-            Repository.Kernel.Get<StreamWriter>().Write(outputText);
+            File.WriteAllText(dargs.OutputFilePath, outputText);
         }
     }
 }
