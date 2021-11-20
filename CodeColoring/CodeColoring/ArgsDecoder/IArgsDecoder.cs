@@ -8,7 +8,7 @@ namespace CodeColoring.ArgsDecoder
     public interface IArgsDecoder
     {
         string Help { get; }
-        DecodedArguments Decode(IEnumerable<string> args);
+        DecodedArguments Decode(string[] args);
     }
 
     public class DecodedArguments
