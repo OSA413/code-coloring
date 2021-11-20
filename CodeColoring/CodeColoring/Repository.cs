@@ -15,7 +15,6 @@ namespace CodeColoring
     public static class Repository
     {
         public static readonly StandardKernel Kernel;
-        //static Repository() => Kernel = new StandardKernel(); потом вернуть к этому виду
 
         static Repository()
         {
