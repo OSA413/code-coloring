@@ -9,6 +9,8 @@ using CodeColoring.ProgrammingLanguage;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
+using Ninject;
+
 namespace CodeColoring_Tests
 {
     public class ConsoleArgsDecoder_Tests
@@ -95,7 +97,7 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_OutputFormat([Values("-f", "--format")] string flag)
         {
             var result = decoder.Decode(new[] { flag, "HTML" });
-            var expected = new DecodedArguments() { OutputFormat = new HTML() };
+            var expected = new DecodedArguments() { OutputFormat = Repository.Kernel.Get<HTML>() };
             AreEqual(expected, result);
         }
 
@@ -133,7 +135,7 @@ namespace CodeColoring_Tests
                 ColorPalette = new DayTheme(),
                 InputFilePath = input,
                 OutputFilePath = output,
-                OutputFormat = new HTML(),
+                OutputFormat = Repository.Kernel.Get<HTML>(),
                 ProgrammingLanguage = new Python()
             };
             AreEqual(expected, result);
@@ -150,7 +152,7 @@ namespace CodeColoring_Tests
                 ColorPalette = new DayTheme(),
                 InputFilePath = parameters.Input,
                 OutputFilePath = parameters.Output,
-                OutputFormat = new HTML(),
+                OutputFormat = Repository.Kernel.Get<HTML>(),
                 ProgrammingLanguage = new Python()
             };
             AreEqual(expected, result);
