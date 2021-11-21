@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using CodeColoring.ProgrammingLanguage;
 
@@ -6,58 +7,19 @@ namespace CodeColoring.Colorizer
 {
     public class Colorizer
     {
-        public static ColoringResult Colorize(ParseUnit[] parseResult, ColorPalette palette)
-        {
-            var result = new ColoringResult();
-            foreach (var arg in parseResult)
+        public Color Colorize(LanguageUnit unit, ColorPalette palette) =>
+            unit switch
             {
-                switch (arg.Unit)
-                {
-                    case LanguageUnit.Function:
-                        result.Add(new ColorizedArgument(palette.FunctionColor, arg.Symbol));
-                        break;
-                    case LanguageUnit.FunctionDefinition:
-                        result.Add(new ColorizedArgument(palette.FunctionDefinitionColor, arg.Symbol));
-                        break;
-                    case LanguageUnit.Operator:
-                        result.Add(new ColorizedArgument(palette.OperatorColor, arg.Symbol));
-                        break;
-                    case LanguageUnit.Symbol:
-                        result.Add(new ColorizedArgument(palette.SymbolColor, arg.Symbol));
-                        break;
-                    case LanguageUnit.Variable:
-                        result.Add(new ColorizedArgument(palette.VariableColor, arg.Symbol));
-                        break;
-                    case LanguageUnit.Comment:
-                        result.Add(new ColorizedArgument(palette.CommentColor, arg.Symbol));
-                        break;
-                    case LanguageUnit.Value:
-                        result.Add(new ColorizedArgument(palette.ValueColor, arg.Symbol));
-                        break;
-                    default:
-                        result.Add(new ColorizedArgument(Color.Empty, arg.Symbol));
-                        break;
-                }
-            }
-            return result;
-        }
-    }
-
-    public class ColoringResult
-    {
-        public List<ColorizedArgument> Result = new();
-        public void Add(ColorizedArgument a) => Result.Add(a);
-    }
-
-    public class ColorizedArgument
-    {
-        public Color ArgumentColor { get; set; }
-        public string Argument { get; set; }
-
-        public ColorizedArgument(Color color, string argument)
-        {
-            ArgumentColor = color;
-            Argument = argument;
-        }
+                LanguageUnit.Variable => palette.VariableColor,
+                LanguageUnit.Comment => palette.CommentColor,
+                LanguageUnit.Function => palette.FunctionColor,
+                LanguageUnit.FunctionDefinition => palette.FunctionDefinitionColor,
+                LanguageUnit.Operator => palette.OperatorColor,
+                LanguageUnit.Symbol => palette.SymbolColor,
+                LanguageUnit.Unknown => palette.UnknownColor,
+                LanguageUnit.Value => palette.ValueColor,
+                LanguageUnit.Whitespace => palette.WhitespaceColor,
+                _ => throw new ArgumentOutOfRangeException(nameof(unit), unit, null)
+            };
     }
 }

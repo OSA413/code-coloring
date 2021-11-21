@@ -7,7 +7,7 @@ namespace CodeColoring.ProgrammingLanguage
 {
     public class Python : IProgrammingLanguage
     {
-        public ParseUnit[] Parse(string text)
+        public ParsingResult Parse(string text)
         {
             var result = new List<ParseUnit>();
             var strBuilder = new StringBuilder();
@@ -69,7 +69,9 @@ namespace CodeColoring.ProgrammingLanguage
                 }
             }
 
-            return result.Where(unit => !unit.Symbol.IsNullOrEmpty()).ToArray();
+            var output = new ParsingResult();
+            output.Result = result.Where(unit => !unit.Symbol.IsNullOrEmpty()).ToList();
+            return output;
         }
 
         private static ParseUnit ChooseSymbolBetweenValueAndVariable(StringBuilder builder)

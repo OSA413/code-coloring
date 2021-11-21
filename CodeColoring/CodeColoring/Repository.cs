@@ -22,7 +22,7 @@ namespace CodeColoring
             Kernel.Bind<IArgsDecoder>().To<ConsoleArgsDecoder>();
             Kernel.Bind<StreamReader>().ToSelf();
             Kernel.Bind<StreamWriter>().ToSelf();
-            Kernel.Bind<Colorizer.Colorizer>().ToSelf();
+            Kernel.Bind<Colorizer.Colorizer>().ToSelf().InSingletonScope();
             Kernel.Bind<ColorPalette>().To<DayTheme>().Named("DayTheme");
             Kernel.Bind<IOutputFormat>().To<HTML>().Named("HTML");
             Kernel.Bind<IProgrammingLanguage>().To<Python>().Named("Python");

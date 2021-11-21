@@ -1,9 +1,10 @@
 ﻿using CodeColoring.Colorizer;
+using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring.OutputFormat
 {
     public interface IOutputFormat
     {
-        string Format(ColoringResult cr);
+        string Format(ParsingResult pr, ColorPalette palette);
     }
 }

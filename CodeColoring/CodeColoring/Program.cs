@@ -11,8 +11,7 @@ namespace CodeColoring
             var dargs = Repository.Kernel.Get<IArgsDecoder>().Decode(args);
             var inputText = File.ReadAllText(dargs.InputFilePath);
             var parsingResult = dargs.ProgrammingLanguage.Parse(inputText);
-            var withColorsApplied = Colorizer.Colorizer.Colorize(parsingResult, dargs.ColorPalette);
-            var outputText = dargs.OutputFormat.Format(withColorsApplied);
+            var outputText = dargs.OutputFormat.Format(parsingResult, dargs.ColorPalette);
             File.WriteAllText(dargs.OutputFilePath, outputText);
         }
     }

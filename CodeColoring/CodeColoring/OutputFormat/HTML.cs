@@ -1,13 +1,16 @@
 ﻿using System;
-using CodeColoring.Colorizer;
 using System.Text;
 using System.Linq;
+using CodeColoring.Colorizer;
+using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring.OutputFormat
 {
     public class HTML : IOutputFormat
     {
-        public string Format(ColoringResult cr)
+        private Colorizer.Colorizer colorizer;
+        public HTML(Colorizer.Colorizer colorizer) => this.colorizer = colorizer;
+        public string Format(ParsingResult pu, ColorPalette palette)
         {
             var result = new StringBuilder();
             var title = "Colored code";
@@ -17,26 +20,26 @@ namespace CodeColoring.OutputFormat
             result.Append("<html>\n");
 
             result.Append(FormatHeader(title, tab));
-            result.Append(FormatBody(cr, tab));
+            result.Append(FormatBody(pu, palette, tab));
 
             result.Append("</html>\n");
             return result.ToString();
         }
 
-        private static string FormatBody(ColoringResult cr, int tab)
+        private string FormatBody(ParsingResult pu, ColorPalette palette, int tab)
         {
             var body = new StringBuilder();
-            ColorizedArgument unit;
+            ParseUnit unit;
             int space = 1;
 
             body.Append(new String(' ', tab) + "<body>\n");
             body.Append(new String(' ', tab * 2) + "<code>" + "<pre>\n");
-            for(int i = 0; i < cr.Result.Count; i++)
+            for(int i = 0; i < pu.Result.Count; i++)
             {
-                unit = cr.Result[i];
-                if (i < cr.Result.Count - 1)
-                    space = unit.Argument.Equals("(") || cr.Result[i + 1].Argument.Any(c => !Char.IsLetterOrDigit(c)) ? 0 : 1;
-                body.Append(FormatUnit(unit) + new String(' ', space));
+                unit = pu.Result[i];
+                if (i < pu.Result.Count - 1)
+                    space = unit.Symbol.Equals("(") || pu.Result[i + 1].Symbol.Any(c => !Char.IsLetterOrDigit(c)) ? 0 : 1;
+                body.Append(FormatUnit(unit, palette) + new String(' ', space));
             }
             body.Append(new String(' ', tab * 2) + "\n</code>" + "</pre>\n");
             body.Append(new String(' ', tab) + "</body>\n");
@@ -53,6 +56,10 @@ namespace CodeColoring.OutputFormat
             return header.ToString();
         }
 
-        private static string FormatUnit(ColorizedArgument unit) => $"<span style=\"color:rgb({unit.ArgumentColor.R},{unit.ArgumentColor.G},{unit.ArgumentColor.B})\">{unit.Argument}</span>";
+        private string FormatUnit(ParseUnit unit, ColorPalette palette)
+        {
+            var color = colorizer.Colorize(unit.Unit, palette);
+            return $"<span style=\"color:rgb({color.R},{color.G},{color.B})\">{unit.Symbol}</span>";
+        }
     }
 }

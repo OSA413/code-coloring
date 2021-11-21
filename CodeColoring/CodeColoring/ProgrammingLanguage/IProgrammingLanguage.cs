@@ -1,4 +1,6 @@
-﻿namespace CodeColoring.ProgrammingLanguage
+﻿using System.Collections.Generic;
+
+namespace CodeColoring.ProgrammingLanguage
 {
     public enum LanguageUnit
     {
@@ -15,11 +17,15 @@
 
     public interface IProgrammingLanguage
     {
-        public ParseUnit[] Parse(string text);
+        public ParsingResult Parse(string text);
         public string[] Extensions(); //будем вообще это вызывать? Или другое определние языка
        
     }
 
+    public class ParsingResult
+    {
+        public List<ParseUnit> Result = new();
+    }
     
     public readonly struct ParseUnit
     {
