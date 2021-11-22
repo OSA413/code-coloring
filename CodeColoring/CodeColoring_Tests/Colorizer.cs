@@ -12,11 +12,14 @@ using Ninject;
 
 namespace CodeColoring_Tests
 {
-    internal class Colorizer_Tests
+    internal class ColorPalette_Tests
     {
+        private class NewColorPalette : ColorPalette { }
+
         private readonly Randomizer randomizer = new();
         private readonly ColorPalette palette = new DayTheme();
         private readonly Colorizer colorizer = Repository.Kernel.Get<Colorizer>();
+        private readonly NewColorPalette newColorPalette = new();
 
         [Test]
         [Repeat(5)]
@@ -29,10 +32,17 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OneArgColorization([Values] LanguageUnit unit)
         {
-            var argName = randomizer.GetString(10);
             var actual = colorizer.Colorize(unit, palette);
             var expected = UnitToColorMap(unit, palette);
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void DefaultColorPaletteIsBlack()
+        {
+            Assert.True(typeof(NewColorPalette).GetProperties()
+                .All(x => (Color)x.GetValue(newColorPalette) == Color.Black));
         }
 
         private static Color UnitToColorMap(LanguageUnit languageUnit, ColorPalette palette)

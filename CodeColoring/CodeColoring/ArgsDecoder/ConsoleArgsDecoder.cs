@@ -18,7 +18,7 @@ namespace CodeColoring.ArgsDecoder
         private class ArgumentAssigner
         {
             private Action<string> action;
-            private DecodedArguments decoded;
+            private readonly DecodedArguments decoded;
 
             public ArgumentAssigner(DecodedArguments result) => decoded = result;
 
@@ -46,14 +46,8 @@ namespace CodeColoring.ArgsDecoder
             private void HandleOutputFilePath(string arg) =>
                 decoded.OutputFilePath = arg;
 
-            private bool IsKey(string arg)
-            {
-                if (arg.StartsWith("-") && arg.Length == 2)
-                    return true;
-                if (arg.StartsWith("--") && !arg.Contains(" "))
-                    return true;
-                return false;
-            }
+            private bool IsKey(string arg) =>
+                arg.StartsWith("-") || arg.StartsWith("--");
 
             private Action<string> GetAction(string arg)
             {

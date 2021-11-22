@@ -125,6 +125,13 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(5)]
+        [TestCase("Code Coloring")]
+        [TestCase("Usage Example")]
+        public void HelpIsInformative(string text) => 
+            Assert.IsTrue(decoder.Help.Contains(text));
+
+        [Test]
+        [Repeat(5)]
         public void AllParams()
         {
             var input = randomizer.GetString();
@@ -160,12 +167,22 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(5)]
+        public void IncorrectShortParameterArgumentExceptionWithMessage()
+        {
+            var flag = "-" + randomizer.GetString(3);
+            var error = Assert.Throws<ArgumentException>(() => decoder.Decode(new[] { flag }));
+            Assert.IsTrue(error.Message.Contains("Unknown argument"));
+            Assert.IsTrue(error.Message.Contains(flag));
+        }
+
+        [Test]
+        [Repeat(5)]
         public void IncorrectParameterArgumentExceptionWithMessage()
         {
             var flag = "--" + randomizer.GetString(5);
-            Assert.IsTrue(
-                Assert.Throws<ArgumentException>(() => decoder.Decode(new[] { flag }))
-                .Message.Contains(flag));
+            var error = Assert.Throws<ArgumentException>(() => decoder.Decode(new[] { flag }));
+            Assert.IsTrue(error.Message.Contains("Unknown argument"));
+            Assert.IsTrue(error.Message.Contains(flag));
         }
     }
 }

@@ -4,20 +4,27 @@ namespace CodeColoring.Colorizer
 {
     public abstract class ColorPalette
     {
-        public Color SymbolColor { get; set; }
-        public Color FunctionDefinitionColor { get; set; }
-        public Color VariableColor { get; set; }
-        public Color FunctionColor { get; set; }
-        public Color OperatorColor { get; set; }
-        public Color CommentColor { get; set; }
-        public Color ValueColor { get; set; }
-        public Color WhitespaceColor { get; set; }
-        public Color UnknownColor { get; set; }
+        public Color SymbolColor { get; protected set; }
+        public Color FunctionDefinitionColor { get; protected set; }
+        public Color VariableColor { get; protected set; }
+        public Color FunctionColor { get; protected set; }
+        public Color OperatorColor { get; protected set; }
+        public Color CommentColor { get; protected set; }
+        public Color ValueColor { get; protected set; }
+        public Color WhitespaceColor { get; protected set; }
+        public Color UnknownColor { get; protected set; }
 
         public ColorPalette()
         {
-            WhitespaceColor = Color.Empty;
-            UnknownColor = Color.Empty;
+            SymbolColor = Color.Black;
+            FunctionDefinitionColor = Color.Black;
+            VariableColor = Color.Black;
+            FunctionColor = Color.Black;
+            OperatorColor = Color.Black;
+            CommentColor = Color.Black;
+            ValueColor = Color.Black;
+            WhitespaceColor = Color.Black;
+            UnknownColor = Color.Black;
         }
     }
 }
