@@ -49,7 +49,7 @@ namespace CodeColoring.OutputFormat
                 header.Append(new String(' ', tab * 2) + $"<title>{pageTitle}</title>\n");
                 header.Append(new String(' ', tab * 2) + "<meta charset=\"UTF-8\">\n");
                 header.Append(new String(' ', tab * 2) + "<style>\n");
-                    header.Append(new String(' ', tab * 3) + $"body {{background-color: rgb({backColor.R},{backColor.G},{backColor.B}); font-family: {font}; font-size: {size};}}\n");
+                    header.Append(new String(' ', tab * 3) + $"body {{background-color: rgb({backColor.R},{backColor.G},{backColor.B}); font-family: {font}; font-size: {size}px; line-height: 1;}}\n");
                     header.Append(new String(' ', tab * 3) + $".Function {{color: rgb({palette.FunctionColor.R},{palette.FunctionColor.G},{palette.FunctionColor.B});}}\n");
                     header.Append(new String(' ', tab * 3) + $".Comment {{color: rgb({palette.CommentColor.R},{palette.CommentColor.G},{palette.CommentColor.B});}}\n");
                     header.Append(new String(' ', tab * 3) + $".FunctionDefinition {{color: rgb({palette.FunctionDefinitionColor.R},{palette.FunctionDefinitionColor.G},{palette.FunctionDefinitionColor.B});}}\n");
