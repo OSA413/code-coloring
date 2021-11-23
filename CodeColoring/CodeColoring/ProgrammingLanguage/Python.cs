@@ -11,7 +11,7 @@ namespace CodeColoring.ProgrammingLanguage
         public ParsingResult Parse(string text)
         {
             var result = new List<ParseUnit>();
-            var strBuilder = new StringBuilder();
+            var builder = new StringBuilder();
             var isComment = false;
             var isMultilineComment = false;
             for (var index = 0; index < text.Length; index++)
@@ -20,12 +20,12 @@ namespace CodeColoring.ProgrammingLanguage
 
                 if (index != text.Length - 1 && value == "\"" && text[index + 1].ToString() == "\"")
                 {
-                    strBuilder.Append(value);
+                    builder.Append(value);
                     continue;
                 }
-                if (strBuilder.Length > 1 && strBuilder[^1].Equals('\"') && strBuilder[^2].Equals('\"')  && value == "\"")
+                if (builder.Length > 1 && builder[^1].Equals('\"') && builder[^2].Equals('\"')  && value == "\"")
                 {
-                    strBuilder.Append(value);
+                    builder.Append(value);
                     if (!isMultilineComment)
                     {
                         isMultilineComment = true;
@@ -33,23 +33,23 @@ namespace CodeColoring.ProgrammingLanguage
                     }
                     else
                     {
-                        result.Add(new ParseUnit(LanguageUnit.Comment, strBuilder.ToString()));
-                        strBuilder.Clear();
+                        result.Add(new ParseUnit(LanguageUnit.Comment, builder.ToString()));
+                        builder.Clear();
                         isMultilineComment = false;
                     }
                 }
                 else if(isMultilineComment)
                 {
-                    strBuilder.Append(value);
+                    builder.Append(value);
                 }
                 else if (value == "#")
                 {
-                    if (strBuilder.Length > 0)
+                    if (builder.Length > 0)
                     {
-                        ChooseUnit(result, "", strBuilder);
-                        strBuilder.Clear();
+                        ChooseUnit(result, "", builder);
+                        builder.Clear();
                     }
-                    strBuilder.Append(value);
+                    builder.Append(value);
                     isComment = true;
                 }
                 else if (isComment)
@@ -57,24 +57,24 @@ namespace CodeColoring.ProgrammingLanguage
                     if (value == "\n")
                     {
                         isComment = false;
-                        result.Add(new ParseUnit(LanguageUnit.Comment, strBuilder.ToString()));
+                        result.Add(new ParseUnit(LanguageUnit.Comment, builder.ToString()));
                         result.Add(new ParseUnit(LanguageUnit.Whitespace, value));
-                        strBuilder = new StringBuilder();
+                        builder = new StringBuilder();
                     }
                     else
                     {
-                        strBuilder.Append(value);
+                        builder.Append(value);
                     }
                 }
                 else
                 {
-                    ChooseUnit(result, value, strBuilder);
+                    ChooseUnit(result, value, builder);
                     
                 }
                 
 
                 if (index != text.Length - 1) continue;
-                result.Add(ChooseSymbolBetweenValueAndVariable(strBuilder));
+                result.Add(ChooseSymbolBetweenValueAndVariable(builder));
             }
 
             return new ParsingResult {Result = result.Where(unit => !unit.Symbol.IsNullOrEmpty()).ToList()};
