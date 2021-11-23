@@ -16,7 +16,7 @@ namespace CodeColoring_Tests
             for (var i = 0; i < Math.Min(expected.Count, actual.Result.Count); i++)
             {
                 Assert.AreEqual(expected[i].arg, actual.Result[i].Symbol, "Difference at index " + i);
-                Assert.AreEqual(expected[i].LanguageUnit, actual.Result[i].Unit, "Different unit for [" + expected[i].arg + "]");
+                Assert.AreEqual(expected[i].LanguageUnit, actual.Result[i].Unit, "Different unit for [" + expected[i].arg + "], index " + i);
             }
             Assert.AreEqual(expected.Count, actual.Result.Count, "Expected different lengh");
         }
@@ -388,6 +388,141 @@ namespace CodeColoring_Tests
                 (" ", LanguageUnit.Whitespace),
                 ("10", LanguageUnit.Value),
                 (")", LanguageUnit.Symbol)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void While()
+        {
+            var input = "while x!=10 or x>5 and x<15: x+=1";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("while", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                ("!", LanguageUnit.Symbol),
+                ("=", LanguageUnit.Symbol),
+                ("10", LanguageUnit.Value),
+                (" ", LanguageUnit.Whitespace),
+                ("or", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                (">", LanguageUnit.Symbol),
+                ("5", LanguageUnit.Value),
+                (" ", LanguageUnit.Whitespace),
+                ("and", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                ("<", LanguageUnit.Symbol),
+                ("15", LanguageUnit.Value),
+                (":", LanguageUnit.Symbol),
+                (" ", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                ("+", LanguageUnit.Symbol),
+                ("=", LanguageUnit.Symbol),
+                ("1", LanguageUnit.Value)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void TryExceptFinally()
+        {
+            var input = "try:\n\t1/0\nexcept:\n\tprint(\"ooops!!!\")\nfinally:\n\treturn 5";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("try", LanguageUnit.Operator),
+                (":", LanguageUnit.Symbol),
+                ("\n", LanguageUnit.Whitespace),
+                ("\t", LanguageUnit.Whitespace),
+                ("1", LanguageUnit.Value),
+                ("/", LanguageUnit.Symbol),
+                ("0", LanguageUnit.Value),
+                ("\n", LanguageUnit.Whitespace),
+                ("except", LanguageUnit.Operator),
+                (":", LanguageUnit.Symbol),
+                ("\n", LanguageUnit.Whitespace),
+                ("\t", LanguageUnit.Whitespace),
+                ("print", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                ("\"ooops!!!\"", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol),
+                ("\n", LanguageUnit.Whitespace),
+                ("finally", LanguageUnit.Operator),
+                (":", LanguageUnit.Symbol),
+                ("\n", LanguageUnit.Whitespace),
+                ("\t", LanguageUnit.Whitespace),
+                ("return", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("5", LanguageUnit.Value)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void YieldContinueBreak()
+        {
+            var input = "for i in range(10):\n\tif i%4==0: continue\n\tif i==7: break\n\tyield i";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("for", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("i", LanguageUnit.Variable),
+                (" ", LanguageUnit.Whitespace),
+                ("in", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("range", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                ("10", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol),
+                (":", LanguageUnit.Symbol),
+                ("\n", LanguageUnit.Whitespace),
+                ("\t", LanguageUnit.Whitespace),
+                ("if", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("i", LanguageUnit.Variable),
+                ("%", LanguageUnit.Symbol),
+                ("4", LanguageUnit.Value),
+                ("=", LanguageUnit.Symbol),
+                ("=", LanguageUnit.Symbol),
+                ("0", LanguageUnit.Value),
+                (":", LanguageUnit.Symbol),
+                (" ", LanguageUnit.Whitespace),
+                ("continue", LanguageUnit.Operator),
+                ("\n", LanguageUnit.Whitespace),
+                ("\t", LanguageUnit.Whitespace),
+                ("if", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("i", LanguageUnit.Variable),
+                ("=", LanguageUnit.Symbol),
+                ("=", LanguageUnit.Symbol),
+                ("7", LanguageUnit.Value),
+                (":", LanguageUnit.Symbol),
+                (" ", LanguageUnit.Whitespace),
+                ("break", LanguageUnit.Operator),
+                ("\n", LanguageUnit.Whitespace),
+                ("\t", LanguageUnit.Whitespace),
+                ("yield", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("i", LanguageUnit.Variable)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void AssertCondition()
+        {
+            var input = "assert condition";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("assert", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("condition", LanguageUnit.Variable)
             };
             SameOutput(expected, python.Parse(input));
         }
