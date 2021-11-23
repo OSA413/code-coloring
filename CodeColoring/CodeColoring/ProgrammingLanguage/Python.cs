@@ -103,9 +103,7 @@ namespace CodeColoring.ProgrammingLanguage
             }
             else if (units[LanguageUnit.Function].Contains(value))
             {
-                result.Add(units[LanguageUnit.Operator].Contains(strBuilder.ToString())
-                    ? new ParseUnit(LanguageUnit.Operator, strBuilder.ToString())
-                    : new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
+                result.Add(new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
                 result.Add(new ParseUnit(LanguageUnit.Symbol, value));
                 strBuilder.Clear();
             }
