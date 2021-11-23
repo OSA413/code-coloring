@@ -249,7 +249,32 @@ namespace CodeColoring_Tests
                 ("6", LanguageUnit.Value),
                 (")", LanguageUnit.Symbol),
                 ("+", LanguageUnit.Symbol),
-                ("1", LanguageUnit.Value),
+                ("1", LanguageUnit.Value)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+
+
+        [Test]
+        [Repeat(5)]
+        public void ForLoop()
+        {
+            var input = "[x for x in range(5)]";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("[", LanguageUnit.Symbol),
+                ("x", LanguageUnit.Variable),
+                (" ", LanguageUnit.Whitespace),
+                ("for", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                (" ", LanguageUnit.Whitespace),
+                ("in", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("range", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                ("5", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol)
             };
             SameOutput(expected, python.Parse(input));
         }
