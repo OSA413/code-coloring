@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -12,12 +13,12 @@ namespace CodeColoring_Tests
 
         private static void SameOutput(List<(string arg, LanguageUnit LanguageUnit)> expected, ParsingResult actual)
         {
-            Assert.AreEqual(expected.Count, actual.Result.Count, "Expected different lengh");
-            for (var i = 0; i < expected.Count; i++)
+            for (var i = 0; i < Math.Min(expected.Count, actual.Result.Count); i++)
             {
                 Assert.AreEqual(expected[i].arg, actual.Result[i].Symbol, "Difference at index " + i);
                 Assert.AreEqual(expected[i].LanguageUnit, actual.Result[i].Unit, "Different unit for [" + expected[i].arg + "]");
             }
+            Assert.AreEqual(expected.Count, actual.Result.Count, "Expected different lengh");
         }
 
         [Test]
@@ -157,7 +158,7 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void ClassExample()
         {
-            var input = "class Employee:\n\t\"\"\"Базовый класс для всех сотрудников\"\"\"\n\temp_count=0\n\n"
+            var input = "class Employee:\n\temp_count=0\n\n"
                 + "\tdef __init__(self, name):\n\t\tself.name=name";
             var expected = new List<(string arg, LanguageUnit LanguageUnit)>
             {
@@ -165,9 +166,6 @@ namespace CodeColoring_Tests
                 (" ", LanguageUnit.Whitespace),
                 ("Employee", LanguageUnit.Variable),
                 (":", LanguageUnit.Symbol),
-                ("\n", LanguageUnit.Whitespace),
-                ("\t", LanguageUnit.Whitespace),
-                ("\"\"\"Базовый класс для всех сотрудников\"\"\"", LanguageUnit.Value),
                 ("\n", LanguageUnit.Whitespace),
                 ("\t", LanguageUnit.Whitespace),
                 ("emp_count", LanguageUnit.Variable),
@@ -178,7 +176,7 @@ namespace CodeColoring_Tests
                 ("\t", LanguageUnit.Whitespace),
                 ("def", LanguageUnit.FunctionDefinition),
                 (" ", LanguageUnit.Whitespace),
-                ("__init__", LanguageUnit.Variable),
+                ("__init__", LanguageUnit.Function),
                 ("(", LanguageUnit.Symbol),
                 ("self", LanguageUnit.Variable),
                 (",", LanguageUnit.Symbol),
@@ -204,6 +202,18 @@ namespace CodeColoring_Tests
         {
             var input = "\\";
             var expected = input.Select(x => (x.ToString(), LanguageUnit.Unknown)).ToList();
+            SameOutput(expected, python.Parse(input));
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void MultilineString()
+        {
+            var input = "\"\"\"Multiline \n\tstring\t\n\"\"\"";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("Multiline \n\tstring\t\n", LanguageUnit.Value)
+            };
             SameOutput(expected, python.Parse(input));
         }
     }
