@@ -1,14 +1,13 @@
-﻿using NUnit.Framework;
-using NUnit.Framework.Internal;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.Linq;
 using CodeColoring;
 using CodeColoring.Colorizer;
 using CodeColoring.ProgrammingLanguage;
-
 using Ninject;
+using NUnit.Framework;
+using NUnit.Framework.Internal;
+
 
 namespace CodeColoring_Tests
 {
@@ -16,17 +15,14 @@ namespace CodeColoring_Tests
     {
         private class NewColorPalette : ColorPalette { }
 
-        private readonly Randomizer randomizer = new();
         private readonly ColorPalette palette = new DayTheme();
         private readonly Colorizer colorizer = Repository.Kernel.Get<Colorizer>();
         private readonly NewColorPalette newColorPalette = new();
 
         [Test]
         [Repeat(5)]
-        public void ColorPaletteHasTheSameAmountOfVariablesAsLanguageUnit()
-        {
+        public void ColorPaletteHasTheSameAmountOfVariablesAsLanguageUnit() =>
             Assert.AreEqual(Enum.GetValues(typeof(LanguageUnit)).Length, typeof(ColorPalette).GetProperties().Length);
-        }
 
         [Test]
         [Repeat(5)]
@@ -39,11 +35,9 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(5)]
-        public void DefaultColorPaletteIsBlack()
-        {
+        public void DefaultColorPaletteIsBlack() =>
             Assert.True(typeof(NewColorPalette).GetProperties()
                 .All(x => (Color)x.GetValue(newColorPalette) == Color.Black));
-        }
 
         private static Color UnitToColorMap(LanguageUnit languageUnit, ColorPalette palette)
         {
