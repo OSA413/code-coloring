@@ -216,5 +216,42 @@ namespace CodeColoring_Tests
             };
             SameOutput(expected, python.Parse(input));
         }
+
+        [Test]
+        [Repeat(5)]
+        public void SomeMath()
+        {
+            var input = "x=(int(((10+8)*2-9)/2%5)^6)+1";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("x", LanguageUnit.Variable),
+                ("=", LanguageUnit.Symbol),
+                ("(", LanguageUnit.Symbol),
+                ("int", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                ("(", LanguageUnit.Symbol),
+                ("(", LanguageUnit.Symbol),
+                ("10", LanguageUnit.Value),
+                ("+", LanguageUnit.Symbol),
+                ("8", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol),
+                ("*", LanguageUnit.Symbol),
+                ("2", LanguageUnit.Value),
+                ("-", LanguageUnit.Symbol),
+                ("9", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol),
+                ("/", LanguageUnit.Symbol),
+                ("2", LanguageUnit.Value),
+                ("%", LanguageUnit.Symbol),
+                ("5", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol),
+                ("^", LanguageUnit.Symbol),
+                ("6", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol),
+                ("+", LanguageUnit.Symbol),
+                ("1", LanguageUnit.Value),
+            };
+            SameOutput(expected, python.Parse(input));
+        }
     }
 }
