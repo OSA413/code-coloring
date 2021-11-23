@@ -278,5 +278,60 @@ namespace CodeColoring_Tests
             };
             SameOutput(expected, python.Parse(input));
         }
+
+        [Test]
+        [Repeat(5)]
+        public void Semicolon()
+        {
+            var input = "x=5;print(x)";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("x", LanguageUnit.Variable),
+                ("=", LanguageUnit.Symbol),
+                ("5", LanguageUnit.Value),
+                (";", LanguageUnit.Symbol),
+                ("print", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                ("x", LanguageUnit.Variable),
+                (")", LanguageUnit.Symbol)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void Condition()
+        {
+            var input = "if x>10: pass\nelif x<5: del x\nelse raise KeyError";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("if", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                (">", LanguageUnit.Symbol),
+                ("10", LanguageUnit.Value),
+                (":", LanguageUnit.Symbol),
+                (" ", LanguageUnit.Whitespace),
+                ("pass", LanguageUnit.Operator),
+                ("\n", LanguageUnit.Whitespace),
+                ("elif", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                ("<", LanguageUnit.Symbol),
+                ("5", LanguageUnit.Value),
+                (":", LanguageUnit.Symbol),
+                (" ", LanguageUnit.Whitespace),
+                ("del", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                ("\n", LanguageUnit.Whitespace),
+                ("else", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("raise", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("KeyError", LanguageUnit.Variable)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
     }
 }
