@@ -23,13 +23,13 @@ namespace CodeColoring.ProgrammingLanguage
                     builder.Append(value);
                     continue;
                 }
-                if (builder.Length > 1 && builder[^1].Equals('\"') && builder[^2].Equals('\"')  && value == "\"")
+
+                if (builder.Length > 1 && builder[^1].Equals('\"') && builder[^2].Equals('\"') && value == "\"")
                 {
                     builder.Append(value);
                     if (!isMultilineComment)
                     {
                         isMultilineComment = true;
-                        
                     }
                     else
                     {
@@ -38,7 +38,7 @@ namespace CodeColoring.ProgrammingLanguage
                         isMultilineComment = false;
                     }
                 }
-                else if(isMultilineComment)
+                else if (isMultilineComment)
                 {
                     builder.Append(value);
                 }
@@ -49,6 +49,7 @@ namespace CodeColoring.ProgrammingLanguage
                         ChooseUnit(result, "", builder);
                         builder.Clear();
                     }
+
                     builder.Append(value);
                     isComment = true;
                 }
@@ -69,12 +70,11 @@ namespace CodeColoring.ProgrammingLanguage
                 else
                 {
                     ChooseUnit(result, value, builder);
-                    
                 }
-                
+
 
                 if (index != text.Length - 1) continue;
-                result.Add(ChooseSymbolBetweenValueAndVariable(builder));
+                result.Add(ChooseUnit(builder));
             }
 
             return new ParsingResult {Result = result.Where(unit => !unit.Symbol.IsNullOrEmpty()).ToList()};
@@ -82,24 +82,24 @@ namespace CodeColoring.ProgrammingLanguage
 
         private void ChooseUnit(ICollection<ParseUnit> result, string value, StringBuilder strBuilder)
         {
-            if (strBuilder.Length > 0 && (strBuilder[0] == '\"' && value !="\"" || strBuilder[0] == '\'' &&  value !="\'"))
+            if (strBuilder.Length > 0 &&
+                (strBuilder[0] == '\"' && value != "\"" || strBuilder[0] == '\'' && value != "\'"))
             {
                 strBuilder.Append(value);
                 return;
             }
+
             if (IsStringOrCharType(strBuilder, value))
             {
                 strBuilder.Append(value);
                 result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
                 strBuilder.Clear();
-
             }
             else if (units[LanguageUnit.Whitespace].Contains(value))
             {
-                result.Add(ChooseUnitWhereCurrentSymbolIsWhitSpace(strBuilder));
+                result.Add(ChooseUnit(strBuilder));
                 result.Add(new ParseUnit(LanguageUnit.Whitespace, value));
                 strBuilder.Clear();
-
             }
             else if (units[LanguageUnit.Function].Contains(value))
             {
@@ -108,46 +108,21 @@ namespace CodeColoring.ProgrammingLanguage
                     : new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
                 result.Add(new ParseUnit(LanguageUnit.Symbol, value));
                 strBuilder.Clear();
-                
             }
-
             else if (units[LanguageUnit.Symbol].Contains(value))
             {
-                result.Add(ChooseSymbolBetweenValueAndVariable(strBuilder));
+                result.Add(ChooseUnit(strBuilder));
                 result.Add(new ParseUnit(LanguageUnit.Symbol, value));
                 strBuilder.Clear();
-                
             }
-            
+
             else
             {
                 strBuilder.Append(value);
-                
             }
         }
 
-        private static ParseUnit ChooseSymbolBetweenValueAndVariable(StringBuilder builder)
-        {
-            if (builder.Length > 0 && int.TryParse(builder[0].ToString(), out _))
-            {
-                return new ParseUnit(LanguageUnit.Value, builder.ToString());
-            }
-
-            if (builder.Length > 0 && (char.IsLetter(builder[0])))
-            {
-                return new ParseUnit(LanguageUnit.Variable, builder.ToString());
-            }
-
-            return new ParseUnit(LanguageUnit.Unknown, builder.ToString());
-        }
-
-        private static bool IsStringOrCharType(StringBuilder builder, string currentValue)
-        {
-            return builder.Length > 0 &&
-                   ((currentValue == "\"" && builder[0] == '\"' || currentValue == "\'" && builder[0] == '\'') && builder.Length > 1 );
-        }
-
-        private ParseUnit ChooseUnitWhereCurrentSymbolIsWhitSpace(StringBuilder builder)
+        private ParseUnit ChooseUnit(StringBuilder builder)
         {
             if (units[LanguageUnit.FunctionDefinition].Contains(builder.ToString()))
             {
@@ -159,12 +134,27 @@ namespace CodeColoring.ProgrammingLanguage
                 return new ParseUnit(LanguageUnit.Operator, builder.ToString());
             }
 
-            return ChooseSymbolBetweenValueAndVariable(builder);
+            if (builder.Length > 0 && int.TryParse(builder[0].ToString(), out _))
+            {
+                return new ParseUnit(LanguageUnit.Value, builder.ToString());
+            }
+
+            if (builder.Length > 0 && char.IsLetter(builder[0]))
+            {
+                return new ParseUnit(LanguageUnit.Variable, builder.ToString());
+            }
+
+            return new ParseUnit(LanguageUnit.Unknown, builder.ToString());
         }
 
-        public string[] Extensions() => new[] {".py"};
+        private static bool IsStringOrCharType(StringBuilder builder, string currentValue)
+        {
+            return builder.Length > 0 && (currentValue == "\"" && builder[0] == '\"'
+                                          || currentValue == "\'" && builder[0] == '\'') && builder.Length > 1;
+        }
 
-        
+
+        public string[] Extensions() => new[] {".py"};
 
 
         private readonly Dictionary<LanguageUnit, string[]> units = new()
@@ -184,12 +174,11 @@ namespace CodeColoring.ProgrammingLanguage
             },
             {
                 LanguageUnit.Function,
-                new[] {"(", ".", ":"}
+                new[] {"(", "."}
             },
             {
                 LanguageUnit.Symbol,
                 new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "(", ";", "/", ":", ",", "[", "]"}
-                
             },
             {
                 LanguageUnit.Whitespace,
