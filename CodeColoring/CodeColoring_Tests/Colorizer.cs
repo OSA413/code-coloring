@@ -15,7 +15,7 @@ namespace CodeColoring_Tests
     {
         private class NewColorPalette : ColorPalette { }
 
-        private readonly ColorPalette palette = new DayTheme();
+        private readonly ColorPalette palette = Repository.Kernel.Get<DayTheme>();
         private readonly Colorizer colorizer = Repository.Kernel.Get<Colorizer>();
         private readonly NewColorPalette newColorPalette = new();
 
@@ -38,6 +38,11 @@ namespace CodeColoring_Tests
         public void DefaultColorPaletteIsBlack() =>
             Assert.True(typeof(NewColorPalette).GetProperties()
                 .All(x => (Color)x.GetValue(newColorPalette) == Color.Black));
+
+        [Test]
+        [Repeat(5)]
+        public void NonExistingColorThrowsArgumentOutOfRange() =>
+            Assert.Throws<ArgumentOutOfRangeException>(() => colorizer.Colorize((LanguageUnit)99, palette));
 
         private static Color UnitToColorMap(LanguageUnit languageUnit, ColorPalette palette)
         {

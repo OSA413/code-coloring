@@ -13,9 +13,9 @@ namespace CodeColoring_Tests
 {
     public class ConsoleArgsDecoder_Tests
     {
-        private readonly ConsoleArgsDecoder decoder = new();
-        private readonly Randomizer randomizer = new();
         private Parameters parameters;
+        private readonly Randomizer randomizer = new();
+        private readonly ConsoleArgsDecoder decoder = Repository.Kernel.Get<ConsoleArgsDecoder>();
 
         private class Parameters
         {

@@ -129,7 +129,7 @@ namespace CodeColoring.ProgrammingLanguage
             },
             {
                 LanguageUnit.Symbol,
-                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "(", ";", "\\", "/", ":"}
+                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "(", ";", "/", ":"}
             },
             {
                 LanguageUnit.Whitespace,

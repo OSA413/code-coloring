@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 using CodeColoring.ProgrammingLanguage;
@@ -112,20 +113,97 @@ namespace CodeColoring_Tests
             };
             SameOutput(expected, python.Parse(input));
         }
-        
+
         [Test]
         [Repeat(5)]
-        public void TestWithComment()
+        public void TestWithComment0()
         {
-            var input = "#hahah \nx=5";
+            var input = "a=3#hahah \nx=5";
             var expected = new List<(string arg, LanguageUnit LanguageUnit)>
             {
+                ("a", LanguageUnit.Variable),
+                ("=", LanguageUnit.Symbol),
+                ("3", LanguageUnit.Value),
                 ("#hahah ", LanguageUnit.Comment),
                 ("\n", LanguageUnit.Whitespace),
                 ("x", LanguageUnit.Variable),
                 ("=", LanguageUnit.Symbol),
                 ("5", LanguageUnit.Value),
             };
+            SameOutput(expected, python.Parse(input));
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void TestWithComment1()
+        {
+            var input = "a=3 #hahah \nx=5";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("a", LanguageUnit.Variable),
+                ("=", LanguageUnit.Symbol),
+                ("3", LanguageUnit.Value),
+                (" ", LanguageUnit.Whitespace),
+                ("#hahah ", LanguageUnit.Comment),
+                ("\n", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                ("=", LanguageUnit.Symbol),
+                ("5", LanguageUnit.Value),
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void ClassExample()
+        {
+            var input = "class Employee:\n\t\"\"\"Базовый класс для всех сотрудников\"\"\"\n\temp_count=0\n\n"
+                + "\tdef __init__(self, name):\n\t\tself.name=name";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("class", LanguageUnit.FunctionDefinition),
+                (" ", LanguageUnit.Whitespace),
+                ("Employee", LanguageUnit.Variable),
+                (":", LanguageUnit.Symbol),
+                ("\n", LanguageUnit.Whitespace),
+                ("\t", LanguageUnit.Whitespace),
+                ("\"\"\"Базовый класс для всех сотрудников\"\"\"", LanguageUnit.Value),
+                ("\n", LanguageUnit.Whitespace),
+                ("\t", LanguageUnit.Whitespace),
+                ("emp_count", LanguageUnit.Variable),
+                ("=", LanguageUnit.Symbol),
+                ("0", LanguageUnit.Value),
+                ("\n", LanguageUnit.Whitespace),
+                ("\n", LanguageUnit.Whitespace),
+                ("\t", LanguageUnit.Whitespace),
+                ("def", LanguageUnit.FunctionDefinition),
+                (" ", LanguageUnit.Whitespace),
+                ("__init__", LanguageUnit.Variable),
+                ("(", LanguageUnit.Symbol),
+                ("self", LanguageUnit.Variable),
+                (",", LanguageUnit.Symbol),
+                (" ", LanguageUnit.Whitespace),
+                ("name", LanguageUnit.Variable),
+                (")", LanguageUnit.Symbol),
+                (":", LanguageUnit.Symbol),
+                ("\n", LanguageUnit.Whitespace),
+                ("\t", LanguageUnit.Whitespace),
+                ("\t", LanguageUnit.Whitespace),
+                ("self", LanguageUnit.Function),
+                (".", LanguageUnit.Symbol),
+                ("name", LanguageUnit.Variable),
+                ("=", LanguageUnit.Symbol),
+                ("name", LanguageUnit.Variable)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+
+        [Test]
+        [Repeat(5)]
+        public void UnsupportedCharsAreUnknown()
+        {
+            var input = "\\";
+            var expected = input.Select(x => (x.ToString(), LanguageUnit.Unknown)).ToList();
             SameOutput(expected, python.Parse(input));
         }
     }
