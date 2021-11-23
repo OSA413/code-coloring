@@ -120,7 +120,7 @@ namespace CodeColoring.ProgrammingLanguage
                 {
                     "if", "else", "elif", "for", "while", "pass", "break", "continue", "return", "yield",
                     "global", "nonlocal", "import", "from", "class", "try", "except", "finally", "raise", "assert",
-                    "with", "as", "del", "in"
+                    "with", "as", "del", "in", "and", "or"
                 }
             },
             {
