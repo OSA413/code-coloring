@@ -17,6 +17,11 @@ namespace CodeColoring.ProgrammingLanguage
                 var value = text[index].ToString();
                 if (value == "#")
                 {
+                    if (strBuilder.Length > 0)
+                    {
+                        ChooseUnit(result, "", strBuilder);
+                        strBuilder.Clear();
+                    }
                     strBuilder.Append(value);
                     isComment = true;
                 }
@@ -34,44 +39,61 @@ namespace CodeColoring.ProgrammingLanguage
                         strBuilder.Append(value);
                     }
                 }
-                else if (units[LanguageUnit.Whitespace].Contains(value))
-                {
-                    result.Add(ChooseUnitWhereCurrentSymbolIsWhitSpace(strBuilder));
-                    result.Add(new ParseUnit(LanguageUnit.Whitespace, value));
-                    strBuilder = new StringBuilder();
-                }
-                else if (units[LanguageUnit.Function].Contains(value))
-                {
-                    result.Add(units[LanguageUnit.Operator].Contains(strBuilder.ToString())
-                        ? new ParseUnit(LanguageUnit.Operator, strBuilder.ToString())
-                        : new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
-                    result.Add(new ParseUnit(LanguageUnit.Symbol, value));
-                    strBuilder = new StringBuilder();
-                }
-
-                else if (units[LanguageUnit.Symbol].Contains(value))
-                {
-                    result.Add(ChooseSymbolBetweenValueAndVariable(strBuilder));
-                    result.Add(new ParseUnit(LanguageUnit.Symbol, value));
-                    strBuilder = new StringBuilder();
-                }
-                else if (IsStringOrCharType(strBuilder, value))
-                {
-                    strBuilder.Append(value);
-                    result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
-                    strBuilder = new StringBuilder();
-                }
                 else
                 {
-                    strBuilder.Append(value);
-                    if (index != text.Length - 1) continue;
-                    result.Add(ChooseSymbolBetweenValueAndVariable(strBuilder));
+                    ChooseUnit(result, value, strBuilder);
+                    
                 }
+                
+
+                if (index != text.Length - 1) continue;
+                result.Add(ChooseSymbolBetweenValueAndVariable(strBuilder));
             }
 
             var output = new ParsingResult();
             output.Result = result.Where(unit => !unit.Symbol.IsNullOrEmpty()).ToList();
             return output;
+        }
+
+        private void ChooseUnit(ICollection<ParseUnit> result, string value, StringBuilder strBuilder)
+        {
+            if (IsStringOrCharType(strBuilder, value))
+            {
+                strBuilder.Append(value);
+                result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
+                strBuilder.Clear();
+
+            }
+            else if (units[LanguageUnit.Whitespace].Contains(value))
+            {
+                result.Add(ChooseUnitWhereCurrentSymbolIsWhitSpace(strBuilder));
+                result.Add(new ParseUnit(LanguageUnit.Whitespace, value));
+                strBuilder.Clear();
+
+            }
+            else if (units[LanguageUnit.Function].Contains(value))
+            {
+                result.Add(units[LanguageUnit.Operator].Contains(strBuilder.ToString())
+                    ? new ParseUnit(LanguageUnit.Operator, strBuilder.ToString())
+                    : new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
+                result.Add(new ParseUnit(LanguageUnit.Symbol, value));
+                strBuilder.Clear();
+                
+            }
+
+            else if (units[LanguageUnit.Symbol].Contains(value))
+            {
+                result.Add(ChooseSymbolBetweenValueAndVariable(strBuilder));
+                result.Add(new ParseUnit(LanguageUnit.Symbol, value));
+                strBuilder.Clear();
+                
+            }
+            
+            else
+            {
+                strBuilder.Append(value);
+                
+            }
         }
 
         private static ParseUnit ChooseSymbolBetweenValueAndVariable(StringBuilder builder)
@@ -107,6 +129,8 @@ namespace CodeColoring.ProgrammingLanguage
 
         public string[] Extensions() => new[] {".py"};
 
+        
+
 
         private readonly Dictionary<LanguageUnit, string[]> units = new()
         {
@@ -129,11 +153,12 @@ namespace CodeColoring.ProgrammingLanguage
             },
             {
                 LanguageUnit.Symbol,
-                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "(", ";", "/", ":", ","}
+                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "(", ";", "/", ":", ",", "[", "]"}
+                
             },
             {
                 LanguageUnit.Whitespace,
-                new[] {" ", "\n", "\r", "\t"}
+                new[] {" ", "\n", "\r", "\t", ""}
             }
         };
     }

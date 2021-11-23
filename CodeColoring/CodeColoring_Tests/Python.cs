@@ -274,7 +274,9 @@ namespace CodeColoring_Tests
                 ("range", LanguageUnit.Function),
                 ("(", LanguageUnit.Symbol),
                 ("5", LanguageUnit.Value),
-                (")", LanguageUnit.Symbol)
+                (")", LanguageUnit.Symbol),
+                ("]", LanguageUnit.Symbol)
+                
             };
             SameOutput(expected, python.Parse(input));
         }

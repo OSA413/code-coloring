@@ -7,12 +7,12 @@ namespace CodeColoring.Colorizer
         public DayTheme()
         {
             FunctionColor = Color.Blue;
-            FunctionDefinitionColor = Color.Aqua;
-            OperatorColor = Color.White;
+            FunctionDefinitionColor = Color.Salmon;
+            OperatorColor = Color.Olive;
             SymbolColor = Color.Orange;
-            VariableColor = Color.LightBlue;
+            VariableColor = Color.Chocolate;
             CommentColor = Color.Green;
-            ValueColor = Color.LightGreen;
+            ValueColor = Color.Gray;
         }
     }
 }
