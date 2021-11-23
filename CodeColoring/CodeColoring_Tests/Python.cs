@@ -364,5 +364,32 @@ namespace CodeColoring_Tests
             };
             SameOutput(expected, python.Parse(input));
         }
+
+        [Test]
+        [Repeat(5)]
+        public void ImportFromRandom()
+        {
+            var input = "from random import randint\r\nrandint(0, 10)";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("from", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("random", LanguageUnit.Variable),
+                (" ", LanguageUnit.Whitespace),
+                ("import", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("randint", LanguageUnit.Variable),
+                ("\r", LanguageUnit.Whitespace),
+                ("\n", LanguageUnit.Whitespace),
+                ("randint", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                ("0", LanguageUnit.Value),
+                (",", LanguageUnit.Symbol),
+                (" ", LanguageUnit.Whitespace),
+                ("10", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
     }
 }
