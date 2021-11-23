@@ -133,7 +133,9 @@ namespace CodeColoring_Tests
             };
             SameOutput(expected, python.Parse(input));
         }
-
+        
+        
+        
         [Test]
         [Repeat(5)]
         public void TestWithComment1()
@@ -212,7 +214,7 @@ namespace CodeColoring_Tests
             var input = "\"\"\"Multiline \n\tstring\t\n\"\"\"";
             var expected = new List<(string arg, LanguageUnit LanguageUnit)>
             {
-                ("Multiline \n\tstring\t\n", LanguageUnit.Value)
+                ("\"\"\"Multiline \n\tstring\t\n\"\"\"", LanguageUnit.Comment)
             };
             SameOutput(expected, python.Parse(input));
         }
@@ -528,5 +530,7 @@ namespace CodeColoring_Tests
             };
             SameOutput(expected, python.Parse(input));
         }
+        
+        
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Castle.Core.Internal;
@@ -12,10 +13,36 @@ namespace CodeColoring.ProgrammingLanguage
             var result = new List<ParseUnit>();
             var strBuilder = new StringBuilder();
             var isComment = false;
+            var isMultilineComment = false;
             for (var index = 0; index < text.Length; index++)
             {
                 var value = text[index].ToString();
-                if (value == "#")
+
+                if (index != text.Length - 1 && value == "\"" && text[index + 1].ToString() == "\"")
+                {
+                    strBuilder.Append(value);
+                    continue;
+                }
+                if (strBuilder.Length > 1 && strBuilder[^1].Equals('\"') && strBuilder[^2].Equals('\"')  && value == "\"")
+                {
+                    strBuilder.Append(value);
+                    if (!isMultilineComment)
+                    {
+                        isMultilineComment = true;
+                        
+                    }
+                    else
+                    {
+                        result.Add(new ParseUnit(LanguageUnit.Comment, strBuilder.ToString()));
+                        strBuilder.Clear();
+                        isMultilineComment = false;
+                    }
+                }
+                else if(isMultilineComment)
+                {
+                    strBuilder.Append(value);
+                }
+                else if (value == "#")
                 {
                     if (strBuilder.Length > 0)
                     {
@@ -50,13 +77,16 @@ namespace CodeColoring.ProgrammingLanguage
                 result.Add(ChooseSymbolBetweenValueAndVariable(strBuilder));
             }
 
-            var output = new ParsingResult();
-            output.Result = result.Where(unit => !unit.Symbol.IsNullOrEmpty()).ToList();
-            return output;
+            return new ParsingResult {Result = result.Where(unit => !unit.Symbol.IsNullOrEmpty()).ToList()};
         }
 
         private void ChooseUnit(ICollection<ParseUnit> result, string value, StringBuilder strBuilder)
         {
+            if (strBuilder.Length > 0 && (strBuilder[0] == '\"' && value !="\"" || strBuilder[0] == '\'' &&  value !="\'"))
+            {
+                strBuilder.Append(value);
+                return;
+            }
             if (IsStringOrCharType(strBuilder, value))
             {
                 strBuilder.Append(value);
@@ -103,13 +133,18 @@ namespace CodeColoring.ProgrammingLanguage
                 return new ParseUnit(LanguageUnit.Value, builder.ToString());
             }
 
-            return new ParseUnit(LanguageUnit.Variable, builder.ToString());
+            if (builder.Length > 0 && (char.IsLetter(builder[0])))
+            {
+                return new ParseUnit(LanguageUnit.Variable, builder.ToString());
+            }
+
+            return new ParseUnit(LanguageUnit.Unknown, builder.ToString());
         }
 
         private static bool IsStringOrCharType(StringBuilder builder, string currentValue)
         {
             return builder.Length > 0 &&
-                   (currentValue == "\"" && builder[0] == '\"' || currentValue == "\'" && builder[0] == '\'');
+                   ((currentValue == "\"" && builder[0] == '\"' || currentValue == "\'" && builder[0] == '\'') && builder.Length > 1 );
         }
 
         private ParseUnit ChooseUnitWhereCurrentSymbolIsWhitSpace(StringBuilder builder)
@@ -149,7 +184,7 @@ namespace CodeColoring.ProgrammingLanguage
             },
             {
                 LanguageUnit.Function,
-                new[] {"(", "."}
+                new[] {"(", ".", ":"}
             },
             {
                 LanguageUnit.Symbol,
