@@ -333,5 +333,36 @@ namespace CodeColoring_Tests
             };
             SameOutput(expected, python.Parse(input));
         }
+
+        [Test]
+        [Repeat(5)]
+        public void ReadFile()
+        {
+            var input = "with open(\"file.txt\", \"r\") as f: f.read()";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("with", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("open", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                ("\"file.txt\"", LanguageUnit.Value),
+                (",", LanguageUnit.Symbol),
+                (" ", LanguageUnit.Whitespace),
+                ("\"r\"", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol),
+                (" ", LanguageUnit.Whitespace),
+                ("as", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("f", LanguageUnit.Variable),
+                (":", LanguageUnit.Symbol),
+                (" ", LanguageUnit.Whitespace),
+                ("f", LanguageUnit.Function),
+                (".", LanguageUnit.Symbol),
+                ("read", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                (")", LanguageUnit.Symbol)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
     }
 }
