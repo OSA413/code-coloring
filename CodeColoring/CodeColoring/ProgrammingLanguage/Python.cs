@@ -166,7 +166,7 @@ namespace CodeColoring.ProgrammingLanguage
                 new[]
                 {
                     "if", "else", "elif", "for", "while", "pass", "break", "continue", "return", "yield",
-                    "global", "nonlocal", "import", "from", "class", "try", "except", "finally", "raise", "assert",
+                    "global", "nonlocal", "import", "from", "try", "except", "finally", "raise", "assert",
                     "with", "as", "del", "in", "and", "or"
                 }
             },
@@ -176,7 +176,7 @@ namespace CodeColoring.ProgrammingLanguage
             },
             {
                 LanguageUnit.Symbol,
-                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", "(", ";", "/", ":", ",", "[", "]"}
+                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", ";", "/", ":", ",", "[", "]"}
             },
             {
                 LanguageUnit.Whitespace,
