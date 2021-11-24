@@ -10,24 +10,27 @@ namespace CodeColoring.OutputFormat
     public class HTML : IOutputFormat
     {
         HTMLPageSettings pageSettings = HTMLPageSettings.DefaultSettings();
+
         public string Format(ParsingResult parsed, ColorPalette palette)
         {
-            var result = new StringBuilder();
             pageSettings.Palette = palette;
+            var resultBuilder = new StringBuilder();
 
-            result.Append("<!DOCTYPE HTML>\n");
-            result.Append("<html>\n");
+            resultBuilder.Append("<!DOCTYPE HTML>\n");
+            using (TagToken.Tag("html", resultBuilder))
+            {
+                resultBuilder.Append("<html>\n");
 
-            result.Append(FormatHeader(pageSettings.Palette,  
-                pageSettings.Title, 
-                pageSettings.BackgroundColor, 
-                pageSettings.Font, 
-                pageSettings.FontSize, 
-                pageSettings.TabSize));
-            result.Append(FormatBody(parsed, pageSettings.TabSize));
+                resultBuilder.Append(FormatHeader(pageSettings.Palette,
+                    pageSettings.Title,
+                    pageSettings.BackgroundColor,
+                    pageSettings.Font,
+                    pageSettings.FontSize,
+                    pageSettings.TabSize));
+                resultBuilder.Append(FormatBody(parsed, pageSettings.TabSize));
+            }
 
-            result.Append("</html>\n");
-            return result.ToString();
+            return resultBuilder.ToString();
         }
 
         private string FormatBody(ParsingResult parsed, int tab)
@@ -65,6 +68,29 @@ namespace CodeColoring.OutputFormat
         }
 
         private string FormatUnit(ParseUnit unit) => $"<span class=\"{unit.Unit}\">{unit.Symbol}</span>";
+    }
+
+    class TagToken : IDisposable
+    {
+        readonly StringBuilder builder;
+        readonly string tag;
+
+        public TagToken(string tag, StringBuilder builder)
+        {
+            this.builder = builder;
+            this.tag = tag;
+            builder.Append(String.Format("<{0}>\n", tag));
+        }
+
+        public void Dispose()
+        {
+            builder.Append(String.Format("</{0}>\n", tag));
+        }
+
+        public static TagToken Tag(string tag, StringBuilder builder)
+        {
+            return new TagToken(tag, builder);
+        }
     }
 
     public class HTMLPageSettings
