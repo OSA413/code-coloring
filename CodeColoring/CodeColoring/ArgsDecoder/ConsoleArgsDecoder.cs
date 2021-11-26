@@ -22,9 +22,9 @@ namespace CodeColoring.ArgsDecoder
             private Action<string> action;
             private readonly DecodedArguments decoded;
             
-            private ColorPalette colorPalette;
-            private IOutputFormat outputFormat;
-            private IProgrammingLanguage programmingLanguage;
+            private readonly ColorPalette colorPalette;
+            private readonly IOutputFormat outputFormat;
+            private readonly IProgrammingLanguage programmingLanguage;
 
             public ArgumentAssigner(ColorPalette colorPalette, IOutputFormat outputFormat, IProgrammingLanguage programmingLanguage)
             {

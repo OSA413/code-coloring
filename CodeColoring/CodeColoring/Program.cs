@@ -12,16 +12,17 @@ namespace CodeColoring
         public static void Main(string[] args)
         {
             var container = ConfigureContainer();
-            var dargs = container.Get<IArgsDecoder>().Decode(args);
+            var readOnlyKernel = container.BuildReadonlyKernel();
+            var dargs = readOnlyKernel.Get<IArgsDecoder>().Decode(args);
             var inputText = File.ReadAllText(dargs.InputFilePath);
             var parsingResult = dargs.ProgrammingLanguage.Parse(inputText);
             var outputText = dargs.OutputFormat.Format(parsingResult, dargs.ColorPalette);
             File.WriteAllText(dargs.OutputFilePath, outputText);
         }
 
-        private static StandardKernel ConfigureContainer()
+        private static KernelConfiguration ConfigureContainer()
         {
-            var container = new StandardKernel();
+            var container = new KernelConfiguration();
             container.Bind<IArgsDecoder>().To<ConsoleArgsDecoder>();
             container.Bind<StreamReader>().ToSelf();
             container.Bind<StreamWriter>().ToSelf();
