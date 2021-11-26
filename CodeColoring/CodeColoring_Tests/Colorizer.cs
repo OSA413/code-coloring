@@ -12,12 +12,18 @@ using NUnit.Framework.Internal;
 namespace CodeColoring_Tests
 {
     internal class ColorPalette_Tests
-    {
+    { 
         private class NewColorPalette : ColorPalette { }
 
-        private readonly ColorPalette palette = Repository.Kernel.Get<DayTheme>();
-        private readonly Colorizer colorizer = Repository.Kernel.Get<Colorizer>();
+        private readonly ColorPalette palette;
+        private readonly Colorizer colorizer;
         private readonly NewColorPalette newColorPalette = new();
+
+        public ColorPalette_Tests(ColorPalette palette, Colorizer colorizer)
+        {
+            this.palette = palette;
+            this.colorizer = colorizer;
+        }
 
         [Test]
         [Repeat(5)]

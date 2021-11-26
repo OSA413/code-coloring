@@ -10,6 +10,7 @@ namespace CodeColoring_Tests
     internal partial class Python_Tests
     {
         private readonly Python python = new();
+        
 
         private static void SameOutput(List<(string arg, LanguageUnit LanguageUnit)> expected, ParsingResult actual)
         {

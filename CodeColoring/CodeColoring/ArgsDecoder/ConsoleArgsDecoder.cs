@@ -8,17 +8,30 @@ namespace CodeColoring.ArgsDecoder
 {
     public class ConsoleArgsDecoder : IArgsDecoder
     {
+        
+
         public string Help => "Code Coloring\n\nAvailable parameters:"
-            + "\n\t-i, --input\tInput file path"
-            + "\n\t-l, --lang\tInput programming language"
-            + "\n\t-f, --format\tOutput format"
-            + "\n\t-c, --color\tOutput color palette"
-            + "\n\nUsage Example:\nCodeColoring -i D:\\main.py -c DayTheme -l Python -f HTML D:\\main.html";
+                              + "\n\t-i, --input\tInput file path"
+                              + "\n\t-l, --lang\tInput programming language"
+                              + "\n\t-f, --format\tOutput format"
+                              + "\n\t-c, --color\tOutput color palette"
+                              + "\n\nUsage Example:\nCodeColoring -i D:\\main.py -c DayTheme -l Python -f HTML D:\\main.html";
 
         private class ArgumentAssigner
         {
             private Action<string> action;
             private readonly DecodedArguments decoded;
+            
+            private ColorPalette colorPalette;
+            private IOutputFormat outputFormat;
+            private IProgrammingLanguage programmingLanguage;
+
+            public ArgumentAssigner(ColorPalette colorPalette, IOutputFormat outputFormat, IProgrammingLanguage programmingLanguage)
+            {
+                this.colorPalette = colorPalette;
+                this.outputFormat = outputFormat;
+                this.programmingLanguage = programmingLanguage;
+            }
 
             public ArgumentAssigner(DecodedArguments result) => decoded = result;
 
@@ -36,13 +49,13 @@ namespace CodeColoring.ArgsDecoder
             }
 
             private void HandleColor(string arg) =>
-                decoded.ColorPalette = Repository.Kernel.Get<ColorPalette>(arg);
+                decoded.ColorPalette = colorPalette;
             private void HandleInputFilePath(string arg) =>
                 decoded.InputFilePath = arg;
             private void HandleOutputFormat(string arg) =>
-                decoded.OutputFormat = Repository.Kernel.Get<IOutputFormat>(arg);
+                decoded.OutputFormat = outputFormat;
             private void HandleProgrammingLanguage(string arg) =>
-                decoded.ProgrammingLanguage = Repository.Kernel.Get<IProgrammingLanguage>(arg);
+                decoded.ProgrammingLanguage = programmingLanguage;
             private void HandleOutputFilePath(string arg) =>
                 decoded.OutputFilePath = arg;
 

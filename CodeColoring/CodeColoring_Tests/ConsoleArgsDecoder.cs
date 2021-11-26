@@ -15,7 +15,16 @@ namespace CodeColoring_Tests
     {
         private Parameters parameters;
         private readonly Randomizer randomizer = new();
-        private readonly ConsoleArgsDecoder decoder = Repository.Kernel.Get<ConsoleArgsDecoder>();
+        private readonly IArgsDecoder decoder;
+        private readonly IOutputFormat outputFormat;
+        private readonly HTML html;
+
+        public ConsoleArgsDecoder_Tests(ConsoleArgsDecoder decoder, IOutputFormat outputFormat, HTML html)
+        {
+            this.decoder = decoder;
+            this.outputFormat = outputFormat;
+            this.html = html;
+        }
 
         private class Parameters
         {
@@ -95,7 +104,7 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_OutputFormat([Values("-f", "--format")] string flag)
         {
             var result = decoder.Decode(new[] { flag, "HTML" });
-            var expected = new DecodedArguments() { OutputFormat = Repository.Kernel.Get<HTML>() };
+            var expected = new DecodedArguments() { OutputFormat = outputFormat };
             AreEqual(expected, result);
         }
 
@@ -140,7 +149,7 @@ namespace CodeColoring_Tests
                 ColorPalette = new DayTheme(),
                 InputFilePath = input,
                 OutputFilePath = output,
-                OutputFormat = Repository.Kernel.Get<HTML>(),
+                OutputFormat = outputFormat,
                 ProgrammingLanguage = new Python()
             };
             AreEqual(expected, result);
@@ -157,7 +166,7 @@ namespace CodeColoring_Tests
                 ColorPalette = new DayTheme(),
                 InputFilePath = parameters.Input,
                 OutputFilePath = parameters.Output,
-                OutputFormat = Repository.Kernel.Get<HTML>(),
+                OutputFormat = html,
                 ProgrammingLanguage = new Python()
             };
             AreEqual(expected, result);
