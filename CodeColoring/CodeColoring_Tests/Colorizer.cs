@@ -18,11 +18,13 @@ namespace CodeColoring_Tests
         private readonly ColorPalette palette;
         private readonly Colorizer colorizer;
         private readonly NewColorPalette newColorPalette = new();
+      
 
-        public ColorPalette_Tests(ColorPalette palette, Colorizer colorizer)
+        public ColorPalette_Tests()
         {
-            this.palette = palette;
-            this.colorizer = colorizer;
+            var readOnlyKernel = Program.ConfigureContainer();
+            palette = readOnlyKernel.Get<ColorPalette>();
+            colorizer = readOnlyKernel.Get<Colorizer>();
         }
 
         [Test]

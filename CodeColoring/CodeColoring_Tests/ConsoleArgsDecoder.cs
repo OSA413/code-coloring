@@ -17,13 +17,16 @@ namespace CodeColoring_Tests
         private readonly Randomizer randomizer = new();
         private readonly IArgsDecoder decoder;
         private readonly IOutputFormat outputFormat;
-        private readonly HTML html;
+        private readonly ColorPalette colorPalette;
+        private readonly IProgrammingLanguage programmingLanguage;
 
-        public ConsoleArgsDecoder_Tests(ConsoleArgsDecoder decoder, IOutputFormat outputFormat, HTML html)
+        public ConsoleArgsDecoder_Tests()
         {
-            this.decoder = decoder;
-            this.outputFormat = outputFormat;
-            this.html = html;
+            var readOnlyKernel = Program.ConfigureContainer();
+            decoder = readOnlyKernel.Get<IArgsDecoder>();
+            outputFormat = readOnlyKernel.Get<IOutputFormat>("HTML");
+            colorPalette = readOnlyKernel.Get<ColorPalette>("DayTheme");
+            programmingLanguage = readOnlyKernel.Get<IProgrammingLanguage>("Python");
         }
 
         private class Parameters
@@ -146,11 +149,11 @@ namespace CodeColoring_Tests
             var result = decoder.Decode(new[] { "-c", "DayTheme", "-i", input, "-f", "HTML", "-l", "Python", output });
             var expected = new DecodedArguments()
             {
-                ColorPalette = new DayTheme(),
+                ColorPalette = colorPalette,
                 InputFilePath = input,
                 OutputFilePath = output,
                 OutputFormat = outputFormat,
-                ProgrammingLanguage = new Python()
+                ProgrammingLanguage = programmingLanguage
             };
             AreEqual(expected, result);
         }
@@ -163,11 +166,11 @@ namespace CodeColoring_Tests
             var result = decoder.Decode(args);
             var expected = new DecodedArguments
             {
-                ColorPalette = new DayTheme(),
+                ColorPalette = colorPalette,
                 InputFilePath = parameters.Input,
                 OutputFilePath = parameters.Output,
-                OutputFormat = html,
-                ProgrammingLanguage = new Python()
+                OutputFormat = outputFormat,
+                ProgrammingLanguage = programmingLanguage
             };
             AreEqual(expected, result);
         }

@@ -11,8 +11,7 @@ namespace CodeColoring
     {
         public static void Main(string[] args)
         {
-            var container = ConfigureContainer();
-            var readOnlyKernel = container.BuildReadonlyKernel();
+            var readOnlyKernel = ConfigureContainer();
             var dargs = readOnlyKernel.Get<IArgsDecoder>().Decode(args);
             var inputText = File.ReadAllText(dargs.InputFilePath);
             var parsingResult = dargs.ProgrammingLanguage.Parse(inputText);
@@ -20,18 +19,18 @@ namespace CodeColoring
             File.WriteAllText(dargs.OutputFilePath, outputText);
         }
 
-        private static KernelConfiguration ConfigureContainer()
+        public static IReadOnlyKernel ConfigureContainer()
         {
             var container = new KernelConfiguration();
-            container.Bind<IArgsDecoder>().To<ConsoleArgsDecoder>();
-            container.Bind<StreamReader>().ToSelf();
-            container.Bind<StreamWriter>().ToSelf();
+            container.Bind<IArgsDecoder>().To<ConsoleArgsDecoder>().InSingletonScope();
+            container.Bind<StreamReader>().ToSelf().InSingletonScope();
+            container.Bind<StreamWriter>().ToSelf().InSingletonScope();
             container.Bind<Colorizer.Colorizer>().ToSelf().InSingletonScope();
-            container.Bind<ColorPalette>().To<DayTheme>().Named("DayTheme");
-            container.Bind<IOutputFormat>().To<HTML>().Named("HTML");
-            container.Bind<IProgrammingLanguage>().To<Python>().Named("Python");
-
-            return container;
+            container.Bind<ColorPalette>().To<DayTheme>().InSingletonScope().Named("DayTheme");
+            container.Bind<IOutputFormat>().To<HTML>().InSingletonScope().Named("HTML");
+            container.Bind<IProgrammingLanguage>().To<Python>().InSingletonScope().Named("Python");
+            
+            return container.BuildReadonlyKernel();
         }
     }
 }

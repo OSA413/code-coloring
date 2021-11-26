@@ -26,14 +26,18 @@ namespace CodeColoring.ArgsDecoder
             private readonly IOutputFormat outputFormat;
             private readonly IProgrammingLanguage programmingLanguage;
 
-            public ArgumentAssigner(ColorPalette colorPalette, IOutputFormat outputFormat, IProgrammingLanguage programmingLanguage)
+            public ArgumentAssigner(DecodedArguments result, ColorPalette colorPalette, IOutputFormat outputFormat, IProgrammingLanguage programmingLanguage)
             {
+                decoded = result;
                 this.colorPalette = colorPalette;
                 this.outputFormat = outputFormat;
                 this.programmingLanguage = programmingLanguage;
             }
-
-            public ArgumentAssigner(DecodedArguments result) => decoded = result;
+            
+            public ArgumentAssigner(DecodedArguments result)
+            {
+                decoded = result;
+            }
 
             public void Process(string arg)
             {
