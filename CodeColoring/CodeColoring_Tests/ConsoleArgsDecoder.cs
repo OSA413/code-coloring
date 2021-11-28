@@ -15,6 +15,7 @@ namespace CodeColoring_Tests
     {
         private Parameters parameters;
         private readonly Randomizer randomizer = new();
+        private readonly IReadOnlyKernel container;
         private readonly IArgsDecoder decoder;
         private readonly IOutputFormat outputFormat;
         private readonly ColorPalette colorPalette;
@@ -22,11 +23,11 @@ namespace CodeColoring_Tests
 
         public ConsoleArgsDecoder_Tests()
         {
-            var readOnlyKernel = Program.ConfigureContainer();
-            decoder = readOnlyKernel.Get<IArgsDecoder>();
-            outputFormat = readOnlyKernel.Get<IOutputFormat>("HTML");
-            colorPalette = readOnlyKernel.Get<ColorPalette>("DayTheme");
-            programmingLanguage = readOnlyKernel.Get<IProgrammingLanguage>("Python");
+            container = Program.ConfigureContainer();
+            decoder = container.Get<ConsoleArgsDecoder>();
+            outputFormat = container.Get<IOutputFormat>("HTML");
+            colorPalette = container.Get<ColorPalette>("DayTheme");
+            programmingLanguage = container.Get<IProgrammingLanguage>("Python");
         }
 
         private class Parameters
@@ -116,7 +117,7 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_ProgrammingLanguage([Values("-l", "--lang")] string flag)
         {
             var result = decoder.Decode(new[] { flag, "Python" });
-            var expected = new DecodedArguments() { ProgrammingLanguage = new Python() };
+            var expected = new DecodedArguments() { ProgrammingLanguage = container.Get<Python>() };
             AreEqual(expected, result);
         }
 

@@ -8,37 +8,24 @@ namespace CodeColoring.ArgsDecoder
 {
     public class ConsoleArgsDecoder : IArgsDecoder
     {
-        
-
         public string Help => "Code Coloring\n\nAvailable parameters:"
-                              + "\n\t-i, --input\tInput file path"
-                              + "\n\t-l, --lang\tInput programming language"
-                              + "\n\t-f, --format\tOutput format"
-                              + "\n\t-c, --color\tOutput color palette"
-                              + "\n\nUsage Example:\nCodeColoring -i D:\\main.py -c DayTheme -l Python -f HTML D:\\main.html";
+            + "\n\t-i, --input\tInput file path"
+            + "\n\t-l, --lang\tInput programming language"
+            + "\n\t-f, --format\tOutput format"
+            + "\n\t-c, --color\tOutput color palette"
+            + "\n\nUsage Example:\nCodeColoring -i D:\\main.py -c DayTheme -l Python -f HTML D:\\main.html";
 
         private class ArgumentAssigner
         {
             private Action<string> action;
             private readonly DecodedArguments decoded;
-            
-            private readonly ColorPalette colorPalette;
-            private readonly IOutputFormat outputFormat;
-            private readonly IProgrammingLanguage programmingLanguage;
-
-            public ArgumentAssigner(DecodedArguments result, ColorPalette colorPalette, IOutputFormat outputFormat, IProgrammingLanguage programmingLanguage)
-            {
-                decoded = result;
-                this.colorPalette = colorPalette;
-                this.outputFormat = outputFormat;
-                this.programmingLanguage = programmingLanguage;
-            }
+            private readonly IReadOnlyKernel container = Program.ConfigureContainer();
             
             public ArgumentAssigner(DecodedArguments result)
             {
                 decoded = result;
             }
-
+            
             public void Process(string arg)
             {
                 if (IsKey(arg))
@@ -53,13 +40,13 @@ namespace CodeColoring.ArgsDecoder
             }
 
             private void HandleColor(string arg) =>
-                decoded.ColorPalette = colorPalette;
+                decoded.ColorPalette = container.Get<ColorPalette>(arg);
             private void HandleInputFilePath(string arg) =>
                 decoded.InputFilePath = arg;
             private void HandleOutputFormat(string arg) =>
-                decoded.OutputFormat = outputFormat;
+                decoded.OutputFormat = container.Get<IOutputFormat>(arg);
             private void HandleProgrammingLanguage(string arg) =>
-                decoded.ProgrammingLanguage = programmingLanguage;
+                decoded.ProgrammingLanguage = container.Get<IProgrammingLanguage>(arg);
             private void HandleOutputFilePath(string arg) =>
                 decoded.OutputFilePath = arg;
 
