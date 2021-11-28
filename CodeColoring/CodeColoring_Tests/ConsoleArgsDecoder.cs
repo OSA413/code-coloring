@@ -8,6 +8,7 @@ using CodeColoring.ProgrammingLanguage;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using Ninject;
+using Autofac;
 
 namespace CodeColoring_Tests
 {
@@ -15,12 +16,12 @@ namespace CodeColoring_Tests
     {
         private Parameters parameters;
         private readonly Randomizer randomizer = new();
-        private readonly IReadOnlyKernel container = Program.ConfigureContainer();
+        private readonly IContainer container = Program.ConfigureContainer();
         private readonly IArgsDecoder decoder;
 
         public ConsoleArgsDecoder_Tests()
         {
-            decoder = container.Get<ConsoleArgsDecoder>();
+            decoder = container.Resolve<ConsoleArgsDecoder>();
         }
 
         private class Parameters
@@ -72,7 +73,7 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_ColorPalette([Values("-c", "--color")] string flag)
         {
             var result = decoder.Decode(new[] { flag, "DayTheme" });
-            var expected = new DecodedArguments() { ColorPalette = container.Get<DayTheme>() };
+            var expected = new DecodedArguments() { ColorPalette = container.Resolve<DayTheme>() };
             AreEqual(expected, result);
         }
 
@@ -101,7 +102,7 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_OutputFormat([Values("-f", "--format")] string flag)
         {
             var result = decoder.Decode(new[] { flag, "HTML" });
-            var expected = new DecodedArguments() { OutputFormat = container.Get<HTML>() };
+            var expected = new DecodedArguments() { OutputFormat = container.Resolve<HTML>() };
             AreEqual(expected, result);
         }
 
@@ -110,7 +111,7 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_ProgrammingLanguage([Values("-l", "--lang")] string flag)
         {
             var result = decoder.Decode(new[] { flag, "Python" });
-            var expected = new DecodedArguments() { ProgrammingLanguage = container.Get<Python>() };
+            var expected = new DecodedArguments() { ProgrammingLanguage = container.Resolve<Python>() };
             AreEqual(expected, result);
         }
 
@@ -143,11 +144,11 @@ namespace CodeColoring_Tests
             var result = decoder.Decode(new[] { "-c", "DayTheme", "-i", input, "-f", "HTML", "-l", "Python", output });
             var expected = new DecodedArguments()
             {
-                ColorPalette = container.Get<DayTheme>(),
+                ColorPalette = container.Resolve<DayTheme>(),
                 InputFilePath = input,
                 OutputFilePath = output,
-                OutputFormat = container.Get<HTML>(),
-                ProgrammingLanguage = container.Get<Python>()
+                OutputFormat = container.Resolve<HTML>(),
+                ProgrammingLanguage = container.Resolve<Python>()
         };
             AreEqual(expected, result);
         }
@@ -160,11 +161,11 @@ namespace CodeColoring_Tests
             var result = decoder.Decode(args);
             var expected = new DecodedArguments
             {
-                ColorPalette = container.Get<DayTheme>(),
+                ColorPalette = container.Resolve<DayTheme>(),
                 InputFilePath = parameters.Input,
                 OutputFilePath = parameters.Output,
-                OutputFormat = container.Get<HTML>(),
-                ProgrammingLanguage = container.Get<Python>()
+                OutputFormat = container.Resolve<HTML>(),
+                ProgrammingLanguage = container.Resolve<Python>()
             };
             AreEqual(expected, result);
         }

@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using Autofac;
 using CodeColoring.ArgsDecoder;
 using CodeColoring.Colorizer;
 using CodeColoring.OutputFormat;
@@ -12,25 +16,34 @@ namespace CodeColoring
         public static void Main(string[] args)
         {
             var readOnlyKernel = ConfigureContainer();
-            var dargs = readOnlyKernel.Get<IArgsDecoder>().Decode(args);
+            var dargs = readOnlyKernel.Resolve<IArgsDecoder>().Decode(args);
             var inputText = File.ReadAllText(dargs.InputFilePath);
             var parsingResult = dargs.ProgrammingLanguage.Parse(inputText);
             var outputText = dargs.OutputFormat.Format(parsingResult, dargs.ColorPalette);
             File.WriteAllText(dargs.OutputFilePath, outputText);
         }
 
-        public static IReadOnlyKernel ConfigureContainer()
+        public static IContainer ConfigureContainer()
         {
-            var container = new KernelConfiguration();
-            container.Bind<IArgsDecoder>().To<ConsoleArgsDecoder>().InSingletonScope();
-            container.Bind<StreamReader>().ToSelf().InSingletonScope();
-            container.Bind<StreamWriter>().ToSelf().InSingletonScope();
-            container.Bind<Colorizer.Colorizer>().ToSelf().InSingletonScope();
-            container.Bind<ColorPalette>().To<DayTheme>().InSingletonScope();
-            container.Bind<IOutputFormat>().To<HTML>().InSingletonScope();
-            container.Bind<IProgrammingLanguage>().To<Python>().InSingletonScope();
+            var builder = new ContainerBuilder();
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            builder.RegisterAssemblyTypes(currentAssembly).AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<StreamReader>().AsSelf().SingleInstance();
+            builder.RegisterType<StreamWriter>().AsSelf().SingleInstance();
+            builder.RegisterType<Colorizer.Colorizer>().AsSelf().SingleInstance();
+            builder.RegisterAssemblyTypes(currentAssembly)
+              .Where(x => x.Name.EndsWith("Theme"))
+              .As<ColorPalette>().SingleInstance();
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+              .Where(x => x.GetType().Equals(typeof(IOutputFormat)))
+              .AsImplementedInterfaces()
+              .SingleInstance();
+            builder.RegisterType<DayTheme>().AsSelf().SingleInstance();
+            builder.RegisterType<ConsoleArgsDecoder>().AsSelf();
+            builder.RegisterType<HTML>().AsSelf().SingleInstance();
+            builder.RegisterType<Python>().AsSelf().SingleInstance();
             
-            return container.BuildReadonlyKernel();
+            return builder.Build();
         }
     }
 }

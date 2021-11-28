@@ -7,6 +7,7 @@ using CodeColoring.ProgrammingLanguage;
 using Ninject;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using Autofac;
 
 
 namespace CodeColoring_Tests
@@ -24,8 +25,8 @@ namespace CodeColoring_Tests
         public ColorPalette_Tests()
         {
             var readOnlyKernel = Program.ConfigureContainer();
-            palette = readOnlyKernel.Get<ColorPalette>();
-            colorizer = readOnlyKernel.Get<Colorizer>();
+            palette = readOnlyKernel.Resolve<ColorPalette>();
+            colorizer = readOnlyKernel.Resolve<Colorizer>();
         }
 
         [Test]
