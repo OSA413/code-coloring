@@ -17,6 +17,7 @@ namespace CodeColoring.ProgrammingLanguage
 
     public interface IProgrammingLanguage
     {
+        public string Name { get; }
         public ParsingResult Parse(string text);
         public string[] Extensions(); //будем вообще это вызывать? Или другое определние языка
        
