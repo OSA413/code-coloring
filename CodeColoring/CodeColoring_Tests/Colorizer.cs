@@ -44,6 +44,10 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(5)]
+        public void DefaultBackgroundIsWhite() => Assert.AreEqual(Color.White, newColorPalette.BackgroundColor);
+
+        [Test]
+        [Repeat(5)]
         public void NonExistingColorThrowsArgumentOutOfRange() =>
             Assert.Throws<ArgumentOutOfRangeException>(() => colorizer.Colorize((LanguageUnit)99, palette));
 

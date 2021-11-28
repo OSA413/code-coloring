@@ -27,6 +27,7 @@ namespace CodeColoring.Colorizer
             ValueColor = Color.Black;
             WhitespaceColor = Color.Black;
             UnknownColor = Color.Black;
+            BackgroundColor = Color.White;
             Name = "DefaultColorPalette";
         }
     }
