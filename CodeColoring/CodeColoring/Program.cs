@@ -26,9 +26,9 @@ namespace CodeColoring
             container.Bind<StreamReader>().ToSelf().InSingletonScope();
             container.Bind<StreamWriter>().ToSelf().InSingletonScope();
             container.Bind<Colorizer.Colorizer>().ToSelf().InSingletonScope();
-            container.Bind<ColorPalette>().To<DayTheme>().InSingletonScope().Named("DayTheme");
-            container.Bind<IOutputFormat>().To<HTML>().InSingletonScope().Named("HTML");
-            container.Bind<IProgrammingLanguage>().To<Python>().InSingletonScope().Named("Python");
+            container.Bind<ColorPalette>().To<DayTheme>().InSingletonScope();
+            container.Bind<IOutputFormat>().To<HTML>().InSingletonScope();
+            container.Bind<IProgrammingLanguage>().To<Python>().InSingletonScope();
             
             return container.BuildReadonlyKernel();
         }
