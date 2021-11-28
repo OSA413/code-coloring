@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using CodeColoring.Colorizer;
+﻿using CodeColoring.Colorizer;
 using CodeColoring.OutputFormat;
 using CodeColoring.ProgrammingLanguage;
 

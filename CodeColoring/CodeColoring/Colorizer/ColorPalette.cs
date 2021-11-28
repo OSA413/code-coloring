@@ -13,6 +13,8 @@ namespace CodeColoring.Colorizer
         public Color ValueColor { get; protected set; }
         public Color WhitespaceColor { get; protected set; }
         public Color UnknownColor { get; protected set; }
+        public Color BackgroundColor { get; protected set; }
+        public string Name { get; protected set; }
 
         public ColorPalette()
         {
@@ -25,6 +27,7 @@ namespace CodeColoring.Colorizer
             ValueColor = Color.Black;
             WhitespaceColor = Color.Black;
             UnknownColor = Color.Black;
+            Name = "DefaultColorPalette";
         }
     }
 }

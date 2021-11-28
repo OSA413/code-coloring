@@ -21,10 +21,7 @@ namespace CodeColoring.ArgsDecoder
             private readonly DecodedArguments decoded;
             private readonly IReadOnlyKernel container = Program.ConfigureContainer();
             
-            public ArgumentAssigner(DecodedArguments result)
-            {
-                decoded = result;
-            }
+            public ArgumentAssigner(DecodedArguments result) => decoded = result;
             
             public void Process(string arg)
             {

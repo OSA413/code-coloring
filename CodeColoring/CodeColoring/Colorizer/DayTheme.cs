@@ -13,6 +13,7 @@ namespace CodeColoring.Colorizer
             VariableColor = Color.Chocolate;
             CommentColor = Color.Green;
             ValueColor = Color.Gray;
+            Name = "DayTheme";
         }
     }
 }

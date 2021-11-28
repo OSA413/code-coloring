@@ -17,6 +17,7 @@ namespace CodeColoring_Tests
 
         private readonly ColorPalette palette;
         private readonly Colorizer colorizer;
+        
         private readonly NewColorPalette newColorPalette = new();
       
 
@@ -29,11 +30,6 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(5)]
-        public void ColorPaletteHasTheSameAmountOfVariablesAsLanguageUnit() =>
-            Assert.AreEqual(Enum.GetValues(typeof(LanguageUnit)).Length, typeof(ColorPalette).GetProperties().Length);
-
-        [Test]
-        [Repeat(5)]
         public void OneArgColorization([Values] LanguageUnit unit)
         {
             var actual = colorizer.Colorize(unit, palette);
@@ -43,9 +39,8 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(5)]
-        public void DefaultColorPaletteIsBlack() =>
-            Assert.True(typeof(NewColorPalette).GetProperties()
-                .All(x => (Color)x.GetValue(newColorPalette) == Color.Black));
+        public void DefaultColorPaletteIsBlack([Values] LanguageUnit unit) =>
+            Assert.AreEqual(Color.Black, colorizer.Colorize(unit, new NewColorPalette()));
 
         [Test]
         [Repeat(5)]
