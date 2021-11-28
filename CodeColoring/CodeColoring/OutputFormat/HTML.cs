@@ -9,6 +9,7 @@ namespace CodeColoring.OutputFormat
 {
     public class HTML : IOutputFormat
     {
+        public string Name => "HTML";
         HTMLPageSettings pageSettings = HTMLPageSettings.DefaultSettings();
 
         public string Format(ParsingResult parsed, ColorPalette palette)

@@ -8,6 +8,7 @@ namespace CodeColoring.ProgrammingLanguage
 {
     public class Python : IProgrammingLanguage
     {
+        public string Name => "Python";
         public ParsingResult Parse(string text)
         {
             var result = new List<ParseUnit>();
