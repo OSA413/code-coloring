@@ -19,6 +19,7 @@ namespace CodeColoring.Colorizer
             CommentColor = Color.DarkSeaGreen;
             ValueColor = Color.White;
             BackgroundColor = Color.Black;
+            Name = "OneMonokaiMockTheme";
         }
     }
 }

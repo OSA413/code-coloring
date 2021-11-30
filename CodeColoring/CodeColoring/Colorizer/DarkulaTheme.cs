@@ -19,6 +19,7 @@ namespace CodeColoring.Colorizer
             CommentColor = Color.DarkOliveGreen;
             ValueColor = Color.White;
             BackgroundColor = Color.DarkGray;
+            Name = "DarkulaTheme";
         }
     }
 }
