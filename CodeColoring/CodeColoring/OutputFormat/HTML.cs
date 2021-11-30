@@ -47,7 +47,7 @@ namespace CodeColoring.OutputFormat
             var resultBuilder = new StringBuilder();
 
             resultBuilder.Append("<!DOCTYPE HTML>\n");
-            using (TagToken.Tag("html", resultBuilder, false, true, "", ""))
+            using (TagToken.Tag("html", resultBuilder, "", ""))
             {
                 resultBuilder.Append(FormatHeader(pageSettings.Palette,
                     pageSettings.Title,
@@ -74,7 +74,7 @@ namespace CodeColoring.OutputFormat
         private string FormatHeader(ColorPalette palette, string pageTitle, string font, int size, int tab)
         {
             var header = new StringBuilder();
-            using (TagToken.Tag("head", header, false, true, new String(' ', tab), new String(' ', tab))){
+            using (TagToken.Tag("head", header, new String(' ', tab), new String(' ', tab))){
                 header.Append(new String(' ', tab * 2) + $"<title>{pageTitle}</title>\n");
                 header.Append(new String(' ', tab * 2) + "<meta charset=\"UTF-8\">\n");
                 header.Append(new String(' ', tab * 2) + "<style>\n");
@@ -100,39 +100,22 @@ namespace CodeColoring.OutputFormat
     {
         readonly StringBuilder builder;
         readonly string tag;
-        bool newLineAtStart;
-        bool newLineAtEnd;
-        readonly string toAppendBeforeTag;
         readonly string toAppendAfterTag;
 
-        public TagToken(string tag, StringBuilder builder, bool newLineAtStart, bool newLineAtEnd,
-            string toAppendBeforeTag, string toAppendAfterTag)
+        public TagToken(string tag, StringBuilder builder, string toAppendBeforeTag, string toAppendAfterTag)
         {
             this.builder = builder;
             this.tag = tag;
-            this.newLineAtEnd = newLineAtEnd;
-            this.newLineAtStart = newLineAtStart;
             this.toAppendAfterTag = toAppendAfterTag;
-            this.toAppendBeforeTag = toAppendBeforeTag;
-            if (newLineAtEnd)
-                builder.Append(toAppendBeforeTag + String.Format("<{0}>\n", tag));
-            else if (newLineAtStart)
-                builder.Append(toAppendBeforeTag + String.Format("\n<{0}>", tag));
+
+            builder.Append(toAppendBeforeTag + string.Format("<{0}>\n", tag));
         }
 
-        public void Dispose()
-        {
-            if (newLineAtEnd)
-                builder.Append(toAppendAfterTag + String.Format("</{0}>\n", tag));
-            else if (newLineAtStart)
-                builder.Append(toAppendAfterTag + String.Format("\n</{0}>", tag));
-        }
+        public void Dispose() =>
+            builder.Append(toAppendAfterTag + string.Format("</{0}>\n", tag));
 
-        public static TagToken Tag(string tag, StringBuilder builder, bool newLineAtStart, bool newLineAtEnd,
-            string toAppendBeforeTag, string toAppendAfterTag)
-        {
-            return new TagToken(tag, builder, newLineAtStart, newLineAtEnd, toAppendBeforeTag, toAppendAfterTag);
-        }
+        public static TagToken Tag(string tag, StringBuilder builder, string toAppendBeforeTag, string toAppendAfterTag) =>
+            new TagToken(tag, builder, toAppendBeforeTag, toAppendAfterTag);
     }
 
     public class HTMLPageSettings
