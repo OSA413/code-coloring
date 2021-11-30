@@ -33,14 +33,18 @@ namespace CodeColoring
             builder.RegisterType<Colorizer.Colorizer>().AsSelf().SingleInstance();
             builder.RegisterAssemblyTypes(currentAssembly)
               .Where(x => x.Name.EndsWith("Theme"))
-              .As<ColorPalette>().SingleInstance();
+              .As<ColorPalette>().AsSelf().SingleInstance();
+
+            //builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+            //  .Where(x => x is IOutputFormat)
+            //  .AsSelf().AsImplementedInterfaces();
+
+
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-              .Where(x => x.GetType().Equals(typeof(IOutputFormat)))
-              .AsImplementedInterfaces()
-              .SingleInstance();
-            builder.RegisterType<DayTheme>().AsSelf().SingleInstance();
+              .Where(x => x.Equals(typeof(HTML)))
+              .AsSelf();
+
             builder.RegisterType<ConsoleArgsDecoder>().AsSelf();
-            builder.RegisterType<HTML>().AsSelf().SingleInstance();
             builder.RegisterType<Python>().AsSelf().SingleInstance();
             
             return builder.Build();
