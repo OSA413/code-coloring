@@ -13,14 +13,11 @@ namespace CodeColoring_Tests
 {
     internal class ColorPalette_Tests
     { 
-        private class NewColorPalette : ColorPalette { }
-
         private readonly ColorPalette palette;
         private readonly Colorizer colorizer;
         
-        private readonly NewColorPalette newColorPalette = new();
-      
-
+        private readonly DefaultColorPalette defaultColorPalette = new();
+        
         public ColorPalette_Tests()
         {
             var readOnlyKernel = Program.ConfigureContainer();
@@ -40,11 +37,11 @@ namespace CodeColoring_Tests
         [Test]
         [Repeat(5)]
         public void DefaultColorPaletteIsBlack([Values] LanguageUnit unit) =>
-            Assert.AreEqual(Color.Black, colorizer.Colorize(unit, new NewColorPalette()));
+            Assert.AreEqual(Color.Black, colorizer.Colorize(unit, defaultColorPalette));
 
         [Test]
         [Repeat(5)]
-        public void DefaultBackgroundIsWhite() => Assert.AreEqual(Color.White, newColorPalette.BackgroundColor);
+        public void DefaultBackgroundIsWhite() => Assert.AreEqual(Color.White, defaultColorPalette.BackgroundColor);
 
         [Test]
         [Repeat(5)]
