@@ -29,9 +29,7 @@ namespace CodeColoring.ProgrammingLanguage
                 {
                     builder.Append(value);
                     if (!isMultilineComment)
-                    {
                         isMultilineComment = true;
-                    }
                     else
                     {
                         result.Add(new ParseUnit(LanguageUnit.Comment, builder.ToString()));
@@ -40,9 +38,7 @@ namespace CodeColoring.ProgrammingLanguage
                     }
                 }
                 else if (isMultilineComment)
-                {
                     builder.Append(value);
-                }
                 else if (value == "#")
                 {
                     if (builder.Length > 0)
@@ -64,14 +60,10 @@ namespace CodeColoring.ProgrammingLanguage
                         builder = new StringBuilder();
                     }
                     else
-                    {
                         builder.Append(value);
-                    }
                 }
                 else
-                {
                     ChooseUnit(result, value, builder);
-                }
 
 
                 if (index != text.Length - 1) continue;
@@ -116,32 +108,22 @@ namespace CodeColoring.ProgrammingLanguage
             }
 
             else
-            {
                 strBuilder.Append(value);
-            }
         }
 
         private ParseUnit ChooseUnit(StringBuilder builder)
         {
             if (units[LanguageUnit.FunctionDefinition].Contains(builder.ToString()))
-            {
                 return new ParseUnit(LanguageUnit.FunctionDefinition, builder.ToString());
-            }
 
             if (units[LanguageUnit.Operator].Contains(builder.ToString()))
-            {
                 return new ParseUnit(LanguageUnit.Operator, builder.ToString());
-            }
 
             if (builder.Length > 0 && int.TryParse(builder[0].ToString(), out _))
-            {
                 return new ParseUnit(LanguageUnit.Value, builder.ToString());
-            }
 
             if (builder.Length > 0 && char.IsLetter(builder[0]))
-            {
                 return new ParseUnit(LanguageUnit.Variable, builder.ToString());
-            }
 
             return new ParseUnit(LanguageUnit.Unknown, builder.ToString());
         }
@@ -152,9 +134,7 @@ namespace CodeColoring.ProgrammingLanguage
                                           || currentValue == "\'" && builder[0] == '\'') && builder.Length > 1;
         }
 
-
         public string[] Extensions() => new[] {".py"};
-
 
         private readonly Dictionary<LanguageUnit, string[]> units = new()
         {

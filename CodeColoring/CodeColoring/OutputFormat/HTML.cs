@@ -20,29 +20,26 @@ namespace CodeColoring.OutputFormat
             resultBuilder.Append("<!DOCTYPE HTML>\n");
             using (TagToken.Tag("html", resultBuilder, false, true, "", ""))
             {
-
                 resultBuilder.Append(FormatHeader(pageSettings.Palette,
                     pageSettings.Title,
                     pageSettings.BackgroundColor,
                     pageSettings.Font,
                     pageSettings.FontSize,
                     pageSettings.TabSize));
-                resultBuilder.Append(FormatBody(parsed, pageSettings.TabSize));
+                FormatBody(resultBuilder, parsed, pageSettings.TabSize);
             }
 
             return resultBuilder.ToString();
         }
 
-        private string FormatBody(ParsingResult parsed, int tab)
+        private void FormatBody(StringBuilder sb, ParsingResult parsed, int tab)
         {
-            var body = new StringBuilder();
-            body.Append(new String(' ', tab) + "<body>\n");
-            body.Append(new String(' ', tab * 2) + "<code>" + "<pre>\n");
+            sb.Append(new String(' ', tab) + "<body>\n");
+            sb.Append(new String(' ', tab * 2) + "<code>" + "<pre>\n");
             foreach(var unit in parsed.Result)
-                body.Append(FormatUnit(unit));
-            body.Append(new String(' ', tab * 2) + "\n</code>" + "</pre>\n");
-            body.Append(new String(' ', tab) + "</body>\n");
-            return body.ToString();
+                sb.Append(FormatUnit(unit));
+            sb.Append(new String(' ', tab * 2) + "\n</code>" + "</pre>\n");
+            sb.Append(new String(' ', tab) + "</body>\n");
         }
 
         private string FormatHeader(ColorPalette palette, string pageTitle, Color backColor, string font, int size, int tab)
@@ -101,13 +98,9 @@ namespace CodeColoring.OutputFormat
         public void Dispose()
         {
             if (newLineAtEnd)
-            {
                 builder.Append(toAppendAfterTag + String.Format("</{0}>\n", tag));
-            }
             else if (newLineAtStart)
-            {
                 builder.Append(toAppendAfterTag + String.Format("\n</{0}>", tag));
-            }
         }
 
         public static TagToken Tag(string tag, StringBuilder builder, bool newLineAtStart, bool newLineAtEnd,
