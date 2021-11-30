@@ -43,7 +43,7 @@ namespace CodeColoring_Tests
         body +
     "</html> ";
 
-        public string BuildBody(string text = "") => "<body><pre><code>" + text + "</code></pre></body>";
+        public string BuildBody(string text = "") => "<body><code><pre>" + text + "</pre></code></body>";
 
         [Test]
         public void Internal_FlattenHTML() =>
@@ -61,6 +61,15 @@ namespace CodeColoring_Tests
         {
             var actual = html.Format(new ParsingResult(), null);
             Assert.AreEqual(html.Flatten(BuildHTML(BuildBody())), html.Flatten(actual));
+        }
+
+        [Test]
+        public void SingleParsingResult()
+        {
+            var parsingResult = new ParsingResult();
+            parsingResult.Result.Add(new ParseUnit(LanguageUnit.Comment, "dsadsa"));
+            var actual = html.Format(parsingResult, null);
+            Assert.AreEqual(html.Flatten(BuildHTML(BuildBody("<span class=\"Comment\">dsadsa</span>"))), html.Flatten(actual));
         }
 
         /*

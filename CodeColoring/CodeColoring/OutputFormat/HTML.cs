@@ -67,7 +67,7 @@ namespace CodeColoring.OutputFormat
             sb.Append(new String(' ', tab * 2) + "<code>" + "<pre>\n");
             foreach(var unit in parsed.Result)
                 sb.Append(FormatUnit(unit));
-            sb.Append(new String(' ', tab * 2) + "\n</code>" + "</pre>\n");
+            sb.Append(new String(' ', tab * 2) + "\n</pre>" + "</code>\n");
             sb.Append(new String(' ', tab) + "</body>\n");
         }
 
