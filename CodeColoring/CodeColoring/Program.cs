@@ -36,12 +36,10 @@ namespace CodeColoring
               .Where(x => x.Name.EndsWith("Theme"))
               .As<ColorPalette>().AsSelf().SingleInstance();
 
+            foreach (Type t in new[] { typeof(IOutputFormat), typeof(IArgsDecoder), typeof(IProgrammingLanguage) })
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-              .Where(x => typeof(IOutputFormat).IsAssignableFrom(x))
-              .AsSelf();
-
-            builder.RegisterType<ConsoleArgsDecoder>().AsSelf();
-            builder.RegisterType<Python>().AsSelf().SingleInstance();
+              .Where(x => t.IsAssignableFrom(x))
+              .AsSelf().SingleInstance();
             
             return builder.Build();
         }
