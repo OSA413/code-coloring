@@ -64,12 +64,15 @@ namespace CodeColoring_Tests
         }
 
         [Test]
-        public void SingleParsingResult()
+        public void SingleParsingResult([Values] LanguageUnit unit)
         {
+            var symbol = randomizer.GetString(7);
             var parsingResult = new ParsingResult();
-            parsingResult.Result.Add(new ParseUnit(LanguageUnit.Comment, "dsadsa"));
+            parsingResult.Result.Add(new ParseUnit(unit, symbol));
             var actual = html.Format(parsingResult, null);
-            Assert.AreEqual(html.Flatten(BuildHTML(BuildBody("<span class=\"Comment\">dsadsa</span>"))), html.Flatten(actual));
+            Assert.AreEqual(html.Flatten(BuildHTML(BuildBody(
+                "<span class=\""+ Enum.GetName(typeof(LanguageUnit), unit) +"\">" + symbol + "</span>")))
+                , html.Flatten(actual));
         }
 
         /*
