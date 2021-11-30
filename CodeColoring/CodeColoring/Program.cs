@@ -7,7 +7,6 @@ using CodeColoring.ArgsDecoder;
 using CodeColoring.Colorizer;
 using CodeColoring.OutputFormat;
 using CodeColoring.ProgrammingLanguage;
-using Ninject;
 
 namespace CodeColoring
 {

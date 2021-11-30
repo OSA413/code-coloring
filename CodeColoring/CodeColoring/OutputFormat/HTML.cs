@@ -14,6 +14,7 @@ namespace CodeColoring.OutputFormat
 
         public string Format(ParsingResult parsed, ColorPalette palette)
         {
+            if (palette == null) palette = new DefaultColorPalette();
             pageSettings.Palette = palette;
             var resultBuilder = new StringBuilder();
 
@@ -25,7 +26,8 @@ namespace CodeColoring.OutputFormat
                     pageSettings.Font,
                     pageSettings.FontSize,
                     pageSettings.TabSize));
-                FormatBody(resultBuilder, parsed, pageSettings.TabSize);
+                if (parsed != null)
+                    FormatBody(resultBuilder, parsed, pageSettings.TabSize);
             }
 
             return resultBuilder.ToString();

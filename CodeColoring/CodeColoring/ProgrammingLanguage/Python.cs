@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Castle.Core.Internal;
 
 namespace CodeColoring.ProgrammingLanguage
 {
@@ -70,7 +69,7 @@ namespace CodeColoring.ProgrammingLanguage
                 result.Add(ChooseUnit(builder));
             }
 
-            return new ParsingResult {Result = result.Where(unit => !unit.Symbol.IsNullOrEmpty()).ToList()};
+            return new ParsingResult {Result = result.Where(unit => !string.IsNullOrEmpty(unit.Symbol)).ToList()};
         }
 
         private void ChooseUnit(ICollection<ParseUnit> result, string value, StringBuilder strBuilder)

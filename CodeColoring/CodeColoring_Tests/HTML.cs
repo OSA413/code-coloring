@@ -4,12 +4,61 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Autofac;
+
+using NUnit.Framework;
+using NUnit.Framework.Internal;
+
+using CodeColoring;
+using CodeColoring.OutputFormat;
+
 namespace CodeColoring_Tests
 {
     internal class HTML_Tests
     {
-        /*
         private readonly Randomizer randomizer = new();
+        private readonly IContainer container = Program.ConfigureContainer();
+        private readonly HTML html;
+
+        public HTML_Tests() => html = container.Resolve<HTML>();
+
+        private readonly StringBuilder sb = new StringBuilder();
+        public string FlattenHTML(string text)
+        {
+            var afterSpace = false;
+            var lastMeaningChar = ' ';
+            foreach (var c in text)
+            {
+                if (char.IsWhiteSpace(c))
+                {
+                    if (!(lastMeaningChar == '<' || lastMeaningChar == '>' || lastMeaningChar == '/'))
+                        afterSpace = true;
+                    continue;
+                }
+
+                if (!(c == '<' || c == '>' || c == '/') && afterSpace)
+                    sb.Append(' ');
+                sb.Append(c);
+                lastMeaningChar = c;
+                afterSpace = false;
+            }
+
+            var result = sb.ToString();
+            sb.Clear();
+            return result;
+        }
+
+        [Test]
+        public void Internal_FlattenHTML() =>
+            Assert.AreEqual("<><a b></><abc>", FlattenHTML(" < >\n    <   a    \n    b >   </>\n<abc> "));
+
+        [Test]
+        public void AllNulls()
+        {
+            var actual = html.Format(null, null);
+        }
+        
+        /*
         private readonly ColorPalette palette = new DayTheme();
 
         [Test]

@@ -3,7 +3,6 @@ using CodeColoring.Colorizer;
 using CodeColoring.OutputFormat;
 using CodeColoring.ProgrammingLanguage;
 using System.Linq;
-using Ninject;
 
 namespace CodeColoring.ArgsDecoder
 {

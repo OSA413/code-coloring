@@ -7,7 +7,6 @@ using CodeColoring.OutputFormat;
 using CodeColoring.ProgrammingLanguage;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using Ninject;
 using Autofac;
 
 namespace CodeColoring_Tests

@@ -4,7 +4,6 @@ using System.Linq;
 using CodeColoring;
 using CodeColoring.Colorizer;
 using CodeColoring.ProgrammingLanguage;
-using Ninject;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using Autofac;
