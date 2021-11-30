@@ -222,6 +222,21 @@ namespace CodeColoring_Tests
 
         [Test]
         [Repeat(5)]
+        public void SeveralMultilineStrings()
+        {
+            var input = "\"\"\"Multiline \n\tstring\t\n\"\"\"\n\n\"\"\"llamao\"\"\"";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("\"\"\"Multiline \n\tstring\t\n\"\"\"", LanguageUnit.Comment),
+                ("\n", LanguageUnit.Whitespace),
+                ("\n", LanguageUnit.Whitespace),
+                ("\"\"\"llamao\"\"\"", LanguageUnit.Comment),
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+
+        [Test]
+        [Repeat(5)]
         public void SomeMath()
         {
             var input = "x=(int(((10+8)*2-9)/2%5)^6)+1";
