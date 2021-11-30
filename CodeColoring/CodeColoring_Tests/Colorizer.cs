@@ -16,7 +16,7 @@ namespace CodeColoring_Tests
         private readonly ColorPalette palette;
         private readonly Colorizer colorizer;
         
-        private readonly DefaultColorPalette defaultColorPalette = new();
+        private readonly DefaultColorTheme defaultColorPalette = new();
         
         public ColorPalette_Tests()
         {

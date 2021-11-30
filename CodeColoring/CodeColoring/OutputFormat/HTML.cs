@@ -42,7 +42,7 @@ namespace CodeColoring.OutputFormat
 
         public string Format(ParsingResult parsed, ColorPalette palette)
         {
-            if (palette == null) palette = new DefaultColorPalette();
+            if (palette == null) palette = new DefaultColorTheme();
             pageSettings.Palette = palette;
             var resultBuilder = new StringBuilder();
 

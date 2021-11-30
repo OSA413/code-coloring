@@ -32,7 +32,7 @@ namespace CodeColoring_Tests
             {
                 Input = input;
                 Output = output;
-                Params = new[] { new[] { "-c", "DayTheme" }, new[] { "-i", input }
+                Params = new[] { new[] { "-c", "Default" }, new[] { "-i", input }
                 , new[] { "-f", "HTML" }, new[] { "-l", "Python" }, new[] { output } };
             }
         }
@@ -71,8 +71,8 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_ColorPalette([Values("-c", "--color")] string flag)
         {
-            var result = decoder.Decode(new[] { flag, "DayTheme" });
-            var expected = new DecodedArguments() { ColorPalette = container.Resolve<DayTheme>() };
+            var result = decoder.Decode(new[] { flag, "Default" });
+            var expected = new DecodedArguments() { ColorPalette = container.Resolve<DefaultColorTheme>() };
             AreEqual(expected, result);
         }
 
@@ -140,10 +140,10 @@ namespace CodeColoring_Tests
         {
             var input = randomizer.GetString();
             var output = randomizer.GetString();
-            var result = decoder.Decode(new[] { "-c", "DayTheme", "-i", input, "-f", "HTML", "-l", "Python", output });
+            var result = decoder.Decode(new[] { "-c", "Default", "-i", input, "-f", "HTML", "-l", "Python", output });
             var expected = new DecodedArguments()
             {
-                ColorPalette = container.Resolve<DayTheme>(),
+                ColorPalette = container.Resolve<DefaultColorTheme>(),
                 InputFilePath = input,
                 OutputFilePath = output,
                 OutputFormat = container.Resolve<HTML>(),
@@ -160,7 +160,7 @@ namespace CodeColoring_Tests
             var result = decoder.Decode(args);
             var expected = new DecodedArguments
             {
-                ColorPalette = container.Resolve<DayTheme>(),
+                ColorPalette = container.Resolve<DefaultColorTheme>(),
                 InputFilePath = parameters.Input,
                 OutputFilePath = parameters.Output,
                 OutputFormat = container.Resolve<HTML>(),
