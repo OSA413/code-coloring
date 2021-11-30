@@ -23,6 +23,7 @@ namespace CodeColoring_Tests
         public HTML_Tests() => html = container.Resolve<HTML>();
 
         private readonly StringBuilder sb = new StringBuilder();
+        private readonly HashSet<char> flattenCharExceptions = new HashSet<char>() { '<', '>', '/', '=', '{', '}', ',' };
         public string FlattenHTML(string text)
         {
             var afterSpace = false;
@@ -31,12 +32,12 @@ namespace CodeColoring_Tests
             {
                 if (char.IsWhiteSpace(c))
                 {
-                    if (!(lastMeaningChar == '<' || lastMeaningChar == '>' || lastMeaningChar == '/'))
+                    if (!flattenCharExceptions.Contains(lastMeaningChar))
                         afterSpace = true;
                     continue;
                 }
 
-                if (!(c == '<' || c == '>' || c == '/') && afterSpace)
+                if (!flattenCharExceptions.Contains(c) && afterSpace)
                     sb.Append(' ');
                 sb.Append(c);
                 lastMeaningChar = c;
@@ -48,6 +49,33 @@ namespace CodeColoring_Tests
             return result;
         }
 
+        private string BuildHTML() => "<!DOCTYPE HTML><html><head>" +
+        "< title > Colored code</title>" +
+"        <meta charset = \"UTF-8\" >" +
+"        < style >" +
+"            body {background-color: rgb(255,255,255); font-family: serif; font-size: 14px; line-height: 1;}" +
+"            .Function {color: rgb(0,0,0);" +
+"}" +
+"            .Comment" +
+"{ color: rgb(0, 0, 0); }" +
+"            .FunctionDefinition" +
+"{ color: rgb(0, 0, 0); }" +
+"            .Operator " +
+"{ color: rgb(0, 0, 0); }" +
+"            .Symbol" +
+"{ color: rgb(0, 0, 0); }" +
+"            .Variable" +
+"{ color: rgb(0, 0, 0); }" +
+"            .Value" +
+"{ color: rgb(0, 0, 0); }" +
+"            .Whitespace" +
+"{ color: rgb(0, 0, 0); }" +
+"            .Unknown" +
+"{ color: rgb(0, 0, 0); }" +
+"        </ style > " +
+"    </ head > " +
+    "</html> ";
+
         [Test]
         public void Internal_FlattenHTML() =>
             Assert.AreEqual("<><a b></><abc>", FlattenHTML(" < >\n    <   a    \n    b >   </>\n<abc> "));
@@ -56,6 +84,7 @@ namespace CodeColoring_Tests
         public void AllNulls()
         {
             var actual = html.Format(null, null);
+            Assert.AreEqual(FlattenHTML(BuildHTML()), FlattenHTML(actual));
         }
         
         /*
