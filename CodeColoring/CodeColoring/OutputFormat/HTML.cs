@@ -4,6 +4,7 @@ using System.Linq;
 using CodeColoring.Colorizer;
 using CodeColoring.ProgrammingLanguage;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace CodeColoring.OutputFormat
 {
@@ -11,6 +12,33 @@ namespace CodeColoring.OutputFormat
     {
         public string Name => "HTML";
         HTMLPageSettings pageSettings = HTMLPageSettings.DefaultSettings();
+
+        private readonly StringBuilder sb = new StringBuilder();
+        private readonly HashSet<char> flattenCharExceptions = new HashSet<char>() { '<', '>', '/', '=', '{', '}', ',' };
+        public string Flatten(string text)
+        {
+            var afterSpace = false;
+            var lastMeaningChar = ' ';
+            foreach (var c in text)
+            {
+                if (char.IsWhiteSpace(c))
+                {
+                    if (!flattenCharExceptions.Contains(lastMeaningChar))
+                        afterSpace = true;
+                    continue;
+                }
+
+                if (!flattenCharExceptions.Contains(c) && afterSpace)
+                    sb.Append(' ');
+                sb.Append(c);
+                lastMeaningChar = c;
+                afterSpace = false;
+            }
+
+            var result = sb.ToString();
+            sb.Clear();
+            return result;
+        }
 
         public string Format(ParsingResult parsed, ColorPalette palette)
         {
