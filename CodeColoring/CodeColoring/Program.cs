@@ -31,17 +31,13 @@ namespace CodeColoring
             builder.RegisterType<StreamReader>().AsSelf().SingleInstance();
             builder.RegisterType<StreamWriter>().AsSelf().SingleInstance();
             builder.RegisterType<Colorizer.Colorizer>().AsSelf().SingleInstance();
+
             builder.RegisterAssemblyTypes(currentAssembly)
               .Where(x => x.Name.EndsWith("Theme"))
               .As<ColorPalette>().AsSelf().SingleInstance();
 
-            //builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-            //  .Where(x => x is IOutputFormat)
-            //  .AsSelf().AsImplementedInterfaces();
-
-
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-              .Where(x => x.Equals(typeof(HTML)))
+              .Where(x => typeof(IOutputFormat).IsAssignableFrom(x))
               .AsSelf();
 
             builder.RegisterType<ConsoleArgsDecoder>().AsSelf();
