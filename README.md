@@ -20,10 +20,10 @@
       * Принимает вывод из предыдущего компонента - вывод текст-структуру целевого формата для записи в файл
 
 5. Краткое описание точек расширения:
-    * Новые парсеры аргументов
-    * Новые языки программирования
-    * Новые цветовые палитры
-    * Новые форматы выходных данных
+    * Новые парсеры аргументов - [IArgDecoder](https://github.com/OSA413/code-coloring/blob/main/CodeColoring/CodeColoring/ArgsDecoder/IArgsDecoder.cs)
+    * Новые языки программирования - [IProgrammingLanguage](https://github.com/OSA413/code-coloring/tree/main/CodeColoring/CodeColoring/ProgrammingLanguage)
+    * Новые цветовые палитры - [ColorPalette](https://github.com/OSA413/code-coloring/blob/main/CodeColoring/CodeColoring/Colorizer/ColorPalette.cs)
+    * Новые форматы выходных данных - [IOutputFormat](https://github.com/OSA413/code-coloring/blob/main/CodeColoring/CodeColoring/OutputFormat/IOutputFormat.cs)
 
 # План работы
 1. Создание архитектуры
