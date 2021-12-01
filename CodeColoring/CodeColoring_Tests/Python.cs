@@ -106,12 +106,59 @@ namespace CodeColoring_Tests
         
         [Test]
         [Repeat(5)]
+        public void TestWithHashInString()
+        {
+            var input = "if x==5\n print(\"#yes\")";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("if", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                ("=", LanguageUnit.Symbol),
+                ("=", LanguageUnit.Symbol),
+                ("5", LanguageUnit.Value),
+                ("\n", LanguageUnit.Whitespace),
+                (" ", LanguageUnit.Whitespace),
+                ("print", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                ("\"#yes\"", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+        
+        [Test]
+        [Repeat(5)]
         public void SingleQuotes()
         {
             var input = "\'yes\'";
             var expected = new List<(string arg, LanguageUnit LanguageUnit)>
             {
                 ("'yes'", LanguageUnit.Value)
+            };
+            SameOutput(expected, python.Parse(input));
+        }
+        
+        [Test]
+        [Repeat(5)]
+        public void TestWithCommentAfterOperator()
+        {
+            var input = "if x==5\n print(\"yes\")#ha-ha";
+            var expected = new List<(string arg, LanguageUnit LanguageUnit)>
+            {
+                ("if", LanguageUnit.Operator),
+                (" ", LanguageUnit.Whitespace),
+                ("x", LanguageUnit.Variable),
+                ("=", LanguageUnit.Symbol),
+                ("=", LanguageUnit.Symbol),
+                ("5", LanguageUnit.Value),
+                ("\n", LanguageUnit.Whitespace),
+                (" ", LanguageUnit.Whitespace),
+                ("print", LanguageUnit.Function),
+                ("(", LanguageUnit.Symbol),
+                ("\"yes\"", LanguageUnit.Value),
+                (")", LanguageUnit.Symbol),
+                ("#ha-ha", LanguageUnit.Comment)
             };
             SameOutput(expected, python.Parse(input));
         }
