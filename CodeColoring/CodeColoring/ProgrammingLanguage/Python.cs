@@ -12,7 +12,7 @@ namespace CodeColoring.ProgrammingLanguage
         {
             var result = new List<ParseUnit>();
             var builder = new StringBuilder();
-            var isComment = false;
+            var isInlineComment = false;
             var isMultilineComment = false;
             for (var index = 0; index < text.Length; index++)
             {
@@ -42,7 +42,7 @@ namespace CodeColoring.ProgrammingLanguage
                     {
                         case > 0 when builder[0] == '\'' || builder[0] == '\"':
                             builder.Append(value);
-                            isComment = false;
+                            isInlineComment = false;
                             continue;
                         case > 0:
                             ChooseUnit(result, "", builder);
@@ -50,9 +50,9 @@ namespace CodeColoring.ProgrammingLanguage
                     }
 
                     builder.Append(value);
-                    isComment = true;
+                    isInlineComment = true;
                 }
-                else if (isComment)
+                else if (isInlineComment)
                 {
                     if (index == text.Length - 1)
                     {
@@ -62,7 +62,7 @@ namespace CodeColoring.ProgrammingLanguage
                     }
                     else if (value == "\n")
                     {
-                        isComment = false;
+                        isInlineComment = false;
                         result.Add(new ParseUnit(LanguageUnit.Comment, builder.ToString()));
                         result.Add(new ParseUnit(LanguageUnit.Whitespace, value));
                         builder.Clear();
