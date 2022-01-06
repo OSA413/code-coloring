@@ -81,13 +81,13 @@ namespace CodeColoring_Tests.Steps
 
         }
 
-        [Then(@"^the file at ([a-zA-Z0-9\\._-]+) should be created$")]
+        [Then(@"^the file at ([a-zA-Z0-9/._-]+) should be created$")]
         public void ThenFileCreated(string filePath)
         {
             Assert.True(File.Exists(filePath));
         }
 
-        [Then(@"^the file at ([a-zA-Z0-9\\._-]+) should not be created$")]
+        [Then(@"^the file at ([a-zA-Z0-9/._-]+) should not be created$")]
         public void ThenFileNotCreated(string filePath)
         {
             Assert.True(!File.Exists(filePath));
@@ -121,7 +121,7 @@ namespace CodeColoring_Tests.Steps
 
         private void CleanUp()
         {
-            var directory = @"..\..\..\DemoContent\";
+            var directory = @"../../../DemoContent/";
             foreach (var file in Directory.GetFiles(directory))
                 if (file.Contains(".html")) File.Delete(file);
         }
