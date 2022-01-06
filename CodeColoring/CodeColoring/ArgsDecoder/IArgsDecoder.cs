@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace CodeColoring.ArgsDecoder
+﻿namespace CodeColoring.ArgsDecoder
 {
     public interface IArgsDecoder
     {
         string Help { get; }
-        DecodedArguments Decode(IEnumerable<string> args);
+        DecodedArguments Decode(string[] args);
     }
 }

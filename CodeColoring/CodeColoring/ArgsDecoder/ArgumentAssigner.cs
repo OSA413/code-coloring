@@ -2,21 +2,20 @@
 using System.Linq;
 using CodeColoring.Colorizer;
 using CodeColoring.OutputFormat;
-using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring.ArgsDecoder
 {
-    public class ArgumentAssigner
+    internal class ArgumentAssigner
     {
         private Action<string> action;
         private readonly DecodedArguments decoded;
 
         private readonly ColorPalette[] colorPalettes;
         private readonly IOutputFormat[] outputFormats;
-        private readonly IProgrammingLanguage[] programmingLanguages;
+        private readonly ProgrammingLanguage.ProgrammingLanguage[] programmingLanguages;
 
         public ArgumentAssigner(DecodedArguments result, ColorPalette[] colorPalettes, IOutputFormat[] outputFormats,
-            IProgrammingLanguage[] programmingLanguages)
+            ProgrammingLanguage.ProgrammingLanguage[] programmingLanguages)
         {
             decoded = result;
             this.colorPalettes = colorPalettes;

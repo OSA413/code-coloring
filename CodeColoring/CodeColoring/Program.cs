@@ -31,14 +31,18 @@ namespace CodeColoring
             builder.RegisterType<Colorizer.Colorizer>().AsSelf().SingleInstance();
 
             builder.RegisterAssemblyTypes(currentAssembly)
-              .Where(x => x.Name.EndsWith("Theme"))
-              .As<ColorPalette>().AsSelf().SingleInstance();
+                .Where(x => x.IsSubclassOf(typeof(ColorPalette)))
+                .As<ColorPalette>().AsSelf().SingleInstance();
 
-            foreach (var t in new[] { typeof(IOutputFormat), typeof(IArgsDecoder), typeof(IProgrammingLanguage) })
+            builder.RegisterAssemblyTypes(currentAssembly)
+                .Where(x => x.IsSubclassOf(typeof(ProgrammingLanguage.ProgrammingLanguage)))
+                .As<ProgrammingLanguage.ProgrammingLanguage>().AsSelf().SingleInstance();
+
+            foreach (var t in new[] {typeof(IOutputFormat), typeof(IArgsDecoder)})
                 builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                     .Where(x => t.IsAssignableFrom(x))
                     .AsSelf().SingleInstance();
-            
+
             return builder.Build();
         }
     }

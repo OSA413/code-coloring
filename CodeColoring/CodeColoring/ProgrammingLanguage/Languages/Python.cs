@@ -2,14 +2,16 @@
 
 namespace CodeColoring.ProgrammingLanguage.Languages
 {
-    public class Python : IProgrammingLanguage
+    public class Python : ProgrammingLanguage
     {
-        public override string Name => "Python";
+        public Python()
+        {
+            Name = "Python";
+            Extensions = new[] {".py"};
+            base.Units = Units;
+        }
         
-        public override string[] Extensions() => new[] {".py"};
-
-
-        protected override Dictionary<LanguageUnit, string[]> Units() => new()
+        private new static readonly Dictionary<LanguageUnit, string[]> Units = new()
         {
             {
                 LanguageUnit.FunctionDefinition,
@@ -37,7 +39,5 @@ namespace CodeColoring.ProgrammingLanguage.Languages
                 new[] {" ", "\n", "\r", "\t", ""}
             }
         };
-
-        
     }
 }
