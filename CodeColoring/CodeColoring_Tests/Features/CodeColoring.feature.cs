@@ -194,7 +194,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("the user uses Console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 26
- testRunner.When("the user types -i ..\\..\\..\\DemoContent\\mtl_texture_separator.py -f HTML -l Python" +
+ testRunner.When("the user types -i ../../../DemoContent/mtl_texture_separator.py -f HTML -l Python" +
                         " -c DayTheme", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 27
@@ -237,11 +237,11 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("the user uses Console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 32
- testRunner.When("the user types -i ..\\..\\..\\DemoContent\\mtl_texture_separator.py -f HTML -c DayThe" +
-                        "me ..\\..\\..\\DemoContent\\demo2.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the user types -i ../../../DemoContent/mtl_texture_separator.py -f HTML -c DayThe" +
+                        "me ../../../DemoContent/demo2.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 33
- testRunner.Then("the file at ..\\..\\..\\DemoContent\\demo2.html should not be created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the file at ../../../DemoContent/demo2.html should not be created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 34
  testRunner.Then("the console should not display any output", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -283,15 +283,15 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("the user uses Console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 39
- testRunner.When("the user types -i  ..\\..\\..\\DemoContent\\mtl_texture_separator.py -l Python -c Day" +
-                        "Theme ..\\..\\..\\DemoContent\\demo3.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the user types -i  ../../../DemoContent/mtl_texture_separator.py -l Python -c Day" +
+                        "Theme ../../../DemoContent/demo3.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 40
  testRunner.Then("throws exception with message \"NullReferenceException: Object reference not set t" +
                         "o an instance of an object.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 41
- testRunner.Then("the file at ..\\..\\..\\DemoContent\\demo3.html should not be created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the file at ../../../DemoContent/demo3.html should not be created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 42
  testRunner.And("the console should not display any output", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -333,14 +333,14 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("the user uses Console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 47
- testRunner.When("the user types -i ..\\..\\..\\DemoContent\\mtl_texture_separator.py -f HTML -l Python" +
-                        " -c DayTheme ..\\..\\..\\DemoContent\\demo4.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the user types -i ../../../DemoContent/mtl_texture_separator.py -f HTML -l Python" +
+                        " -c DayTheme ../../../DemoContent/demo4.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 48
  testRunner.Then("DayTheme theme is used", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 49
- testRunner.And("the file at ..\\..\\..\\DemoContent\\demo4.html should be created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the file at ../../../DemoContent/demo4.html should be created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 50
  testRunner.And("the console should not display any output", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -382,8 +382,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("the user uses Console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 55
- testRunner.When("the user types -i ..\\..\\..\\DemoContent\\mtl_texture_separator.py -f HTML -l Python" +
-                        " -c DayTheme ..\\..\\..\\DemoContent\\demo.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the user types -i ../../../DemoContent/mtl_texture_separator.py -f HTML -l Python" +
+                        " -c DayTheme ../../../DemoContent/demo.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 56
  testRunner.Then("Python language is used", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -395,7 +395,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("output is in HTML format", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 59
- testRunner.And("the file at ..\\..\\..\\DemoContent\\demo.html should be created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the file at ../../../DemoContent/demo.html should be created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 60
  testRunner.And("the console should not display any output", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -437,8 +437,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("the user uses Console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 65
- testRunner.When("the user types -i ..\\..\\..\\DemoContent\\mtl_texture_separator.py -f HTML -l Python" +
-                        " -c DarkulaTheme ..\\..\\..\\DemoContent\\demo.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the user types -i ../../../DemoContent/mtl_texture_separator.py -f HTML -l Python" +
+                        " -c DarkulaTheme ../../../DemoContent/demo.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 66
  testRunner.Then("DarkulaTheme theme is used", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -483,8 +483,8 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("the user uses Console", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 72
- testRunner.When("the user types -i ..\\..\\..\\DemoContent\\mtl_texture_separator.py -f HTML -l Python" +
-                        " -c OneMonokaiMockTheme ..\\..\\..\\DemoContent\\demo.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the user types -i ../../../DemoContent/mtl_texture_separator.py -f HTML -l Python" +
+                        " -c OneMonokaiMockTheme ../../../DemoContent/demo.html", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 73
  testRunner.Then("OneMonokaiMockTheme theme is used", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
