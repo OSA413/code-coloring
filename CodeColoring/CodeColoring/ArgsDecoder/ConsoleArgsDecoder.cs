@@ -37,6 +37,5 @@ namespace CodeColoring.ArgsDecoder
             return result;
         }
 
-        public string Name => "Console";
     }
 }

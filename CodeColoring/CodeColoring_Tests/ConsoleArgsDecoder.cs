@@ -29,8 +29,9 @@ namespace CodeColoring_Tests
         public ConsoleArgsDecoder_Tests()
         {
             randomizer = new Randomizer();
-            var container =  ContainerSetting.ConfigureContainer();
-            decoder = (ConsoleArgsDecoder) container.Resolve<IArgsDecoder[]>().First(x=> x.Name == "Console");
+            var container = ContainerSetting.ConfigureContainer();
+            decoder = (ConsoleArgsDecoder) container.Resolve<IArgsDecoder[]>()
+                .First(x => x.GetType() == typeof(ConsoleArgsDecoder));
             palettes = container.Resolve<ColorPalette[]>();
             outputFormats = container.Resolve<IOutputFormat[]>();
             programmingLanguages = container.Resolve<ProgrammingLanguage[]>();
