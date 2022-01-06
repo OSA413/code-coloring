@@ -42,7 +42,7 @@ namespace CodeColoring.ProgrammingLanguage
                 }
                 else if (isMultilineComment)
                     builder.Append(value);
-                else if (value == "#")
+                else if (Units[LanguageUnit.Comment].Contains(value))
                 {
                     switch (builder.Length)
                     {

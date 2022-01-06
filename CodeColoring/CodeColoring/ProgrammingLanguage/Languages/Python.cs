@@ -37,6 +37,10 @@ namespace CodeColoring.ProgrammingLanguage.Languages
             {
                 LanguageUnit.Whitespace,
                 new[] {" ", "\n", "\r", "\t", ""}
+            },
+            {
+                LanguageUnit.Comment,
+                new []{"#"}
             }
         };
     }
