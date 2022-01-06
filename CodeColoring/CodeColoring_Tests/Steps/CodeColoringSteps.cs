@@ -12,7 +12,7 @@ namespace CodeColoring_Tests.Steps
     [Binding]
     internal class CodeColoringSteps
     {
-        private ConsoleArgsDecoder decoder;
+        private IArgsDecoder decoder;
         private DecodedArguments dargs;
         private StringWriter consoleWriter;
         private Exception exception = new();
@@ -23,7 +23,7 @@ namespace CodeColoring_Tests.Steps
         public void GivenConsole()
         {
             var container = ContainerSetting.ConfigureContainer();
-            decoder = (ConsoleArgsDecoder) container.Resolve<IArgsDecoder[]>().First(x => x.GetType() == typeof(ConsoleArgsDecoder));
+            decoder = container.Resolve<IArgsDecoder[]>().First(x => x.GetType() == typeof(ConsoleArgsDecoder));
             consoleWriter = new StringWriter();
             Console.SetOut(consoleWriter);
         }
