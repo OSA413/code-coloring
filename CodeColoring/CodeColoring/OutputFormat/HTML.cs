@@ -1,9 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Linq;
+﻿using System.Text;
 using CodeColoring.Colorizer;
 using CodeColoring.ProgrammingLanguage;
-using System.Drawing;
 using System.Collections.Generic;
 
 namespace CodeColoring.OutputFormat
@@ -11,10 +8,10 @@ namespace CodeColoring.OutputFormat
     public class HTML : IOutputFormat
     {
         public string Name => "HTML";
-        HTMLPageSettings pageSettings = HTMLPageSettings.DefaultSettings();
+        private readonly HTMLPageSettings pageSettings = HTMLPageSettings.DefaultSettings();
 
-        private readonly StringBuilder sb = new StringBuilder();
-        private readonly HashSet<char> flattenCharExceptions = new HashSet<char>() { '<', '>', '/', '=', '{', '}', ',' };
+        private readonly StringBuilder sb = new();
+        private readonly HashSet<char> flattenCharExceptions = new() { '<', '>', '/', '=', '{', '}', ',' };
         public string Flatten(string text)
         {
             var afterSpace = false;
@@ -42,7 +39,7 @@ namespace CodeColoring.OutputFormat
 
         public string Format(ParsingResult parsed, ColorPalette palette)
         {
-            if (palette == null) palette = new DefaultColorTheme();
+            palette ??= new DefaultColorTheme();
             pageSettings.Palette = palette;
             var resultBuilder = new StringBuilder();
 
@@ -60,7 +57,7 @@ namespace CodeColoring.OutputFormat
             return resultBuilder.ToString();
         }
 
-        private void FormatBody(StringBuilder sb, ParsingResult parsed)
+        private static void FormatBody(StringBuilder sb, ParsingResult parsed)
         {
             sb.Append("<body>\n");
             sb.Append("<code>" + "<pre>\n");
@@ -70,7 +67,7 @@ namespace CodeColoring.OutputFormat
             sb.Append("</body>\n");
         }
 
-        private string FormatHeader(ColorPalette palette, string pageTitle, string font, int size)
+        private static string FormatHeader(ColorPalette palette, string pageTitle, string font, int size)
         {
             var header = new StringBuilder();
             using (TagToken.Tag("head", header)){
@@ -92,42 +89,6 @@ namespace CodeColoring.OutputFormat
             return header.ToString();
         }
 
-        private string FormatUnit(ParseUnit unit) => $"<span class=\"{unit.Unit}\">{unit.Symbol}</span>";
-    }
-
-    class TagToken : IDisposable
-    {
-        readonly StringBuilder builder;
-        readonly string tag;
-
-        public TagToken(string tag, StringBuilder builder)
-        {
-            this.builder = builder;
-            this.tag = tag;
-
-            builder.Append(string.Format("<{0}>\n", tag));
-        }
-
-        public void Dispose() => builder.Append(string.Format("</{0}>\n", tag));
-
-        public static TagToken Tag(string tag, StringBuilder builder) => new TagToken(tag, builder);
-    }
-
-    public class HTMLPageSettings
-    {
-        public string Title { get; }
-        public string Font { get; }
-        public int FontSize { get; }
-        public ColorPalette Palette { get; set; }
-
-        public static HTMLPageSettings DefaultSettings() => new HTMLPageSettings("Colored code", "serif", 14, new DefaultColorTheme());
-
-        public HTMLPageSettings(string title, string font, int fontSize, ColorPalette palette)
-        {
-            Title = title;
-            Font = font;
-            FontSize = fontSize;
-            Palette = palette;
-        }
+        private static string FormatUnit(ParseUnit unit) => $"<span class=\"{unit.Unit}\">{unit.Symbol}</span>";
     }
 }

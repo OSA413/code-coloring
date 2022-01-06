@@ -24,7 +24,7 @@ namespace CodeColoring_Tests.Steps
         private IArgsDecoder decoder;
         private DecodedArguments dargs;
         private StringWriter consoleWriter;
-        private Exception exception = new Exception();
+        private Exception exception = new();
 
         #region given
         [Given(@"^the user uses Console$")]

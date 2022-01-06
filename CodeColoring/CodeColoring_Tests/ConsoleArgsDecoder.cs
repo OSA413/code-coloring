@@ -8,6 +8,7 @@ using CodeColoring.ProgrammingLanguage;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using Autofac;
+using CodeColoring.ProgrammingLanguage.Languages;
 
 namespace CodeColoring_Tests
 {
