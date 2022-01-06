@@ -1,25 +1,16 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using Autofac;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
-
 using CodeColoring;
 using CodeColoring.ArgsDecoder;
-using CodeColoring.Colorizer;
-using CodeColoring.OutputFormat;
-using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring_Tests.Steps
 {
     [Binding]
-    class CodeColoringSteps
+    internal class CodeColoringSteps
     {
         private IArgsDecoder decoder;
         private DecodedArguments dargs;
@@ -27,31 +18,35 @@ namespace CodeColoring_Tests.Steps
         private Exception exception = new();
 
         #region given
+
         [Given(@"^the user uses Console$")]
         public void GivenConsole()
         {
-            var container = Program.ConfigureContainer();
-            decoder = container.Resolve<IArgsDecoder>() as ConsoleArgsDecoder;
+            var container = ContainerSetting.ConfigureContainer();
+            decoder = container.Resolve<IArgsDecoder[]>().First(x => x.GetType() == typeof(ConsoleArgsDecoder));
             consoleWriter = new StringWriter();
             Console.SetOut(consoleWriter);
         }
+
         #endregion
 
         #region when
+
         [When(@"^the user types\s*(.*)?$")]
         public void WhenConsoleArgsFull(string args)
         {
-            var split = args.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+            var split = args.Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries);
             try
             {
                 dargs = decoder.Decode(split);
-                Program.Main(split);
+                ConsoleProgram.Main(split);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 exception = e;
             }
         }
+
         #endregion
 
         #region then
@@ -78,7 +73,6 @@ namespace CodeColoring_Tests.Steps
             var output = consoleWriter.ToString();
             Assert.AreEqual(String.Empty, output);
             CleanUp();
-
         }
 
         [Then(@"^the file at ([a-zA-Z0-9/._-]+) should be created$")]
@@ -117,13 +111,15 @@ namespace CodeColoring_Tests.Steps
             Assert.AreEqual(exceptionType, exception.GetType().Name);
             Assert.AreEqual(exceptionMsg, exception.Message);
         }
+
         #endregion
 
         private void CleanUp()
         {
             var directory = @"../../../DemoContent/";
             foreach (var file in Directory.GetFiles(directory))
-                if (file.Contains(".html")) File.Delete(file);
+                if (file.Contains(".html"))
+                    File.Delete(file);
         }
     }
 }

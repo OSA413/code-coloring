@@ -5,24 +5,21 @@ using CodeColoring;
 using CodeColoring.Colorizer;
 using CodeColoring.ProgrammingLanguage;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using Autofac;
 
 
 namespace CodeColoring_Tests
 {
     internal class ColorPalette_Tests
-    { 
+    {
+        private readonly ColorPalette defaultColorPalette;
         private readonly ColorPalette palette;
-        private readonly Colorizer colorizer;
-        
-        private readonly DefaultColorTheme defaultColorPalette = new();
-        
+
         public ColorPalette_Tests()
         {
-            var readOnlyKernel = Program.ConfigureContainer();
-            palette = readOnlyKernel.Resolve<ColorPalette>();
-            colorizer = readOnlyKernel.Resolve<Colorizer>();
+            defaultColorPalette = ContainerSetting.ConfigureContainer().Resolve<ColorPalette[]>()
+                .First(x => x.GetType() == typeof(DefaultColorTheme));
+            palette = ContainerSetting.ConfigureContainer().Resolve<ColorPalette>();
         }
 
         [Test]
@@ -46,7 +43,7 @@ namespace CodeColoring_Tests
         [Test]
         [Repeat(5)]
         public void NonExistingColorThrowsArgumentOutOfRange() =>
-            Assert.Throws<ArgumentOutOfRangeException>(() => Colorizer.Colorize((LanguageUnit)99, palette));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Colorizer.Colorize((LanguageUnit) 99, palette));
 
         private static Color UnitToColorMap(LanguageUnit languageUnit, ColorPalette palette)
         {

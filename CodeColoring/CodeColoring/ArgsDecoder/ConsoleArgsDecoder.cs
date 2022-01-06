@@ -36,5 +36,6 @@ namespace CodeColoring.ArgsDecoder
 
             return result;
         }
+
     }
 }
