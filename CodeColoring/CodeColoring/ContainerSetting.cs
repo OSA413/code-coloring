@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 using CodeColoring.ArgsDecoder;
@@ -14,22 +15,13 @@ namespace CodeColoring
             var builder = new ContainerBuilder();
             var currentAssembly = Assembly.GetExecutingAssembly();
             builder.RegisterAssemblyTypes(currentAssembly).AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<StreamReader>().AsSelf().SingleInstance();
-            builder.RegisterType<StreamWriter>().AsSelf().SingleInstance();
-            builder.RegisterType<Colorizer.Colorizer>().AsSelf().SingleInstance();
-            var interfaces = new[] {typeof(IOutputFormat), typeof(IArgsDecoder)};
-            var abstractClasses = new[] {typeof(ProgrammingLanguage.ProgrammingLanguage), typeof(ColorPalette)};
+            builder.RegisterType<Colorizer.Colorizer>().SingleInstance();
+            var abstractClasses = currentAssembly.GetTypes().Where(x=>x.IsAbstract);
             foreach (var abs in abstractClasses)
             {
                 builder.RegisterAssemblyTypes(currentAssembly)
                     .Where(x => x.IsSubclassOf(abs))
                     .As(abs).SingleInstance();
-            }
-            foreach (var inf in interfaces)
-            {
-                builder.RegisterAssemblyTypes(currentAssembly)
-                    .Where(x => inf.IsAssignableFrom(x))
-                    .SingleInstance();
             }
             return builder.Build();
         }

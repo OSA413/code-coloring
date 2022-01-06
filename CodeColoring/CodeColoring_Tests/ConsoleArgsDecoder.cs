@@ -9,6 +9,7 @@ using CodeColoring.ProgrammingLanguage;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using Autofac;
+using CodeColoring.ProgrammingLanguage.Languages;
 
 namespace CodeColoring_Tests
 {
@@ -17,24 +18,26 @@ namespace CodeColoring_Tests
         private Parameters parameters;
         private readonly Randomizer randomizer;
         private readonly ConsoleArgsDecoder decoder;
-        private readonly ColorPalette[] palettes;
-        private readonly IOutputFormat[] outputFormats;
-        private readonly ProgrammingLanguage[] programmingLanguages;
+        private readonly ColorPalette palette;
+        private readonly IOutputFormat outputFormat;
+        private readonly ProgrammingLanguage programmingLanguage;
 
         private const string DefaultProgrammingLanguageName = "Python";
         private const string DefaultColorPalletName = "Default";
         private const string DefaultOutputFormatName = "HTML";
-
+        
 
         public ConsoleArgsDecoder_Tests()
         {
             randomizer = new Randomizer();
             var container = ContainerSetting.ConfigureContainer();
-            decoder = (ConsoleArgsDecoder) container.Resolve<IArgsDecoder[]>()
-                .First(x => x.GetType() == typeof(ConsoleArgsDecoder));
-            palettes = container.Resolve<ColorPalette[]>();
-            outputFormats = container.Resolve<IOutputFormat[]>();
-            programmingLanguages = container.Resolve<ProgrammingLanguage[]>();
+            var d = container.Resolve<Colorizer[]>();
+            decoder = (ConsoleArgsDecoder) container.Resolve<IArgsDecoder[]>().First(x=> x.GetType() == typeof(ConsoleArgsDecoder));
+            palette = ContainerSetting.ConfigureContainer().Resolve<ColorPalette[]>().First(x=> x.Name == "Default");
+            outputFormat = ContainerSetting.ConfigureContainer().Resolve<IOutputFormat[]>().First(x=> x.Name == "HTML");
+            programmingLanguage = ContainerSetting.ConfigureContainer().Resolve<ProgrammingLanguage[]>().First(x=> x.Name == "Python");
+            
+
         }
 
         private class Parameters
@@ -92,7 +95,7 @@ namespace CodeColoring_Tests
             var result = decoder.Decode(new[] {flag, DefaultColorPalletName});
 
             var expected = new DecodedArguments()
-                {ColorPalette = palettes.First(x => x.Name == DefaultColorPalletName)};
+                {ColorPalette =palette};
             AreEqual(expected, result);
         }
 
@@ -122,7 +125,7 @@ namespace CodeColoring_Tests
         {
             var result = decoder.Decode(new[] {flag, DefaultOutputFormatName});
             var expected = new DecodedArguments()
-                {OutputFormat = outputFormats.First(x => x.Name == DefaultOutputFormatName)};
+                {OutputFormat = outputFormat};
             AreEqual(expected, result);
         }
 
@@ -132,7 +135,7 @@ namespace CodeColoring_Tests
         {
             var result = decoder.Decode(new[] {flag, DefaultProgrammingLanguageName});
             var expected = new DecodedArguments()
-                {ProgrammingLanguage = programmingLanguages.First(x => x.Name == DefaultProgrammingLanguageName)};
+                {ProgrammingLanguage = programmingLanguage};
             AreEqual(expected, result);
         }
 
@@ -169,11 +172,11 @@ namespace CodeColoring_Tests
             });
             var expected = new DecodedArguments()
             {
-                ColorPalette = palettes.First(x => x.Name == DefaultColorPalletName),
+                ColorPalette = palette,
                 InputFilePath = input,
                 OutputFilePath = output,
-                OutputFormat = outputFormats.First(x => x.Name == DefaultOutputFormatName),
-                ProgrammingLanguage = programmingLanguages.First(x => x.Name == DefaultProgrammingLanguageName)
+                OutputFormat = outputFormat,
+                ProgrammingLanguage = programmingLanguage
             };
             AreEqual(expected, result);
         }
@@ -186,11 +189,11 @@ namespace CodeColoring_Tests
             var result = decoder.Decode(args);
             var expected = new DecodedArguments
             {
-                ColorPalette = palettes.First(x => x.Name == DefaultColorPalletName),
+                ColorPalette = palette,
                 InputFilePath = parameters.Input,
                 OutputFilePath = parameters.Output,
-                OutputFormat = outputFormats.First(x => x.Name == DefaultOutputFormatName),
-                ProgrammingLanguage = programmingLanguages.First(x => x.Name == DefaultProgrammingLanguageName)
+                OutputFormat = outputFormat,
+                ProgrammingLanguage = programmingLanguage
             };
             AreEqual(expected, result);
         }
