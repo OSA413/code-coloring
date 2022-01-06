@@ -1,16 +1,15 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
 using Autofac;
 using CodeColoring.ArgsDecoder;
 using CodeColoring.Colorizer;
 using CodeColoring.OutputFormat;
 using CodeColoring.ProgrammingLanguage;
+using CodeColoring.ProgrammingLanguage.Languages;
 
 namespace CodeColoring
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -32,14 +31,18 @@ namespace CodeColoring
             builder.RegisterType<Colorizer.Colorizer>().AsSelf().SingleInstance();
 
             builder.RegisterAssemblyTypes(currentAssembly)
-              .Where(x => x.Name.EndsWith("Theme"))
-              .As<ColorPalette>().AsSelf().SingleInstance();
+                .Where(x => x.IsSubclassOf(typeof(ColorPalette)))
+                .As<ColorPalette>().AsSelf().SingleInstance();
 
-            foreach (Type t in new[] { typeof(IOutputFormat), typeof(IArgsDecoder), typeof(IProgrammingLanguage) })
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-              .Where(x => t.IsAssignableFrom(x))
-              .AsSelf().SingleInstance();
-            
+            builder.RegisterAssemblyTypes(currentAssembly)
+                .Where(x => x.IsSubclassOf(typeof(ProgrammingLanguage.ProgrammingLanguage)))
+                .As<ProgrammingLanguage.ProgrammingLanguage>().AsSelf().SingleInstance();
+
+            foreach (var t in new[] {typeof(IOutputFormat), typeof(IArgsDecoder)})
+                builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                    .Where(x => t.IsAssignableFrom(x))
+                    .AsSelf().SingleInstance();
+
             return builder.Build();
         }
     }

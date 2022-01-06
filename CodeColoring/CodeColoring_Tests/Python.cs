@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 using CodeColoring.ProgrammingLanguage;
+using CodeColoring.ProgrammingLanguage.Languages;
+using static CodeColoring.ProgrammingLanguage.Languages.Python;
 
 namespace CodeColoring_Tests
 {

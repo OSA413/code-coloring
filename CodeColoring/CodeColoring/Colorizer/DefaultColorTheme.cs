@@ -1,4 +1,6 @@
 ﻿namespace CodeColoring.Colorizer
 {
-    public class DefaultColorTheme : ColorPalette { }
+    public class DefaultColorTheme : ColorPalette
+    {
+    }
 }

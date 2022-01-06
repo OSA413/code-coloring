@@ -29,7 +29,7 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OneArgColorization([Values] LanguageUnit unit)
         {
-            var actual = colorizer.Colorize(unit, palette);
+            var actual = Colorizer.Colorize(unit, palette);
             var expected = UnitToColorMap(unit, palette);
             Assert.AreEqual(expected, actual);
         }
@@ -37,7 +37,7 @@ namespace CodeColoring_Tests
         [Test]
         [Repeat(5)]
         public void DefaultColorPaletteIsBlack([Values] LanguageUnit unit) =>
-            Assert.AreEqual(Color.Black, colorizer.Colorize(unit, defaultColorPalette));
+            Assert.AreEqual(Color.Black, Colorizer.Colorize(unit, defaultColorPalette));
 
         [Test]
         [Repeat(5)]
@@ -46,7 +46,7 @@ namespace CodeColoring_Tests
         [Test]
         [Repeat(5)]
         public void NonExistingColorThrowsArgumentOutOfRange() =>
-            Assert.Throws<ArgumentOutOfRangeException>(() => colorizer.Colorize((LanguageUnit)99, palette));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Colorizer.Colorize((LanguageUnit)99, palette));
 
         private static Color UnitToColorMap(LanguageUnit languageUnit, ColorPalette palette)
         {

@@ -1,13 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace CodeColoring.ProgrammingLanguage
 {
-    public class Python : IProgrammingLanguage
+    public abstract class ProgrammingLanguage
     {
-        public string Name => "Python";
+        public string Name { get; protected init; }
+
+        protected string[] Extensions { get; init; } //будем вообще это вызывать? Или другое определние языка
+
+        protected Dictionary<LanguageUnit, string[]> Units { get; init; }
+
+
         public ParsingResult Parse(string text)
         {
             var result = new List<ParseUnit>();
@@ -22,6 +27,7 @@ namespace CodeColoring.ProgrammingLanguage
                     builder.Append(value);
                     continue;
                 }
+
                 if (builder.Length > 1 && builder[^1].Equals('\"') && builder[^2].Equals('\"') && value == "\"")
                 {
                     builder.Append(value);
@@ -36,7 +42,7 @@ namespace CodeColoring.ProgrammingLanguage
                 }
                 else if (isMultilineComment)
                     builder.Append(value);
-                else if (value == "#" )
+                else if (Units[LanguageUnit.Comment].Contains(value))
                 {
                     switch (builder.Length)
                     {
@@ -83,7 +89,6 @@ namespace CodeColoring.ProgrammingLanguage
 
         private void ChooseUnit(ICollection<ParseUnit> result, string value, StringBuilder strBuilder)
         {
-            
             if (strBuilder.Length > 0 && (strBuilder[0] == '\"' || strBuilder[0] == '\''))
             {
                 var firstChar = strBuilder[0];
@@ -92,19 +97,19 @@ namespace CodeColoring.ProgrammingLanguage
                 result.Add(new ParseUnit(LanguageUnit.Value, strBuilder.ToString()));
                 strBuilder.Clear();
             }
-            else if (units[LanguageUnit.Whitespace].Contains(value))
+            else if (Units[LanguageUnit.Whitespace].Contains(value))
             {
                 result.Add(ChooseUnit(strBuilder));
                 result.Add(new ParseUnit(LanguageUnit.Whitespace, value));
                 strBuilder.Clear();
             }
-            else if (units[LanguageUnit.Function].Contains(value))
+            else if (Units[LanguageUnit.Function].Contains(value))
             {
                 result.Add(new ParseUnit(LanguageUnit.Function, strBuilder.ToString()));
                 result.Add(new ParseUnit(LanguageUnit.Symbol, value));
                 strBuilder.Clear();
             }
-            else if (units[LanguageUnit.Symbol].Contains(value))
+            else if (Units[LanguageUnit.Symbol].Contains(value))
             {
                 result.Add(ChooseUnit(strBuilder));
                 result.Add(new ParseUnit(LanguageUnit.Symbol, value));
@@ -117,10 +122,10 @@ namespace CodeColoring.ProgrammingLanguage
 
         private ParseUnit ChooseUnit(StringBuilder builder)
         {
-            if (units[LanguageUnit.FunctionDefinition].Contains(builder.ToString()))
+            if (Units[LanguageUnit.FunctionDefinition].Contains(builder.ToString()))
                 return new ParseUnit(LanguageUnit.FunctionDefinition, builder.ToString());
 
-            if (units[LanguageUnit.Operator].Contains(builder.ToString()))
+            if (Units[LanguageUnit.Operator].Contains(builder.ToString()))
                 return new ParseUnit(LanguageUnit.Operator, builder.ToString());
 
             if (builder.Length > 0 && int.TryParse(builder[0].ToString(), out _))
@@ -131,36 +136,5 @@ namespace CodeColoring.ProgrammingLanguage
 
             return new ParseUnit(LanguageUnit.Unknown, builder.ToString());
         }
-
-        public string[] Extensions() => new[] {".py"};
-
-        private readonly Dictionary<LanguageUnit, string[]> units = new()
-        {
-            {
-                LanguageUnit.FunctionDefinition,
-                new[] {"def", "class"} //переименовать
-            },
-            {
-                LanguageUnit.Operator,
-                new[]
-                {
-                    "if", "else", "elif", "for", "while", "pass", "break", "continue", "return", "yield",
-                    "global", "nonlocal", "import", "from", "try", "except", "finally", "raise", "assert",
-                    "with", "as", "del", "in", "and", "or"
-                }
-            },
-            {
-                LanguageUnit.Function,
-                new[] {"(", "."}
-            },
-            {
-                LanguageUnit.Symbol,
-                new[] {"=", "+", "-", "<", ">", "!", "^", "%", "*", ")", ";", "/", ":", ",", "[", "]"}
-            },
-            {
-                LanguageUnit.Whitespace,
-                new[] {" ", "\n", "\r", "\t", ""}
-            }
-        };
     }
 }
