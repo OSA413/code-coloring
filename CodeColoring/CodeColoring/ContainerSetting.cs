@@ -1,27 +1,14 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using Autofac;
 using CodeColoring.ArgsDecoder;
 using CodeColoring.Colorizer;
 using CodeColoring.OutputFormat;
-using CodeColoring.ProgrammingLanguage;
-using CodeColoring.ProgrammingLanguage.Languages;
 
 namespace CodeColoring
 {
-    public static class Program
+    public static class ContainerSetting
     {
-        public static void Main(string[] args)
-        {
-            var readOnlyKernel = ConfigureContainer();
-            var dargs = readOnlyKernel.Resolve<IArgsDecoder>().Decode(args);
-            var inputText = File.ReadAllText(dargs.InputFilePath);
-            var parsingResult = dargs.ProgrammingLanguage.Parse(inputText);
-            var outputText = dargs.OutputFormat.Format(parsingResult, dargs.ColorPalette);
-            File.WriteAllText(dargs.OutputFilePath, outputText);
-        }
-
         public static IContainer ConfigureContainer()
         {
             var builder = new ContainerBuilder();
@@ -47,5 +34,4 @@ namespace CodeColoring
             return builder.Build();
         }
     }
-    
 }

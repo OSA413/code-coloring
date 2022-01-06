@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Autofac;
-
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-
 using CodeColoring;
 using CodeColoring.OutputFormat;
 using CodeColoring.ProgrammingLanguage;
@@ -17,33 +11,37 @@ namespace CodeColoring_Tests
 {
     internal class HTML_Tests
     {
-        private readonly Randomizer randomizer = new();
-        private readonly IContainer container = Program.ConfigureContainer();
+        private readonly Randomizer randomizer;
         private readonly HTML html;
 
-        public HTML_Tests() => html = (HTML) container.Resolve<IOutputFormat>();
+        public HTML_Tests()
+        {
+            randomizer = new Randomizer();
+            html = (HTML) ContainerSetting.ConfigureContainer().Resolve<IOutputFormat[]>().First(x=> x.Name == "HTML");
+        }
 
-        private string BuildHTML(string body = "")
+
+        private static string BuildHTML(string body = "")
             => "<!DOCTYPE HTML><html><head>" +
-        "< title > Colored code</title>" +
-"        <meta charset = \"UTF-8\" >" +
-"        < style >" +
-"            body {background-color: rgb(255,255,255); font-family: serif; font-size: 14px; line-height: 1;}" +
-"            .Function {color: rgb(0,0,0);}" +
-"            .Comment { color: rgb(0, 0, 0); }" +
-"            .FunctionDefinition { color: rgb(0, 0, 0); }" +
-"            .Operator { color: rgb(0, 0, 0); }" +
-"            .Symbol { color: rgb(0, 0, 0); }" +
-"            .Variable { color: rgb(0, 0, 0); }" +
-"            .Value { color: rgb(0, 0, 0); }" +
-"            .Whitespace { color: rgb(0, 0, 0); }" +
-"            .Unknown { color: rgb(0, 0, 0); }" +
-"        </ style > " +
-"    </ head > " +
-        body +
-    "</html> ";
+               "< title > Colored code</title>" +
+               "        <meta charset = \"UTF-8\" >" +
+               "        < style >" +
+               "            body {background-color: rgb(255,255,255); font-family: serif; font-size: 14px; line-height: 1;}" +
+               "            .Function {color: rgb(0,0,0);}" +
+               "            .Comment { color: rgb(0, 0, 0); }" +
+               "            .FunctionDefinition { color: rgb(0, 0, 0); }" +
+               "            .Operator { color: rgb(0, 0, 0); }" +
+               "            .Symbol { color: rgb(0, 0, 0); }" +
+               "            .Variable { color: rgb(0, 0, 0); }" +
+               "            .Value { color: rgb(0, 0, 0); }" +
+               "            .Whitespace { color: rgb(0, 0, 0); }" +
+               "            .Unknown { color: rgb(0, 0, 0); }" +
+               "        </ style > " +
+               "    </ head > " +
+               body +
+               "</html> ";
 
-        public string BuildBody(string text = "") => "<body><code><pre>" + text + "</pre></code></body>";
+        private static string BuildBody(string text = "") => "<body><code><pre>" + text + "</pre></code></body>";
 
         private string GetSpan(LanguageUnit unit, string symbol) =>
             "<span class=\"" + Enum.GetName(typeof(LanguageUnit), unit) + "\">" + symbol + "</span>";
@@ -91,7 +89,7 @@ namespace CodeColoring_Tests
             var actual = html.Format(parsingResult, null);
 
             Assert.AreEqual(html.Flatten(BuildHTML(BuildBody(
-                string.Join("", parsingResult.Result.Select(x => GetSpan(x.Unit, x.Symbol))))))
+                    string.Join("", parsingResult.Result.Select(x => GetSpan(x.Unit, x.Symbol))))))
                 , html.Flatten(actual));
         }
 
@@ -107,7 +105,7 @@ namespace CodeColoring_Tests
             var actual = html.Format(parsingResult, null);
 
             Assert.AreEqual(html.Flatten(BuildHTML(BuildBody(
-                string.Join("", parsingResult.Result.Select(x => GetSpan(x.Unit, x.Symbol))))))
+                    string.Join("", parsingResult.Result.Select(x => GetSpan(x.Unit, x.Symbol))))))
                 , html.Flatten(actual));
         }
     }

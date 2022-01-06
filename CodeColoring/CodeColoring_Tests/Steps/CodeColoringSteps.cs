@@ -1,25 +1,17 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using Autofac;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 using CodeColoring;
 using CodeColoring.ArgsDecoder;
-using CodeColoring.Colorizer;
-using CodeColoring.OutputFormat;
-using CodeColoring.ProgrammingLanguage;
 
 namespace CodeColoring_Tests.Steps
 {
     [Binding]
-    class CodeColoringSteps
+    internal class CodeColoringSteps
     {
         private IArgsDecoder decoder;
         private DecodedArguments dargs;
@@ -30,8 +22,8 @@ namespace CodeColoring_Tests.Steps
         [Given(@"^the user uses Console$")]
         public void GivenConsole()
         {
-            var container = Program.ConfigureContainer();
-            decoder = container.Resolve<IArgsDecoder>() as ConsoleArgsDecoder;
+            var container = ContainerSetting.ConfigureContainer();
+            decoder = container.Resolve<IArgsDecoder[]>().First(x=> x.Name == "Console");
             consoleWriter = new StringWriter();
             Console.SetOut(consoleWriter);
         }
@@ -45,7 +37,7 @@ namespace CodeColoring_Tests.Steps
             try
             {
                 dargs = decoder.Decode(split);
-                Program.Main(split);
+                ConsoleProgram.Main(split);
             }
             catch(Exception e)
             {
