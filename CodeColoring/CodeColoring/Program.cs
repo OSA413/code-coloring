@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using Autofac;
 using CodeColoring.ArgsDecoder;
@@ -29,21 +30,22 @@ namespace CodeColoring
             builder.RegisterType<StreamReader>().AsSelf().SingleInstance();
             builder.RegisterType<StreamWriter>().AsSelf().SingleInstance();
             builder.RegisterType<Colorizer.Colorizer>().AsSelf().SingleInstance();
-
-            builder.RegisterAssemblyTypes(currentAssembly)
-                .Where(x => x.IsSubclassOf(typeof(ColorPalette)))
-                .As<ColorPalette>().AsSelf().SingleInstance();
-
-            builder.RegisterAssemblyTypes(currentAssembly)
-                .Where(x => x.IsSubclassOf(typeof(ProgrammingLanguage.ProgrammingLanguage)))
-                .As<ProgrammingLanguage.ProgrammingLanguage>().AsSelf().SingleInstance();
-
-            foreach (var t in new[] {typeof(IOutputFormat), typeof(IArgsDecoder)})
-                builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                    .Where(x => t.IsAssignableFrom(x))
-                    .AsSelf().SingleInstance();
-
+            var interfaces = new[] {typeof(IOutputFormat), typeof(IArgsDecoder)};
+            var abstractClasses = new[] {typeof(ProgrammingLanguage.ProgrammingLanguage), typeof(ColorPalette)};
+            foreach (var abs in abstractClasses)
+            {
+                builder.RegisterAssemblyTypes(currentAssembly)
+                    .Where(x => x.IsSubclassOf(abs))
+                    .As(abs).SingleInstance();
+            }
+            foreach (var inf in interfaces)
+            {
+                builder.RegisterAssemblyTypes(currentAssembly)
+                    .Where(x => inf.IsAssignableFrom(x))
+                    .SingleInstance();
+            }
             return builder.Build();
         }
     }
+    
 }

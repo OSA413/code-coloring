@@ -21,7 +21,7 @@ namespace CodeColoring_Tests
         private readonly IContainer container = Program.ConfigureContainer();
         private readonly HTML html;
 
-        public HTML_Tests() => html = container.Resolve<HTML>();
+        public HTML_Tests() => html = (HTML) container.Resolve<IOutputFormat>();
 
         private string BuildHTML(string body = "")
             => "<!DOCTYPE HTML><html><head>" +

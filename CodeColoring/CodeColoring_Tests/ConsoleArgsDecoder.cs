@@ -1,5 +1,7 @@
 using System;
+using System.Configuration;
 using System.Linq;
+using System.Runtime.InteropServices;
 using CodeColoring;
 using CodeColoring.ArgsDecoder;
 using CodeColoring.Colorizer;
@@ -17,11 +19,18 @@ namespace CodeColoring_Tests
         private Parameters parameters;
         private readonly Randomizer randomizer = new();
         private readonly IContainer container = Program.ConfigureContainer();
-        private readonly IArgsDecoder decoder;
+        private readonly ConsoleArgsDecoder decoder;
+        private readonly ColorPalette[] palettes;
+        private readonly IOutputFormat[] outputFormats;
+        private readonly ProgrammingLanguage[] programmingLanguages;
+        
 
         public ConsoleArgsDecoder_Tests()
         {
-            decoder = container.Resolve<ConsoleArgsDecoder>();
+            decoder = (ConsoleArgsDecoder) container.Resolve<IArgsDecoder>();
+            palettes = container.Resolve<ColorPalette[]>();
+            outputFormats = container.Resolve<IOutputFormat[]>();
+            programmingLanguages = container.Resolve<ProgrammingLanguage[]>();
         }
 
         private class Parameters
@@ -73,7 +82,8 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_ColorPalette([Values("-c", "--color")] string flag)
         {
             var result = decoder.Decode(new[] { flag, "Default" });
-            var expected = new DecodedArguments() { ColorPalette = container.Resolve<DefaultColorTheme>() };
+            
+            var expected = new DecodedArguments() { ColorPalette = palettes.First(x=> x.Name == "Default") };
             AreEqual(expected, result);
         }
 
@@ -102,7 +112,7 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_OutputFormat([Values("-f", "--format")] string flag)
         {
             var result = decoder.Decode(new[] { flag, "HTML" });
-            var expected = new DecodedArguments() { OutputFormat = container.Resolve<HTML>() };
+            var expected = new DecodedArguments() { OutputFormat = outputFormats.First(x=>x.Name == "HTML") };
             AreEqual(expected, result);
         }
 
@@ -111,7 +121,7 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_ProgrammingLanguage([Values("-l", "--lang")] string flag)
         {
             var result = decoder.Decode(new[] { flag, "Python" });
-            var expected = new DecodedArguments() { ProgrammingLanguage = container.Resolve<Python>() };
+            var expected = new DecodedArguments() { ProgrammingLanguage = programmingLanguages.First(x=> x.Name=="Python") };
             AreEqual(expected, result);
         }
 
@@ -144,11 +154,11 @@ namespace CodeColoring_Tests
             var result = decoder.Decode(new[] { "-c", "Default", "-i", input, "-f", "HTML", "-l", "Python", output });
             var expected = new DecodedArguments()
             {
-                ColorPalette = container.Resolve<DefaultColorTheme>(),
+                ColorPalette = palettes.First(x=>x.Name == "Default"),
                 InputFilePath = input,
                 OutputFilePath = output,
-                OutputFormat = container.Resolve<HTML>(),
-                ProgrammingLanguage = container.Resolve<Python>()
+                OutputFormat = outputFormats.First(x=>x.Name == "HTML"),
+                ProgrammingLanguage = programmingLanguages.First(x=>x.Name == "Python")
         };
             AreEqual(expected, result);
         }
@@ -161,11 +171,11 @@ namespace CodeColoring_Tests
             var result = decoder.Decode(args);
             var expected = new DecodedArguments
             {
-                ColorPalette = container.Resolve<DefaultColorTheme>(),
+                ColorPalette = palettes.First(x=>x.Name == "Default"),
                 InputFilePath = parameters.Input,
                 OutputFilePath = parameters.Output,
-                OutputFormat = container.Resolve<HTML>(),
-                ProgrammingLanguage = container.Resolve<Python>()
+                OutputFormat = outputFormats.First(x=>x.Name == "HTML"),
+                ProgrammingLanguage = programmingLanguages.First(x=>x.Name == "Python")
             };
             AreEqual(expected, result);
         }
