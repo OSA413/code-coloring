@@ -11,14 +11,16 @@ namespace CodeColoring.Colorizer
     {
         public DarkulaTheme()
         {
-            FunctionColor = Color.Turquoise;
-            FunctionDefinitionColor = Color.DarkBlue;
-            OperatorColor = Color.Olive;
+            FunctionColor = Color.WhiteSmoke;
+            FunctionDefinitionColor = Color.DarkOrange;
+            OperatorColor = Color.DarkOrange;
             SymbolColor = Color.DarkOrange;
-            VariableColor = Color.LightBlue;
-            CommentColor = Color.DarkOliveGreen;
+            VariableColor = Color.White;
+            CommentColor = Color.DarkGreen;
             ValueColor = Color.White;
-            BackgroundColor = Color.DarkGray;
+            BackgroundColor = Color.FromArgb(35, 31, 32);
+            UnknownColor = Color.WhiteSmoke;
+            Name = "DarkulaTheme";
         }
     }
 }

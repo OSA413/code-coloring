@@ -23,7 +23,6 @@ namespace CodeColoring.OutputFormat
 
                 resultBuilder.Append(FormatHeader(pageSettings.Palette,
                     pageSettings.Title,
-                    pageSettings.BackgroundColor,
                     pageSettings.Font,
                     pageSettings.FontSize,
                     pageSettings.TabSize));
@@ -45,14 +44,14 @@ namespace CodeColoring.OutputFormat
             return body.ToString();
         }
 
-        private string FormatHeader(ColorPalette palette, string pageTitle, Color backColor, string font, int size, int tab)
+        private string FormatHeader(ColorPalette palette, string pageTitle, string font, int size, int tab)
         {
             var header = new StringBuilder();
             using (TagToken.Tag("head", header, false, true, new String(' ', tab), new String(' ', tab))){
                 header.Append(new String(' ', tab * 2) + $"<title>{pageTitle}</title>\n");
                 header.Append(new String(' ', tab * 2) + "<meta charset=\"UTF-8\">\n");
                 header.Append(new String(' ', tab * 2) + "<style>\n");
-                    header.Append(new String(' ', tab * 3) + $"body {{background-color: rgb({backColor.R},{backColor.G},{backColor.B}); font-family: {font}; font-size: {size}px; line-height: 1;}}\n");
+                    header.Append(new String(' ', tab * 3) + $"body {{background-color: rgb({palette.BackgroundColor.R},{palette.BackgroundColor.G},{palette.BackgroundColor.B}); font-family: {font}; font-size: {size}px; line-height: 1;}}\n");
                     header.Append(new String(' ', tab * 3) + $".Function {{color: rgb({palette.FunctionColor.R},{palette.FunctionColor.G},{palette.FunctionColor.B});}}\n");
                     header.Append(new String(' ', tab * 3) + $".Comment {{color: rgb({palette.CommentColor.R},{palette.CommentColor.G},{palette.CommentColor.B});}}\n");
                     header.Append(new String(' ', tab * 3) + $".FunctionDefinition {{color: rgb({palette.FunctionDefinitionColor.R},{palette.FunctionDefinitionColor.G},{palette.FunctionDefinitionColor.B});}}\n");
@@ -122,18 +121,16 @@ namespace CodeColoring.OutputFormat
         public string Title { get; }
         public string Font { get; }
         public int FontSize { get; }
-        public Color BackgroundColor { get; }
         public int TabSize { get; }
         public ColorPalette Palette { get; set; }
 
-        public static HTMLPageSettings DefaultSettings() => new HTMLPageSettings("Colored code", "serif", 14, Color.White, 4, new DayTheme());
+        public static HTMLPageSettings DefaultSettings() => new HTMLPageSettings("Colored code", "serif", 14, 4, new DayTheme());
 
-        public HTMLPageSettings(string title, string font, int fontSize, Color backgroundColor, int tabSize, ColorPalette palette)
+        public HTMLPageSettings(string title, string font, int fontSize, int tabSize, ColorPalette palette)
         {
             Title = title;
             Font = font;
             FontSize = fontSize;
-            BackgroundColor = backgroundColor;
             TabSize = tabSize;
             Palette = palette;
         }

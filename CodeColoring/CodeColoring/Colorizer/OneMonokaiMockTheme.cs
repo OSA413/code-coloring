@@ -11,14 +11,16 @@ namespace CodeColoring.Colorizer
     {
         public OneMonokaiMockTheme()
         {
-            FunctionColor = Color.DarkSlateBlue;
-            FunctionDefinitionColor = Color.IndianRed;
+            FunctionColor = Color.DarkCyan;
+            FunctionDefinitionColor = Color.DarkRed;
             OperatorColor = Color.DarkRed;
-            SymbolColor = Color.OrangeRed;
-            VariableColor = Color.Olive;
+            SymbolColor = Color.WhiteSmoke;
+            VariableColor = Color.LightGray;
             CommentColor = Color.DarkSeaGreen;
-            ValueColor = Color.White;
-            BackgroundColor = Color.Black;
+            ValueColor = Color.WhiteSmoke;
+            BackgroundColor = Color.FromArgb(32, 32, 32);
+            UnknownColor = Color.LightGray;
+            Name = "OneMonokaiMockTheme";
         }
     }
 }
