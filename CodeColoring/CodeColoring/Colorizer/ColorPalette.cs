@@ -16,7 +16,7 @@ namespace CodeColoring.Colorizer
         public Color BackgroundColor { get; protected set; }
         public string Name { get; protected set; }
 
-        public ColorPalette()
+        protected ColorPalette()
         {
             SymbolColor = Color.Black;
             FunctionDefinitionColor = Color.Black;
@@ -28,7 +28,7 @@ namespace CodeColoring.Colorizer
             WhitespaceColor = Color.Black;
             UnknownColor = Color.Black;
             BackgroundColor = Color.White;
-            Name = "DefaultColorPalette";
+            Name = "Default";
         }
     }
 }

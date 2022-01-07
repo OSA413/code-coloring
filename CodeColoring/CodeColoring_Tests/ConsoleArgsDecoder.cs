@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using CodeColoring;
 using CodeColoring.ArgsDecoder;
@@ -7,21 +8,36 @@ using CodeColoring.OutputFormat;
 using CodeColoring.ProgrammingLanguage;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using Ninject;
 using Autofac;
+using CodeColoring.ProgrammingLanguage.Languages;
 
 namespace CodeColoring_Tests
 {
     public class ConsoleArgsDecoder_Tests
     {
         private Parameters parameters;
-        private readonly Randomizer randomizer = new();
-        private readonly IContainer container = Program.ConfigureContainer();
-        private readonly IArgsDecoder decoder;
+        private readonly Randomizer randomizer;
+        private readonly ConsoleArgsDecoder decoder;
+        private readonly ColorPalette palette;
+        private readonly IOutputFormat outputFormat;
+        private readonly ProgrammingLanguage programmingLanguage;
+
+        private const string DefaultProgrammingLanguageName = "Python";
+        private const string DefaultColorPalletName = "Default";
+        private const string DefaultOutputFormatName = "HTML";
+        
 
         public ConsoleArgsDecoder_Tests()
         {
-            decoder = container.Resolve<ConsoleArgsDecoder>();
+            randomizer = new Randomizer();
+            var container = ContainerSetting.ConfigureContainer();
+            var d = container.Resolve<Colorizer[]>();
+            decoder = (ConsoleArgsDecoder) container.Resolve<IArgsDecoder[]>().First(x=> x.GetType() == typeof(ConsoleArgsDecoder));
+            palette = ContainerSetting.ConfigureContainer().Resolve<ColorPalette[]>().First(x=> x.Name == "Default");
+            outputFormat = ContainerSetting.ConfigureContainer().Resolve<IOutputFormat[]>().First(x=> x.Name == "HTML");
+            programmingLanguage = ContainerSetting.ConfigureContainer().Resolve<ProgrammingLanguage[]>().First(x=> x.Name == "Python");
+            
+
         }
 
         private class Parameters
@@ -29,12 +45,16 @@ namespace CodeColoring_Tests
             public readonly string[][] Params;
             public readonly string Input;
             public readonly string Output;
+
             public Parameters(string input, string output)
             {
                 Input = input;
                 Output = output;
-                Params = new[] { new[] { "-c", "DayTheme" }, new[] { "-i", input }
-                , new[] { "-f", "HTML" }, new[] { "-l", "Python" }, new[] { output } };
+                Params = new[]
+                {
+                    new[] {"-c", DefaultColorPalletName}, new[] {"-i", input}, new[] {"-f", DefaultOutputFormatName},
+                    new[] {"-l", DefaultProgrammingLanguageName}, new[] {output}
+                };
             }
         }
 
@@ -72,8 +92,10 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_ColorPalette([Values("-c", "--color")] string flag)
         {
-            var result = decoder.Decode(new[] { flag, "DayTheme" });
-            var expected = new DecodedArguments() { ColorPalette = container.Resolve<DayTheme>() };
+            var result = decoder.Decode(new[] {flag, DefaultColorPalletName});
+
+            var expected = new DecodedArguments()
+                {ColorPalette =palette};
             AreEqual(expected, result);
         }
 
@@ -82,8 +104,8 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_InputFilePath([Values("-i", "--input")] string flag)
         {
             var arg = randomizer.GetString();
-            var result = decoder.Decode(new[] { flag, arg });
-            var expected = new DecodedArguments() { InputFilePath = arg };
+            var result = decoder.Decode(new[] {flag, arg});
+            var expected = new DecodedArguments() {InputFilePath = arg};
             AreEqual(expected, result);
         }
 
@@ -92,8 +114,8 @@ namespace CodeColoring_Tests
         public void OnlyOneParam_OutputFilePath()
         {
             var arg = randomizer.GetString();
-            var result = decoder.Decode(new[] { arg });
-            var expected = new DecodedArguments() { OutputFilePath = arg };
+            var result = decoder.Decode(new[] {arg});
+            var expected = new DecodedArguments() {OutputFilePath = arg};
             AreEqual(expected, result);
         }
 
@@ -101,8 +123,9 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_OutputFormat([Values("-f", "--format")] string flag)
         {
-            var result = decoder.Decode(new[] { flag, "HTML" });
-            var expected = new DecodedArguments() { OutputFormat = container.Resolve<HTML>() };
+            var result = decoder.Decode(new[] {flag, DefaultOutputFormatName});
+            var expected = new DecodedArguments()
+                {OutputFormat = outputFormat};
             AreEqual(expected, result);
         }
 
@@ -110,8 +133,9 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         public void OnlyOneParam_ProgrammingLanguage([Values("-l", "--lang")] string flag)
         {
-            var result = decoder.Decode(new[] { flag, "Python" });
-            var expected = new DecodedArguments() { ProgrammingLanguage = container.Resolve<Python>() };
+            var result = decoder.Decode(new[] {flag, DefaultProgrammingLanguageName});
+            var expected = new DecodedArguments()
+                {ProgrammingLanguage = programmingLanguage};
             AreEqual(expected, result);
         }
 
@@ -132,7 +156,7 @@ namespace CodeColoring_Tests
         [Repeat(5)]
         [TestCase("Code Coloring")]
         [TestCase("Usage Example")]
-        public void HelpIsInformative(string text) => 
+        public void HelpIsInformative(string text) =>
             Assert.IsTrue(decoder.Help.Contains(text));
 
         [Test]
@@ -141,15 +165,19 @@ namespace CodeColoring_Tests
         {
             var input = randomizer.GetString();
             var output = randomizer.GetString();
-            var result = decoder.Decode(new[] { "-c", "DayTheme", "-i", input, "-f", "HTML", "-l", "Python", output });
+            var result = decoder.Decode(new[]
+            {
+                "-c", DefaultColorPalletName, "-i", input, "-f", DefaultOutputFormatName, "-l",
+                DefaultProgrammingLanguageName, output
+            });
             var expected = new DecodedArguments()
             {
-                ColorPalette = container.Resolve<DayTheme>(),
+                ColorPalette = palette,
                 InputFilePath = input,
                 OutputFilePath = output,
-                OutputFormat = container.Resolve<HTML>(),
-                ProgrammingLanguage = container.Resolve<Python>()
-        };
+                OutputFormat = outputFormat,
+                ProgrammingLanguage = programmingLanguage
+            };
             AreEqual(expected, result);
         }
 
@@ -161,11 +189,11 @@ namespace CodeColoring_Tests
             var result = decoder.Decode(args);
             var expected = new DecodedArguments
             {
-                ColorPalette = container.Resolve<DayTheme>(),
+                ColorPalette = palette,
                 InputFilePath = parameters.Input,
                 OutputFilePath = parameters.Output,
-                OutputFormat = container.Resolve<HTML>(),
-                ProgrammingLanguage = container.Resolve<Python>()
+                OutputFormat = outputFormat,
+                ProgrammingLanguage = programmingLanguage
             };
             AreEqual(expected, result);
         }
@@ -175,7 +203,8 @@ namespace CodeColoring_Tests
         public void IncorrectShortParameterArgumentExceptionWithMessage()
         {
             var flag = "-" + randomizer.GetString(3);
-            var error = Assert.Throws<ArgumentException>(() => decoder.Decode(new[] { flag }));
+            var error = Assert.Throws<ArgumentException>(() => decoder.Decode(new[] {flag}));
+            Debug.Assert(error != null, nameof(error) + " != null");
             Assert.IsTrue(error.Message.Contains("Unknown argument"));
             Assert.IsTrue(error.Message.Contains(flag));
         }
@@ -185,7 +214,8 @@ namespace CodeColoring_Tests
         public void IncorrectParameterArgumentExceptionWithMessage()
         {
             var flag = "--" + randomizer.GetString(5);
-            var error = Assert.Throws<ArgumentException>(() => decoder.Decode(new[] { flag }));
+            var error = Assert.Throws<ArgumentException>(() => decoder.Decode(new[] {flag}));
+            Debug.Assert(error != null, nameof(error) + " != null");
             Assert.IsTrue(error.Message.Contains("Unknown argument"));
             Assert.IsTrue(error.Message.Contains(flag));
         }

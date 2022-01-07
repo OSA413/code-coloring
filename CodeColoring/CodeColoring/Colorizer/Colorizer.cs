@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using CodeColoring.ProgrammingLanguage;
 
@@ -7,7 +6,7 @@ namespace CodeColoring.Colorizer
 {
     public class Colorizer
     {
-        public Color Colorize(LanguageUnit unit, ColorPalette palette) =>
+        public static Color Colorize(LanguageUnit unit, ColorPalette palette) =>
             unit switch
             {
                 LanguageUnit.Variable => palette.VariableColor,

@@ -4,36 +4,29 @@ using System.Linq;
 using CodeColoring;
 using CodeColoring.Colorizer;
 using CodeColoring.ProgrammingLanguage;
-using Ninject;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using Autofac;
 
 
 namespace CodeColoring_Tests
 {
     internal class ColorPalette_Tests
-    { 
-        private class NewColorPalette : ColorPalette { }
-
+    {
+        private readonly ColorPalette defaultColorPalette;
         private readonly ColorPalette palette;
-        private readonly Colorizer colorizer;
-        
-        private readonly NewColorPalette newColorPalette = new();
-      
 
         public ColorPalette_Tests()
         {
-            var readOnlyKernel = Program.ConfigureContainer();
-            palette = readOnlyKernel.Resolve<ColorPalette>();
-            colorizer = readOnlyKernel.Resolve<Colorizer>();
+            defaultColorPalette = ContainerSetting.ConfigureContainer().Resolve<ColorPalette[]>()
+                .First(x => x.GetType() == typeof(DefaultColorTheme));
+            palette = ContainerSetting.ConfigureContainer().Resolve<ColorPalette>();
         }
 
         [Test]
         [Repeat(5)]
         public void OneArgColorization([Values] LanguageUnit unit)
         {
-            var actual = colorizer.Colorize(unit, palette);
+            var actual = Colorizer.Colorize(unit, palette);
             var expected = UnitToColorMap(unit, palette);
             Assert.AreEqual(expected, actual);
         }
@@ -41,16 +34,16 @@ namespace CodeColoring_Tests
         [Test]
         [Repeat(5)]
         public void DefaultColorPaletteIsBlack([Values] LanguageUnit unit) =>
-            Assert.AreEqual(Color.Black, colorizer.Colorize(unit, new NewColorPalette()));
+            Assert.AreEqual(Color.Black, Colorizer.Colorize(unit, defaultColorPalette));
 
         [Test]
         [Repeat(5)]
-        public void DefaultBackgroundIsWhite() => Assert.AreEqual(Color.White, newColorPalette.BackgroundColor);
+        public void DefaultBackgroundIsWhite() => Assert.AreEqual(Color.White, defaultColorPalette.BackgroundColor);
 
         [Test]
         [Repeat(5)]
         public void NonExistingColorThrowsArgumentOutOfRange() =>
-            Assert.Throws<ArgumentOutOfRangeException>(() => colorizer.Colorize((LanguageUnit)99, palette));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Colorizer.Colorize((LanguageUnit) 99, palette));
 
         private static Color UnitToColorMap(LanguageUnit languageUnit, ColorPalette palette)
         {

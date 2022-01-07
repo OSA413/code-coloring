@@ -2,7 +2,7 @@
 
 namespace CodeColoring.Colorizer
 {
-    public class DayTheme: ColorPalette
+    public class DayTheme : ColorPalette
     {
         public DayTheme()
         {

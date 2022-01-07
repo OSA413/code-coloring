@@ -1,6 +1,6 @@
 {
     "stryker-config":
     {
-        "mutate": ["!**/DayTheme.cs"]
+        "mutate": [ "!**/Colorizer/*Theme.cs"]
     }
 }
