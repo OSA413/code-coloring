@@ -10,7 +10,7 @@ namespace CodeColoring
         public static void Main(string[] args)
         {
             var readOnlyKernel = ContainerSetting.ConfigureContainer();
-            var consoleDecoder = readOnlyKernel.Resolve<IArgsDecoder[]>().First(x => x.GetType() == typeof(ConsoleArgsDecoder));
+            var consoleDecoder = (ConsoleArgsDecoder) readOnlyKernel.Resolve<IArgsDecoder[]>().First(x => x.GetType() == typeof(ConsoleArgsDecoder));
             var dargs = consoleDecoder.Decode(args);
             var inputText = File.ReadAllText(dargs.InputFilePath);
             var parsingResult = dargs.ProgrammingLanguage.Parse(inputText);
